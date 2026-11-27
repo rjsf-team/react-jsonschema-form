@@ -1,4 +1,4 @@
-import type { JSONSchema7Definition } from 'json-schema';
+import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 
 import { patternRegExp } from '../../additionalPropertiesUtils.ts';
 import {
@@ -934,18 +934,89 @@ export function sourcesOfOption(option: object): readonly unknown[] | undefined 
  * `sourcesOfOption()`. A keyword under which no pair of options merges is left to the merge, which rejects it
  *
  * @param schemas - The schemas a plan conjoins, in the order they are merged
+ * @param graph - The graph of the root, which resolves a `$ref` beside the lists
+ * @param [enclosing] - The schemas an enclosing `allOf` conjoins beside them, which can close a property of a pair too
  * @returns - The keyword and its rebuilt options, for each such keyword
  */
-function rebuiltLists(schemas: readonly object[]): [string, ReturnType<typeof mergeOptionLists> & object][] {
+function rebuiltLists<S extends StrictRJSFSchema>(
+  schemas: readonly object[],
+  graph: SchemaGraph<S>,
+  enclosing: readonly object[] = [],
+): [string, ReturnType<typeof mergeOptionLists> & object][] {
   return [ANY_OF_KEY, ONE_OF_KEY].flatMap((keyword): [string, ReturnType<typeof mergeOptionLists> & object][] => {
     const lists = schemas.flatMap((schema): JSONSchema7Definition[][] => {
       const list: unknown = Reflect.get(schema, keyword);
       return Array.isArray(list) ? [list] : [];
     });
     const [first, ...rest] = lists;
-    const options = first !== undefined && rest.length > 0 ? recorded(mergeOptionLists(first, rest)) : undefined;
+    const [beside, resolve] = besideLists(graph, keyword, schemas, enclosing);
+    const options =
+      first !== undefined && rest.length > 0
+        ? recorded(mergeOptionLists(first, rest, beside, mergedPair, true, resolve))
+        : undefined;
     return options === undefined ? [] : [[keyword, options]];
   });
+}
+
+/** Returns the schemas beside the `keyword` lists of `schemas` that can close a property of a pair of their options:
+ * `schemas` without their lists, then `enclosing` without theirs or those of their `allOf`, `then` and `else` subschemas,
+ * since the enclosing merge pairs those options with these and reads each closer only where it pairs. With them, a
+ * resolver of a `$ref` among them, see `mergeOptionLists()`
+ *
+ * @param graph - The graph of the root
+ * @param keyword - The keyword holding the lists
+ * @param schemas - The schemas holding the lists
+ * @param enclosing - The schemas an enclosing `allOf` conjoins beside them
+ * @returns - The schemas beside the lists, and the resolver
+ */
+function besideLists<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  keyword: string,
+  schemas: readonly object[],
+  enclosing: readonly object[],
+): [JSONSchema7[], (schema: object) => JSONSchema7 | undefined] {
+  const originals = new Map<object, object>();
+  const withoutLists = (schema: object): object => {
+    const allOf: unknown = Reflect.get(schema, ALL_OF_KEY);
+    const branches = [THEN_KEY, ELSE_KEY].filter((key) => isObject(Reflect.get(schema, key)));
+    if (!Object.hasOwn(schema, keyword) && !Array.isArray(allOf) && branches.length === 0) {
+      return schema;
+    }
+    const copy = withoutKeys(schema as RJSFSchema, keyword);
+    if (Array.isArray(allOf)) {
+      Reflect.set(
+        copy,
+        ALL_OF_KEY,
+        allOf.map((entry: unknown) => (isObject(entry) ? withoutLists(entry) : entry)),
+      );
+    }
+    for (const key of branches) {
+      Reflect.set(copy, key, withoutLists(Reflect.get(schema, key) as object));
+    }
+    originals.set(copy, schema);
+    return copy;
+  };
+  // An option a merge built is a copy the graph never parsed, so its `$ref` is read where one it was built from sits
+  const nodeOf = (schema: object): NodeId | undefined =>
+    graph.byObject(originals.get(schema) ?? schema) ??
+    sourcesOfOption(schema)
+      ?.filter((source) => isObject(source) && source[REF_KEY] === Reflect.get(schema, REF_KEY))
+      .map((source) => nodeOf(source as object))
+      .find((id) => id !== undefined);
+  const resolve = (schema: object) => {
+    const id = nodeOf(schema);
+    /* v8 ignore next -- a schema holding a `$ref` beside the lists is one the graph parsed, a copy of one, or an option
+     * a merge built from one; the plan's own copies leave the `$ref` keyword out */
+    const ref = id === undefined ? undefined : (graph.node(id) as ObjectNode<S>).ref;
+    /* v8 ignore next -- a `$ref` the graph parsed records what it resolves to, an invalid node for nothing */
+    const definition = ref === undefined ? undefined : graph.node(ref);
+    return definition?.kind === 'schema' ? (definition.raw as JSONSchema7) : undefined;
+  };
+  const beside = [
+    ...schemas.map((schema) => withoutKeys(schema as RJSFSchema, keyword)),
+    ...enclosing.map(withoutLists),
+  ] as JSONSchema7[];
+  return [beside, resolve];
 }
 
 /** Returns `options`, each recording the options it was built from, see `sourcesOfOption()` */
@@ -966,11 +1037,16 @@ const ANNOTATION_KEYS = ['title', 'description', 'default', 'examples', 'depreca
  * still relabels the field's options. A pair no data can meet, which the merge rejects or whose `$ref`s or `const`s
  * differ, is undefined, as is one holding `false`
  */
-function branchPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
+function branchPair(
+  left: JSONSchema7Definition,
+  right: JSONSchema7Definition,
+  outside: readonly JSONSchema7[],
+  unchecked: readonly JSONSchema7[],
+): JSONSchema7Definition | undefined {
   if (isObject(left) && isObject(right) && pairConflicts(left, right)) {
     return undefined;
   }
-  const merged = mergedPair(left, right);
+  const merged = mergedPair(left, right, outside, unchecked);
   return merged === undefined || merged === false ? undefined : withAnnotationsOf(merged, right);
 }
 
@@ -1174,6 +1250,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
    */
   private branchDepth = 0;
+  /** The raw schemas each enclosing `allOf` conjoins beside the member being expanded, such as the `$ref` a conjunction
+   * applies beside the keywords holding a list, which the member's merges of lists read as closing a property too
+   */
+  private enclosing: readonly object[] = [];
 
   constructor(
     context: SchemaContext<S, F>,
@@ -1338,11 +1418,26 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     ) {
       return part;
     }
-    const entries = this.graph.subschemas(provider.node.id, ALL_OF_KEY).map(([, member]) => {
-      const expanded = this.expand(member, provider.refPath, 'allOf', dependencyKey);
-      return expanded === undefined ? undefined : scopedPart(expanded, `a${member}`);
-    });
+    const members = this.graph.subschemas(provider.node.id, ALL_OF_KEY);
+    const outer = this.enclosing;
     const own = { ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) };
+    let entries: (Part<S> | undefined)[];
+    try {
+      entries = members.map(([, member]) => {
+        this.enclosing = [
+          ...outer,
+          own.schema,
+          ...members.flatMap(([, other]) => {
+            const node = this.graph.node(other);
+            return other !== member && node.kind === 'schema' ? [node.raw] : [];
+          }),
+        ];
+        const expanded = this.expand(member, provider.refPath, 'allOf', dependencyKey);
+        return expanded === undefined ? undefined : scopedPart(expanded, `a${member}`);
+      });
+    } finally {
+      this.enclosing = outer;
+    }
     const [beside, ...rest] = entries;
     // A `$ref` applies its definition in place, so the keywords beside it, its conjunction's first entry, are the
     // object's own: an `unevaluatedProperties` among them sees the definition's keys
@@ -1370,7 +1465,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const schemas = [part.schema, ...members.map((member) => member.schema)];
     // An `allOf` a member still holds is one the policy left unmerged
     const nested = ownAllOf(schemas);
-    const rebuilt = this.context.customMergeAllOf ? [] : rebuiltLists(schemas);
+    const rebuilt = this.context.customMergeAllOf ? [] : rebuiltLists(schemas, this.graph, this.enclosing);
     const taken = rebuilt.map(([keyword]) => keyword);
     // A merge that fails keeps the part's own lists rather than options built with the members it drops
     const unmerged = withoutKeys(part.schema, ALL_OF_KEY);
@@ -1419,11 +1514,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
       const own: unknown = Reflect.get(part.schema, keyword);
       const other: unknown = Reflect.get(branch.schema, keyword);
+      const [beside, resolve] = besideLists(this.graph, keyword, [part.schema, branch.schema], this.enclosing);
       const options =
         Array.isArray(own) &&
         Array.isArray(other) &&
         !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
-          ? recorded(mergeOptionLists(own, [other], branchPair, false))
+          ? recorded(mergeOptionLists(own, [other], beside, branchPair, false, resolve))
           : undefined;
       if (
         options !== undefined &&

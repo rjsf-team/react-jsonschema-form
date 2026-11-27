@@ -143,7 +143,7 @@ Define the behavior the callback needs from its `schema` and `rootSchema` argume
 
 ###### Parameters
 
-- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within an option of a `oneOf`/`anyOf` of several constants, unless `constAsDefaults` is `'always'`, and, under `constAsDefaults: 'skipOneOf'`, within the option of a non-empty `oneOf` on a field with a single primitive `type` or none, or on a select over object or array constants with a single `type` or none, its `constAsDefaults` is `'never'`
 - schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
@@ -327,19 +327,27 @@ render(
 
 ### constAsDefaults
 
-Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with undefined values, defaulting to `always`.
+Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with undefined values.
 Unless the flag is `never`, a `const` wins over a `default` at any depth: an object `const` gives each key it names its value, over the key's own `default` and the `default` of any field between them, whatever `nestedDefaultsPrecedence` says.
 The one exception is a field whose `type` can't hold the value the `const` gives it, such as `"x"` for a `number`: that field keeps its own `default`. Form data still wins over a `const`.
 A field whose value a `const` gives, its own `const` or an ancestor's object `const` at any depth, is set whether or not it is required, whatever [`emptyObjectFields`](#emptyobjectfields) says.
 That flag still decides whether an object around it whose value no `const` gives is added: for instance, if `populateRequiredDefaults` is set, a `const` inside an object that isn't required is not set.
 
-| Flag Value  | Description                                                                                                                                                                                                                     |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `always`    | A const value will always be merged into the form as a default. If there is are const values in a `oneOf` (for instance to create an enumeration with title different from the values), the first const value will be defaulted |
-| `skipOneOf` | If const is in a `oneOf` it will NOT pick the first value as a default                                                                                                                                                          |
-| `never`     | A const value will never be used as a default                                                                                                                                                                                   |
+| Flag Value  | Description                                                                                                                                                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `always`    | A const value will always be merged into the form as a default. If there are const values in a `oneOf`/`anyOf` (for instance to create an enumeration with title different from the values), the first const value will be defaulted |
+| `skipOneOf` | Deprecated: leave the flag unset instead. A `oneOf`/`anyOf` of several const values is left unpicked, as it is with the flag unset                                                                                                   |
+| `never`     | A const value will never be used as a default                                                                                                                                                                                        |
 
-Left unset, a `const` is used as a default as under `always`, but only an explicit `always` lets it take the place of a value the form data holds, such as `"b"` for `{ "const": "a" }`, or of a `default` that names none of the constants of a `oneOf`/`anyOf`: `{ "type": "string", "default": "blue", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts at `"blue"` unset and at `"red"` under `always`.
+Left unset, a field's own `const` is used as a default as under `always`, and so is the `const` of a property inside the `oneOf`/`anyOf` option a field shows, such as the `kind` of `{ "oneOf": [{ "properties": { "kind": { "const": "a" } } }, { "properties": { "kind": { "const": "b" } } }] }`.
+A `oneOf` or `anyOf` whose options are several constants, which renders as a select, radio group or checkbox, is a choice rather than a value, so it is left unpicked, as an `enum` is: it starts on the value its `default` names, its own or one an ancestor's `default` gives it, and is otherwise left empty.
+A `oneOf` or `anyOf` whose one option is a `const`, such as `[{ "const": "a" }]`, leaves nothing to choose, so that constant is filled in, unless the flag is `never`. Unlike a `const`, it gives way to a `default`, and it follows [`emptyObjectFields`](#emptyobjectfields) as a `default` does. An `enum` is left empty however many values it lists, and so is a single option holding one, such as `[{ "enum": ["a"] }]`.
+The options are counted rather than their values, so a constant listed twice, such as `true` under two titles, is a choice of two options and is left empty.
+`{ "type": "string", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts empty unset and at `"red"` under `always`.
+
+Only an explicit `always` picks the first constant of such a list, or lets a `const` take the place of a value the form data holds, such as `"b"` for `{ "const": "a" }`, or of a `default` that names none of the constants of a `oneOf`/`anyOf`: `{ "type": "string", "default": "blue", "oneOf": [{ "const": "red" }, { "const": "green" }] }` starts at `"blue"` unset and at `"red"` under `always`.
+
+`skipOneOf` is deprecated, since a list of several constants is left unpicked without it. It still differs from the flag left unset in one case: for a non-empty `oneOf` on a field with a single primitive `type` or none, or on a select over object or array constants with a single `type` or none, no `const` inside the option the field shows is used as a default, so the `kind` above stays empty too, and so does a `oneOf` of one constant, such as `{ "type": "object", "oneOf": [{ "const": { "a": 1 } }] }`, which starts at `{ "a": 1 }` with the flag unset.
 
 ### mergeDefaultsIntoFormData
 
@@ -401,10 +409,13 @@ render(
 
 Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
 An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
+A boolean whose `oneOf`/`anyOf` lists several constants is filled the same way, whatever control renders it, since [`constAsDefaults`](#constasdefaults) left unset picks none of them.
+A boolean whose schema lists its values is set to `false` only where they include `false`: a required `{ "type": "boolean", "enum": [true] }` is left unset, its checkbox unticked, and validation reports it missing until the user answers; a select over such constants starts on its placeholder.
+The listed values are read from the field's own `enum` and `const`, those an `allOf` brings in, those of the `then` or `else` branch its `if` takes, and the constants of a `oneOf`/`anyOf` whose options are all constants. Where the field's `oneOf`/`anyOf` options aren't all constants, the values the option it starts on lists, read the same way, must include `false` too, since the field starts with that option's value. So a required `{ "type": "boolean", "anyOf": [{ "enum": [true] }, { "title": "Any" }] }` starts unset, and so does one whose first option is `{ "oneOf": [{ "const": true }, { "const": null }] }`, while `{ "type": "boolean", "anyOf": [{ "title": "Any" }, { "enum": [true] }] }` starts at `false`. Nothing else counts: not a `not` that rules `false` out, not an option the field doesn't start on, and not a `const` that is an Ajv `$data` reference.
 
 | Flag Value      | Description                                                                                                                   |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `populateFalse` | A required boolean with no `default` is set to `false`                                                                        |
+| `populateFalse` | A required boolean with no `default` is set to `false`, unless the values its schema lists leave `false` out                  |
 | `skip`          | No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains a validation concern |
 
 #### Example

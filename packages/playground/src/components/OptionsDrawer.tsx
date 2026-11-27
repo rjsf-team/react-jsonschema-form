@@ -128,8 +128,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
         },
         constAsDefaults: {
           type: 'string',
-          title: 'const as default behavior',
-          default: 'always',
+          title: 'const as default behavior (unset by default)',
           oneOf: [
             {
               type: 'string',
@@ -138,7 +137,8 @@ const liveSettingsBooleanSchema: RJSFSchema = {
             },
             {
               type: 'string',
-              title: 'If const is in a `oneOf` it will NOT pick the first value as a default',
+              title:
+                'Deprecated: a `oneOf`/`anyOf` of several const values is left unpicked, as it is with the flag unset',
               enum: ['skipOneOf'],
             },
             {
@@ -218,7 +218,8 @@ const liveSettingsBooleanSchema: RJSFSchema = {
           oneOf: [
             {
               type: 'string',
-              title: 'A required boolean with no default is set to false',
+              title:
+                'A required boolean with no default is set to false, unless the values its schema lists leave false out',
               enum: ['populateFalse'],
             },
             {
