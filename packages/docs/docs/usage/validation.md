@@ -326,10 +326,10 @@ If you have provided an `onError` callback it will be called with the list of er
 ```tsx
 import { useRef } from 'react';
 import Form, { type FormRef } from '@rjsf/core';
-import { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-const onError = (errors) => alert(errors);
+const onError = (errors: RJSFValidationError[]) => alert(errors.map((e) => e.stack).join('\n'));
 
 const schema: RJSFSchema = {
   type: 'string',
@@ -504,7 +504,7 @@ export default function App() {
           showErrorList='top'
           initialFormData={""}
           liveValidate='onChange'
-          templates: {{ ErrorListTemplate }} />
+          templates={{ ErrorListTemplate }} />
   );
 }
 ```

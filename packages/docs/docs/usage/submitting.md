@@ -95,6 +95,8 @@ function PersonForm() {
     />
   );
 }
+
+export default PersonForm;
 ```
 
 `markSaved()` makes the saved data the baseline and keeps any edit made while the save ran, see [Making the saved data the baseline](#making-the-saved-data-the-baseline).
@@ -150,6 +152,8 @@ The action's state is a good place for errors the server reports. Return them as
       </Form>
     );
   }
+
+  export default PersonForm;
   ```
 
   Canceling the click while saving keeps the browser's constraint validation from running for a submit the form ignores. Or call `useFormStatus()` in them, and start the submission in a transition, by dispatching a `useActionState` action as above or with `startTransition`. While an async transition runs, React holds every other transition in your app until it settles. `onSubmit` returns no promise then, so the form doesn't ignore a second submit, and the button below cancels its click while pending to stop one, as the one above does. Catch the error inside the transition too: one thrown in a transition the standalone `startTransition` started reaches no Error Boundary and is reported as an uncaught error, and one thrown in a transition `useTransition` started reaches the nearest Error Boundary of the component that called `useTransition`.
@@ -275,6 +279,8 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
     </dialog>
   );
 }
+
+export default EditPersonDialog;
 ```
 
 ### Disabling submit when nothing changed
@@ -318,6 +324,8 @@ function PersonForm({ person }: { person: Person }) {
     />
   );
 }
+
+export default PersonForm;
 ```
 
 ## Touched fields
