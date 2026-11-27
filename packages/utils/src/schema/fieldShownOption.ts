@@ -233,8 +233,8 @@ function definitionTitle<S extends StrictRJSFSchema>(source: S, rootSchema: S): 
  * of the field's own list it was built from is named by its uiSchema entry's title first, see
  * `renderedOptionsUiSchema()`, and each other option by its `title`. Where one of them is named, an untitled one is
  * named by its place in its list, as `TranslatableString.OptionPrefix` gives it. An option built from one, or from
- * options naming no two names, has none, and is labelled as any other option is, as is one whose entry names it where the entries
- * describe the options at their positions, as for a field whose lists sit only in `allOf` entries
+ * options naming no two names, has none, and is labelled as any other option is, as is one whose entry names it where
+ * the entries describe the options at their positions, as for a field whose lists sit only in `allOf` entries
  *
  * @param uiSchema - The field's uiSchema
  * @param view - The field's schema as `retrieveSchema()` handed it out

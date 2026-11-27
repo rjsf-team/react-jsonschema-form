@@ -800,7 +800,9 @@ function holdsCopy(copy: unknown, data: unknown): boolean {
   return Object.is(copy, data);
 }
 
-/** Whether the option `option` stands for is one a merge of lists built, see `sourcesOfOption()` */
+/** Whether the option `option` stands for is one a merge of lists built, see `sourcesOfOption()`. shortcut: a
+ * `customMergeAllOf` records no sources, so its products read as written; upgrade if such a merge's fields need it
+ */
 function builtByMerge<S extends StrictRJSFSchema>(option: OptionNode<S>): boolean {
   if (typeof option === 'boolean') {
     return false;
@@ -973,9 +975,10 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * its properties and type match the data, and the candidate with the best score is returned. A tie among options the
  * data matches goes to the one holding each key its scope requires and declaring the most keys the data holds. A tied
  * `selectedOption` written in the list keeps the tie, and one a merge of lists built, as a `then` list merged with the
- * field's own builds its pairs, keeps it only where it ranks as well. Any other tie goes to the `selectedOption` when it
- * is a candidate and to the first candidate otherwise, so an option that does not match the data is never returned
- * while one does.
+ * field's own builds its pairs, keeps it only where it ranks as well. Under a `customMergeAllOf`, whose merged options
+ * keep no record of what they were built from, every option counts as written. Any other tie goes to the
+ * `selectedOption` when it is a candidate and to the first candidate otherwise, so an option that does not match the
+ * data is never returned while one does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form

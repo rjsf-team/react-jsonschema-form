@@ -116,7 +116,8 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  * own that the options cannot disagree about, nor an edit `transformChange` refuses changes it. Other data, such as
  * `setFieldValue()`'s, a reset, a `transformChange` that rewrites a switch, or an edit to a property of the object's own
  * that they can disagree about, is matched again, with the selection preferred where it fits the data as well as any
- * other option, as `getClosestMatchingOption()` ranks a tie, and so is the data after it until the user switches or makes an edit that holds the option then shown.
+ * other option, as `getClosestMatchingOption()` ranks a tie, and so is the data after it until the user switches or
+ * makes an edit that holds the option then shown.
  * Data holding a value for the declared discriminator is always matched, so an edit to the discriminator switches.
  *
  * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,

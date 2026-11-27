@@ -1077,11 +1077,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * of the part's merged with each of the branch's, see `branchPair()`, where the branch's list would otherwise
    * replace the part's. A pair equal to one already kept is kept too, since the branch's annotations can make pairs
    * built from options differing only in theirs equal, which would leave one of them unoffered. The branch's list
-   * replaces the part's where a `discriminator` couldn't tell two merged options apart, see `sharesDiscriminator()`, since
-   * the field would only ever show the first. A list the plan chose an option of stays as the merge leaves it, since the fold tells the lists
-   * it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list replaces the part's, since that
-   * merge reads its first entry as winning where the branch's annotations win; upgrade if such a field needs both lists
-   * offered
+   * replaces the part's where a `discriminator` couldn't tell two merged options apart, see `sharesDiscriminator()`,
+   * since the field would only ever show the first. A list the plan chose an option of stays as the merge leaves it,
+   * since the fold tells the lists it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list
+   * replaces the part's, since that merge reads its first entry as winning where the branch's annotations win; upgrade
+   * if such a field needs both lists offered
    */
   private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId): Part<S> {
     const merged = mergeBranch(part, branch, 'b', node);
