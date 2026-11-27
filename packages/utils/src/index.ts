@@ -67,6 +67,7 @@ import type { GroupRole } from './getGroupAttributes.ts';
 import getGroupLabelling from './getGroupLabelling.ts';
 import getInheritedOptionUiSchema from './getInheritedOptionUiSchema.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
+import getKeywordParentSchema from './getKeywordParentSchema.ts';
 import getLabelId from './getLabelId.ts';
 import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema, withoutFieldOptions } from './getOptionUiSchema.ts';
@@ -231,6 +232,7 @@ export {
   PATTERN_PROPERTIES_KEY,
   PINNED_TYPE_FLAG,
   PROPERTIES_KEY,
+  REUSES_DEFAULTS_FLAG,
   READONLY_KEY,
   REQUIRED_KEY,
   SUBMIT_BTN_OPTIONS_KEY,
@@ -271,6 +273,8 @@ export {
   getValidationTarget,
   isTupleSchema,
   namesEveryType,
+  renderedOptionTitles,
+  renderedOptionsUiSchema,
 } from './schema/index.ts';
 /** @public The validator-based API that `createSchemaUtils()` binds, which consumers call directly with a validator */
 export {
@@ -396,6 +400,7 @@ export {
   getInheritedOptionUiSchema,
   getItemUiSchemaForItem,
   getItemsUiSchemaKey,
+  getKeywordParentSchema,
   getLabelId,
   getMatchingPatternProperties,
   getOptionalDataControlsType,

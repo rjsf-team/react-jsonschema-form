@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { FormRef } from '../src/index.ts';
 import Form from '../src/index.ts';
-import { handleOf } from './testUtils.tsx';
+import { handleOf, input } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -31,6 +31,25 @@ vi.mock(import('../../utils/src/schema/getDefaultFormState.ts'), async (importOr
     ) => {
       fieldFills.count += 1;
       return actual.fieldFillOf(context, schema, rootSchema, fill);
+    },
+  };
+});
+
+// Counted, so a test can count the rows the sanitize hands a fill to judge
+const childFills = vi.hoisted(() => ({ count: 0 }));
+vi.mock(import('../../utils/src/schema/getFilledDefault.ts'), async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    childFillOf: <S extends StrictRJSFSchema, F extends FormContextType>(
+      context: SchemaContext<S, F>,
+      schema: S,
+      rootSchema: S,
+      fill: FieldFill,
+      key: string | number,
+    ) => {
+      childFills.count += 1;
+      return actual.childFillOf(context, schema, rootSchema, fill, key);
     },
   };
 });
@@ -159,5 +178,45 @@ describe('the fills the sanitize of a deep form makes', () => {
     await user.selectOptions(container.querySelector('select')!, 'T');
 
     expect(formFills.count).toBeLessThanOrEqual(3);
+  });
+
+  it('hands a fill to the rows of a long list no more often for a longer one, as the user types into a row (#3183)', async () => {
+    const rows: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+    const fillsForAKeystrokeIn = async (length: number) => {
+      const initialFormData = Array.from({ length }, (_, index) => ({ a: `item ${index}` }));
+      const { container, unmount } = render(
+        <Form schema={rows} validator={validator} initialFormData={initialFormData} />,
+      );
+      childFills.count = 0;
+      await user.type(input(container, 'root_1_a'), 'x');
+      unmount();
+      return childFills.count;
+    };
+
+    const fillsInAShortList = await fillsForAKeystrokeIn(4);
+    // The edited row is still handed its fills, so the count is of fills the sanitize made
+    expect(fillsInAShortList).toBeGreaterThan(0);
+    expect(await fillsForAKeystrokeIn(40)).toBe(fillsInAShortList);
+  });
+
+  it('hands a fill to the keys of a wide object no more often for a wider one, as the user types into a key (#3183)', async () => {
+    const fillsForAKeystrokeIn = async (width: number) => {
+      const properties: Record<string, RJSFSchema> = {};
+      for (let index = 0; index < width; index += 1) {
+        properties[`k${index}`] = { type: 'string' };
+      }
+      const initialFormData = Object.fromEntries(Object.keys(properties).map((key) => [key, key]));
+      const { container, unmount } = render(
+        <Form schema={{ type: 'object', properties }} validator={validator} initialFormData={initialFormData} />,
+      );
+      childFills.count = 0;
+      await user.type(input(container, 'root_k1'), 'x');
+      unmount();
+      return childFills.count;
+    };
+
+    const narrow = await fillsForAKeystrokeIn(4);
+    expect(narrow).toBeGreaterThan(0);
+    expect(await fillsForAKeystrokeIn(40)).toBe(narrow);
   });
 });

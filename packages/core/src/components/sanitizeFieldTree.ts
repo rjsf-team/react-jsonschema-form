@@ -25,7 +25,6 @@ import {
   getDiscriminatorFieldFromSchema,
   getItemSchema,
   getItemsUiSchemaKey,
-  getOptionUiSchema,
   getPrefixLength,
   getRenderedOptionSchema,
   getSchemaType,
@@ -49,9 +48,11 @@ import {
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   REF_KEY,
+  renderedOptionsUiSchema,
   rendersOwnFieldBesideOption,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
+  selectOptionUiSchema,
   setOwn,
   toConstant,
   UI_DEFINITIONS_KEY,
@@ -731,9 +732,12 @@ interface FieldPair<S> {
   newRaw: S;
   oldValue: unknown;
   newValue: unknown;
-  /** What the defaults hand the field on each side, see `FieldFill`, which they fill it and its children by */
-  oldFill: FieldFill;
-  newFill: FieldFill;
+  /** What the defaults hand the field on each side, see `FieldFill`, which they fill it and its children by. A caller
+   * may make them, and `oldUiSchema`, getters: a field `walk()` finds unchanged never reads them, which spares each
+   * unchanged child of a long list or a wide object making them (#3183)
+   */
+  readonly oldFill: FieldFill;
+  readonly newFill: FieldFill;
   /** Whether the two fills are known to hand the field the same without filling anything: the root's, and those of
    * the children of a field whose own fills match and whose fills read it alike, see `fillsMatch()`
    */
@@ -752,7 +756,7 @@ interface FieldPair<S> {
   /** The options the fields above this one showed in the previous tree */
   shownAbove?: ShownAbove;
   /** The uiSchema the previous tree renders `oldValue` with, where no other can, see `soleUiSchemaOf()` */
-  oldUiSchema?: GenericObjectType;
+  readonly oldUiSchema?: GenericObjectType;
 }
 
 /** The options the previous tree showed, as a fill of the previous data reads them: the one the diff laid out the
@@ -1003,25 +1007,46 @@ function declaresDefault<S extends StrictRJSFSchema>(layers: readonly S[]): bool
 /** Whether the defaults hand the field of `pair` the same on both sides, filling what `FieldPair.fillsAlike` can't
  * tell
  */
-function fillsMatch<S>({ oldFill, newFill, fillsAlike }: FieldPair<S>): boolean {
+function fillsMatch<S>(pair: FieldPair<S>): boolean {
+  if (pair.fillsAlike()) {
+    return true;
+  }
+  // Read only now, as the fills may be getters, see `FieldPair.oldFill`
+  const { oldFill, newFill } = pair;
   return (
-    fillsAlike() ||
-    (oldFill.isRequired === newFill.isRequired &&
-      oldFill.isParentRequired === newFill.isParentRequired &&
-      deepEquals(oldFill.inheritedDefault, newFill.inheritedDefault) &&
-      deepEquals(oldFill.inheritedConst, newFill.inheritedConst))
+    oldFill.isRequired === newFill.isRequired &&
+    oldFill.isParentRequired === newFill.isParentRequired &&
+    deepEquals(oldFill.inheritedDefault, newFill.inheritedDefault) &&
+    deepEquals(oldFill.inheritedConst, newFill.inheritedConst)
   );
 }
 
+/** Whether nothing the subtree of a field is built from differs, so neither does the subtree: its schema, its value
+ * and, as `fillsAgree` says, what the defaults hand it. Asked before a child's pair is built, as well as by `walk()`,
+ * so an unchanged child of a long list or a wide object costs no pair (#3183)
+ */
+function isUnchanged<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  edited: boolean,
+  oldRaw: unknown,
+  newRaw: unknown,
+  oldValue: unknown,
+  newValue: unknown,
+  fillsAgree: () => boolean,
+): boolean {
+  return !edited && !ctx.isDefaultsChanged && oldRaw === newRaw && oldValue === newValue && fillsAgree();
+}
+
 /** The innermost of `layers` with the keywords its default is cut down by read from them all, as the fill reads the
- * field: each layer's `properties` and `required`, and the innermost `type` and `additionalProperties` declared
+ * field: each layer's `properties` and `required`, and the innermost `type` and extra-key keywords declared
+ * (`additionalProperties`, `patternProperties`, `unevaluatedProperties`), which describe the keys it takes beside them
  */
 function fieldSchemaOf<S extends StrictRJSFSchema>(layers: readonly S[]): S {
   if (layers.length === 1) {
     return layers[0];
   }
   const field: S = { ...layers[layers.length - 1] };
-  for (const keyword of ['type', 'additionalProperties']) {
+  for (const keyword of ['type', ADDITIONAL_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
     const value = keywordOf(layers, keyword);
     if (value !== undefined) {
       setOwn(field, keyword, value);
@@ -1056,21 +1081,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   pair: FieldPair<S>,
   path: FieldPathList,
 ): unknown {
-  const {
-    oldRaw,
-    newRaw,
-    oldValue,
-    newValue,
-    oldFill,
-    newFill,
-    isItem,
-    hasOld,
-    oldRetrieved,
-    newRetrieved,
-    oldPath,
-    shownAbove,
-    oldUiSchema,
-  } = pair;
+  const { oldRaw, newRaw, oldValue, newValue, isItem, hasOld, oldRetrieved, newRetrieved, oldPath, shownAbove } = pair;
   const { judgedClears } = ctx;
   // Only the keys holding `undefined` and the recorded clears are judged, so a subtree holding neither keeps every value
   if (judgedClears && !judgedClears.along.has(fieldPathFromList(path))) {
@@ -1083,10 +1094,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (oldRaw === undefined || (isClear ? edited : !hasOld)) {
     return newValue;
   }
-  // Nothing a field's subtree is built from differs, so neither does the subtree
-  if (!edited && !ctx.isDefaultsChanged && oldRaw === newRaw && oldValue === newValue && fillsMatch(pair)) {
+  if (isUnchanged(ctx, edited, oldRaw, newRaw, oldValue, newValue, () => fillsMatch(pair))) {
     return newValue;
   }
+  const { oldFill, newFill, oldUiSchema } = pair;
   // The old side shows the options the new side shows from the same lists: which option the data is shown under is
   // the selection's, or the match's, so a matching change changes no field's constraints. The keys a switch put back
   // are the exception: they are laid out on the old side under the option switched away from, and below them as the
@@ -1209,8 +1220,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       | undefined;
     if (isSwitched && switchedFrom.heldKeys.size > 0) {
       // The option switched to renders the keys with its own entry of the switched field's uiSchema option list where
-      // that list holds one, and with the field's uiSchema otherwise, as `getOptionUiSchema()` picks it, so a key is
-      // filled out anew under the uiSchema that option renders it with
+      // that list holds one, as `renderedOptionsUiSchema()` orders the list, and with the field's uiSchema otherwise, so
+      // a key is filled out anew under the uiSchema that option renders it with
       const newOptions = retrievedOptionsOf<T, S, F>(ctx.schemaUtils, newLayers[0], asFieldValue<T>(newValue));
       const newIndex = newOptions
         ? shown.get(optionListKey<S>(newOptions, ctx.schemaUtils.getRootSchema()))
@@ -1225,7 +1236,13 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       ).filter((uiSchema): uiSchema is GenericObjectType => isObject(uiSchema));
       const switchedTo = ownUiSchemas.flatMap((uiSchema) => {
         const optionUiSchema =
-          xxxOfKey && newIndex !== undefined ? getOptionUiSchema(uiSchema, xxxOfKey, newIndex) : uiSchema;
+          xxxOfKey && newIndex !== undefined
+            ? selectOptionUiSchema(
+                renderedOptionsUiSchema(uiSchema, newLayers[0], ctx.schemaUtils.getRootSchema()),
+                uiSchema,
+                newIndex,
+              )
+            : uiSchema;
         return optionUiSchema === uiSchema ? [uiSchema] : withOptionUiSchemas([optionUiSchema]);
       });
       // The form as it was before the switch: its selections, with the option switched away from at the switched field,
@@ -1304,33 +1321,42 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (newSchema !== undefined) {
         const previousKey = from ? key : previousKeyOf(key);
         const previousValue = valueAt(oldValue, previousKey);
-        next = walk(
-          from?.ctx ?? ctx,
-          {
-            oldRaw: oldSchema,
-            newRaw: newSchema,
-            oldValue: previousValue,
-            newValue: newValue[key],
-            oldFill: ctx.oldSchemaUtils.childFillOf(from ? from.fillSchema : oldFillSchema, oldFill, key),
-            newFill: ctx.schemaUtils.childFillOf(newFillSchema, newFill, key),
-            fillsAlike: from ? () => false : fillsAlikeBelow,
-            isItem: false,
-            hasOld: previousValue !== undefined,
-            oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
-            shownAbove: from ? from.shownHere : shownHere,
-            // An extra key renders with the `additionalProperties` uiSchema, whatever entry its name has
-            oldUiSchema:
-              previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
-                ? undefined
-                : soleUiSchemaOf(
-                    ctx,
-                    (from ? from.optionUiSchema : oldOptionUiSchema) ?? oldUiSchema,
-                    oldChild,
-                    (uiSchema) => uiSchema[previousKey],
-                  ),
-          },
-          childPath,
-        );
+        const fillsAlike = from ? () => false : fillsAlikeBelow;
+        const isChildEdited = edited && isEdited(ctx, childPath);
+        if (!isUnchanged(ctx, isChildEdited, oldSchema, newSchema, previousValue, newValue[key], fillsAlike)) {
+          next = walk(
+            from?.ctx ?? ctx,
+            {
+              oldRaw: oldSchema,
+              newRaw: newSchema,
+              oldValue: previousValue,
+              newValue: newValue[key],
+              get oldFill() {
+                return ctx.oldSchemaUtils.childFillOf(from ? from.fillSchema : oldFillSchema, oldFill, key);
+              },
+              get newFill() {
+                return ctx.schemaUtils.childFillOf(newFillSchema, newFill, key);
+              },
+              fillsAlike,
+              isItem: false,
+              hasOld: previousValue !== undefined,
+              oldPath: oldPath && previousKey !== undefined ? [...oldPath, previousKey] : undefined,
+              shownAbove: from ? from.shownHere : shownHere,
+              // An extra key renders with the `additionalProperties` uiSchema, whatever entry its name has
+              get oldUiSchema() {
+                return previousKey === undefined || hasSchemaMarker(oldChild, ADDITIONAL_PROPERTY_FLAG)
+                  ? undefined
+                  : soleUiSchemaOf(
+                      ctx,
+                      (from ? from.optionUiSchema : oldOptionUiSchema) ?? oldUiSchema,
+                      oldChild,
+                      (uiSchema) => uiSchema[previousKey],
+                    );
+              },
+            },
+            childPath,
+          );
+        }
       } else if (
         newChild === undefined &&
         !isEdited(ctx, childPath) &&
@@ -1405,6 +1431,20 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
       // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
       // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
+      const oldItemValue = hasPrevious ? valueAt(oldValue, previousIndex) : item;
+      if (
+        isUnchanged(
+          ctx,
+          edited && isEdited(ctx, [...path, index]),
+          oldItem,
+          newItem,
+          oldItemValue,
+          item,
+          fillsAlikeBelow,
+        )
+      ) {
+        return item;
+      }
       const itemMovesBefore = ctx.itemMoves.length;
       const judged = walk(
         ctx,
@@ -1413,12 +1453,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           // `sanitizeDataForNewSchema()` judges it
           oldRaw: typeof oldItem === 'boolean' ? (UNCONSTRAINED as S) : oldItem,
           newRaw: newItem,
-          oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
+          oldValue: oldItemValue,
           newValue: item,
           // An item inherits its array's default at its index. One a remove or move pairs with the index it held
           // before reads the default there on both sides, so a move by itself changes no item's default
-          oldFill: isMultiSelect() ? UNHANDED : ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, fillIndex),
-          newFill: isMultiSelect() ? UNHANDED : ctx.schemaUtils.childFillOf(newFillSchema, newFill, fillIndex),
+          get oldFill() {
+            return isMultiSelect() ? UNHANDED : ctx.oldSchemaUtils.childFillOf(oldFillSchema, oldFill, fillIndex);
+          },
+          get newFill() {
+            return isMultiSelect() ? UNHANDED : ctx.schemaUtils.childFillOf(newFillSchema, newFill, fillIndex);
+          },
           fillsAlike: fillsAlikeBelow,
           isItem: true,
           hasOld: Array.isArray(oldValue),
@@ -1426,14 +1470,16 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           shownAbove: shownHere,
           // An item renders with the uiSchema key mirroring the keyword describing it, as `ArrayField` reads it, and a
           // function `items` is no entry to read
-          oldUiSchema: hasPrevious
-            ? soleUiSchemaOf(ctx, oldUiSchema, oldItem, (uiSchema) => {
-                const at = Number(previousIndex);
-                const key = oldItemsLayer ? getItemsUiSchemaKey<S>(oldItemsLayer, at) : ITEMS_KEY;
-                const entry: unknown = uiSchema[key];
-                return key !== 'additionalItems' && Array.isArray(entry) ? entry[at] : entry;
-              })
-            : undefined,
+          get oldUiSchema() {
+            return hasPrevious
+              ? soleUiSchemaOf(ctx, oldUiSchema, oldItem, (uiSchema) => {
+                  const at = Number(previousIndex);
+                  const key = oldItemsLayer ? getItemsUiSchemaKey<S>(oldItemsLayer, at) : ITEMS_KEY;
+                  const entry: unknown = uiSchema[key];
+                  return key !== 'additionalItems' && Array.isArray(entry) ? entry[at] : entry;
+                })
+              : undefined;
+          },
         },
         [...path, index],
       );
@@ -1555,9 +1601,9 @@ function soleUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType
 }
 
 /** Where `uiSchema`, the one the field with `layers` renders with, offers `anyOf`/`oneOf` ones, the one its shown
- * option renders every key of the field with, as `getOptionUiSchema()` picks it, so the field's own entry for a key is
- * never read, whether the field or the option declares it. shortcut: only one option level is read, since `shown` keys
- * inline lists alike; upgrade once the layers carry the option each one shows
+ * option renders every key of the field with, as `renderedOptionsUiSchema()` orders the list, so the field's own entry
+ * for a key is never read, whether the field or the option declares it. shortcut: only one option level is read, since
+ * `shown` keys inline lists alike; upgrade once the layers carry the option each one shows
  */
 function shownOptionUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
@@ -1577,7 +1623,11 @@ function shownOptionUiSchemaOf<T, S extends StrictRJSFSchema, F extends FormCont
   }
   // An option the list holds no entry for renders with the field's uiSchema, whose list it doesn't read, and one whose
   // entry is no uiSchema renders with none
-  const optionUiSchema = withoutFieldOptions(getOptionUiSchema(uiSchema, keyword, index), uiSchema, keyword);
+  const optionUiSchema = withoutFieldOptions(
+    selectOptionUiSchema(renderedOptionsUiSchema(uiSchema, layers[0], schemaUtils.getRootSchema()), uiSchema, index),
+    uiSchema,
+    keyword,
+  );
   return isObject(optionUiSchema) ? optionUiSchema : {};
 }
 

@@ -251,7 +251,7 @@ Which schema that is depends on what the form is doing:
 
 - When the form computes defaults from the root schema, a root-level `allOf` provides its defaults with either value.
 - Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value. When switching options, the `if` of an `if-then-else` in the new option's `allOf` is checked against the data of the option being left with the new option's defaults filled in, so its `then` default is filled in when that data, or a default of the new option for a value the data lacks, matches the `if`.
-- The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back. The same goes for an option offered by an `allOf` in an object property or in an array's `items`: that `allOf` is skipped as a whole on the initial render, so the option starts without its defaults, a `ui:initialValue` included, and switching to it fills them in, as an array item added after the initial render has them. Only the `const`s of the option the field shows are taken, the option's own and, for a field whose own `type` is `object`, those of the keys it declares: a field holding no data starts with them, as it does when the field offers the `oneOf` or `anyOf` itself, except for a key the field also declares in its own `properties`, which keeps what its own declaration gives it, and a key that merging the field with the option as a member of its `allOf` leaves out, such as one the field's `additionalProperties: false` forbids, which is left out, as it is for an `allOf` declaring that key itself. A field offering constants of its own, as a select does, reads only its own list, so it can start from a constant that a `oneOf` or `anyOf` its `allOf` offers beside it rejects, where `populateDefaults` merges the two. A `const` that a `dependencies` entry in the skipped `allOf` brings in is not taken either, whether the `allOf` holds the entry itself or the option the field shows does, even once the data triggers it.
+- The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back. The same goes for an option offered by an `allOf` in an object property or in an array's `items`: that `allOf` is skipped as a whole on the initial render, so the option starts without its defaults, a `ui:initialValue` included, and switching to it fills them in, as an array item added after the initial render has them. Only the `const`s of the option the field shows are taken, the option's own and, for a field whose own `type` is `object`, those of the keys it declares: a field holding no data starts with them, as it does when the field offers the `oneOf` or `anyOf` itself, except for a key the field also declares in its own `properties`, which keeps what its own declaration gives it, and a key that merging the field with the option as a member of its `allOf` leaves out, such as one the field's `additionalProperties: false` forbids, which is left out, as it is for an `allOf` declaring that key itself. A key of the field's `default` that only that option declares is kept, as one the `allOf` declares itself is, while the option's own `default`s stay skipped. A field offering constants of its own, as a select does, reads only its own list, so it can start from a constant that a `oneOf` or `anyOf` its `allOf` offers beside it rejects, where `populateDefaults` merges the two. A `const` that a `dependencies` entry in the skipped `allOf` brings in is not taken either, whether the `allOf` holds the entry itself or the option the field shows does, even once the data triggers it.
 
 The branch of an `if-then-else` is picked from the form data with the computed defaults filled in, so a default decides the `if` as the same value in the form data does, and a value the form data holds wins over the default:
 
@@ -565,6 +565,8 @@ Any other value passed after mount, such as a record that loads or the next reco
 
 Only `undefined` means "not passed": a render that passes none leaves the form the data it has, which it owns until a render passes `formData` again. In development the form warns once when it changes between the two, with the ID `form-data-ownership-changed`: pass `formData` on every render, rendering the form once the data has loaded, or pass `initialFormData` alone. `null` shows the schema's defaults the way `undefined` does. `false`, `0` and `''` are values. When both this and `initialFormData` are passed, the form takes `formData`, and in development warns once that `initialFormData` is ignored.
 
+The data must not hold a reference to itself, such as an object with a key that points back at it, which JSON can't express either. The form hands the validator a JSON copy of the data and walks it to fill the defaults and work out [`dirtyFields`](#onchange), so validating such data throws, and a walk can overflow the stack. The same goes for [`initialFormData`](#initialformdata).
+
 ## globalUiOptionsKeys
 
 The keys of the extensions to [`ui:globalOptions`](uiSchema.md#uiglobaloptions) that your own widgets, fields and templates read, beyond the ones RJSF reads there.
@@ -637,6 +639,8 @@ id="root_first">` when rendering `first`.
 The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, unless an earlier `reset(saved)` passed data of its own, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, the form shows [`formData`](#formdata) and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call [`reset(data)`](../usage/submitting.md#making-the-saved-data-the-baseline) on its ref, which makes it the baseline too, so the form reads clean. `setFieldValue('', data)` applies it as an edit instead, so the form reads dirty.
 
 The form's data shares its unchanged parts with the object you pass, so don't mutate that object afterwards; change a copy. In development the form freezes it from its first edit, validation, submit or reset on, so a mutation throws.
+
+Like [`formData`](#formdata), it must not hold a reference to itself.
 
 ## nameGenerator
 
@@ -733,8 +737,6 @@ If set to true, turns off HTML5 validation on the form. Set to `false` by defaul
 ## noValidate
 
 If set to true, turns off all validation. Set to `false` by default.
-
-> NOTE: In a future major release, this flag may be replaced by making `validator` prop optional
 
 ## omitExtraData
 
@@ -1037,7 +1039,7 @@ Set to false by default.
 ## validator
 
 **Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work.
-`@rjsf/validator-ajv8` exports the implementation of this interface from RJSF version 4.
+`@rjsf/validator-ajv8` exports an implementation of this interface.
 
 ## widgets
 

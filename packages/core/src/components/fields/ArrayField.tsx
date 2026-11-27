@@ -706,7 +706,6 @@ function ArrayFieldItemInner<
   onBlur: FieldProps<T[], S, F>['onBlur'];
   onFocus: FieldProps<T[], S, F>['onFocus'];
   onChange: FieldProps<T[], S, F>['onChange'];
-  totalItems: number;
   handleAddItem: (event: ArrayButtonEvent, index?: number) => void;
   handleCopyItem: (event: ArrayButtonEvent, index: number) => void;
   handleRemoveItem: (event: ArrayButtonEvent, index: number) => void;
@@ -737,7 +736,6 @@ function ArrayFieldItemInner<
     onBlur,
     onFocus,
     onChange,
-    totalItems,
     title,
     itemName,
     handleAddItem,
@@ -893,7 +891,6 @@ function ArrayFieldItemInner<
       hasMoveDown: has.moveDown,
       hasRemove: has.remove,
       index,
-      totalItems,
       onAddItem,
       onCopyItem,
       onRemoveItem,
@@ -909,7 +906,6 @@ function ArrayFieldItemInner<
     disabled: lockedDisabled,
     hasToolbar: has.toolbar,
     index,
-    totalItems,
     readonly: lockedReadonly,
     registry,
     schema: itemSchema,
@@ -1033,7 +1029,6 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         autofocus: autofocus && index === 0,
         onBlur,
         onFocus,
-        totalItems: keyedFormData.length,
         handleAddItem,
         handleCopyItem,
         handleRemoveItem,
@@ -1171,7 +1166,6 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         autofocus: autofocus && index === 0,
         onBlur,
         onFocus,
-        totalItems: keyedFormData.length,
         onChange,
         handleAddItem,
         handleCopyItem,

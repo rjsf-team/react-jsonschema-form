@@ -1,6 +1,6 @@
 # RJSF utility functions, constants and types
 
-In version 5, the utility functions from `@rjsf/core/utils` were refactored into their own library called `@rjsf/utils`.
+The utility functions live in their own library called `@rjsf/utils`.
 These utility functions are separated into two distinct groups.
 The first, larger, group are the [functions](#non-validator-utility-functions) that do NOT require a `ValidatorType` interface be provided as one of their parameters.
 The second, smaller, group are the [functions](#validator-based-utility-functions) that DO require a `ValidatorType` interface, which they receive as part of a `SchemaContext`.
@@ -16,11 +16,12 @@ There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defin
 `RJSF_PROVENANCE_KEY` is the Symbol `retrieveSchema()` adds to every subschema it hands out, recording where the subschema came from. Only `retrieveSchema()` writes or reads what it holds. It is exported so that a test can strip it, as RJSF's own test setup does, and compare a retrieved schema with the same schema written by hand.
 `UNEVALUATED_PROPERTIES_KEY` is the `unevaluatedProperties` keyword, which an object naming no `additionalProperties` is read through in its place.
 `EXTRA_KEY_OPTION_KEY` is the Symbol `retrieveSchema()` sets on the stub of an extra key that only the selected `anyOf`/`oneOf` option's extra-key keywords describe, the object offering it declaring none: that option, as `anyOf[1]`, which `@rjsf/core`'s warnings name the key's schema after.
+`REUSES_DEFAULTS_FLAG` is the Symbol `Form` sets to `true` on the `SchemaContext` it builds, and counts only when set to `true`. Under it, `getDefaultFormState()` takes a snapshot of each array and object of the data and reuses the defaults it computed for one an earlier call saw unchanged, which makes a call with the state it returned and one edit cost the edited part alone. An array or object holding anything but arrays, plain objects, `Date`s and primitives, such as a `Map` or a class instance, or holding itself, gets no snapshot, so its defaults are computed on every call. Leave it off for a call that can't reuse anything, such as one that computes the defaults once, since the snapshots cost about a fifth more there.
 `UI_DEFINITION_ORIGIN_KEY` is the Symbol `resolveUiSchema()` sets, as a property that isn't enumerable, on a uiSchema entry it merged a `ui:definitions` entry under: `{ ref, local, definition }`, the definition's key, the entry as the uiSchema gave it and the definition, so a warning about one key names whichever of the two holds it.
 `WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
-The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PINNED_TYPE_FLAG`, `PROPERTIES_KEY`, `READONLY_KEY`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12`, `JSON_SCHEMA_TYPES`, `EXTRA_KEY_OPTION_KEY` and `UI_DEFINITION_ORIGIN_KEY`; that file also holds keys only RJSF's own code reads.
+The constants it exports from `constants.ts` are `ADDITIONAL_PROPERTY_FLAG`, `ADDITIONAL_PROPERTIES_KEY`, `ALL_OF_KEY`, `ANY_OF_KEY`, `CONST_KEY`, `DEFAULT_KEY`, `ELSE_KEY`, `ERRORS_KEY`, `GUESSED_TYPE_FLAG`, `ID_KEY`, `ITEMS_KEY`, `ONE_OF_KEY`, `PATTERN_PROPERTIES_KEY`, `PINNED_TYPE_FLAG`, `PROPERTIES_KEY`, `READONLY_KEY`, `REUSES_DEFAULTS_FLAG`, `REQUIRED_KEY`, `SUBMIT_BTN_OPTIONS_KEY`, `REF_KEY`, `THEN_KEY`, `UNEVALUATED_PROPERTIES_KEY`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY`, `SCHEMA_KEY`, `DEFAULT_ID_PREFIX`, `DEFAULT_ID_SEPARATOR`, `LOOKUP_MAP_NAME`, `RJSF_ADDITIONAL_PROPERTIES_FLAG`, `ROOT_SCHEMA_PREFIX`, `UI_FIELD_KEY`, `UI_WIDGET_KEY`, `UI_OPTIONS_KEY`, `UI_GLOBAL_OPTIONS_KEY`, `UI_DEFINITIONS_KEY`, `JSON_SCHEMA_DRAFT_2019_09`, `JSON_SCHEMA_DRAFT_2020_12`, `JSON_SCHEMA_TYPES`, `EXTRA_KEY_OPTION_KEY` and `UI_DEFINITION_ORIGIN_KEY`; that file also holds keys only RJSF's own code reads.
 
 ## Types
 
@@ -33,7 +34,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`FieldPath`** — The identity of a field in a form: a canonical string path such as `friends[0].firstName`, with the root form as the empty string (`ROOT_FIELD_PATH`). Property names are separated by `.`, array indexes are bracketed, and `\ . [ ]` inside a property name are backslash-escaped, so the grammar is unambiguous even when property names contain dots or brackets. It is a branded `string`, so a plain string (such as a DOM id) cannot be passed where a `FieldPath` is expected; build one with [toFieldPath()](#tofieldpath) and derive the HTML id, HTML name or segment list from it with [fieldPathToId()](#fieldpathtoid), [fieldPathToName()](#fieldpathtoname) and [fieldPathToList()](#fieldpathtolist).
 
-**`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf`, `defaultFormStateBehavior`, `additionalPropertiesWhenAbsent` and `widgets`, the form's registered widgets, as a widget registered under a built-in alias keeps a `type` list on the type it resolves to (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof), [defaultFormStateBehavior](./form-props.md#defaultformstatebehavior) and [additionalPropertiesWhenAbsent](./form-props.md#additionalpropertieswhenabsent) props). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
+**`SchemaContext`** — The settings every [validator-based utility function](#validator-based-utility-functions) resolves schemas with: the `validator`, and the optional `customMergeAllOf`, `defaultFormStateBehavior`, `additionalPropertiesWhenAbsent` and `widgets`, the form's registered widgets, as a widget registered under a built-in alias keeps a `type` list on the type it resolves to (see the `Form` documentation for the [customMergeAllOf](./form-props.md#custommergeallof), [defaultFormStateBehavior](./form-props.md#defaultformstatebehavior) and [additionalPropertiesWhenAbsent](./form-props.md#additionalpropertieswhenabsent) props), and `REUSES_DEFAULTS_FLAG`, which `Form` sets (see [the constants](#constants)). Each of those functions takes it as its first parameter and passes it along whole to every schema function it calls.
 
 **`FieldFill`** — What the defaults hand a field, which [`getFilledDefault()`](#getfilleddefaults-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) and `constrainsAlike()` fill it by: `inheritedDefault`, the default the field holding it hands it; `inheritedConst`, the value an ancestor's `const` gives it, which wins over the field's own `default`; `isRequired`, whether it is required where it sits, a property its object lists in `required`, left out where that object lists none, or an item whose array is required; `isParentRequired`, for a property, whether the object holding it is required itself; and `isProperty`, whether it is a property, whose default is written only where `emptyObjectFields` lets it be. `{}` is the root's. A field's children get theirs from [`childFillOf()`](#childfillofs-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype), which reads what the field's own fill hands each only once something asks. A fill can be reused under another `SchemaContext` or root schema, which fills it anew, though a child's `inheritedDefault` and `inheritedConst` stay those of the fill `childFillOf()` read them from.
 
@@ -1501,6 +1502,26 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
 
+### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
+The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
+Either way a next key such as `properties` or `items`, which merging joins with its target's, is read from the two merged, unless the merge fails, or, after a `$ref` key or, without `skipsRefs`, at a key the `$ref` schema holds itself, unless the path goes on through a key merging doesn't join, such as an `allOf`, other than a further `$ref`; a merged read after a chain of `$ref` keys starts from the first, for the titles of every schema along it.
+Where the merge fails, there or further along the chain of `$ref`s, and leaves the `allOf` of the two, a next key the `$ref` schema doesn't hold itself is read from its target.
+A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's, unless the merge fails, there or further along the chain, which leaves the schema as written.
+With `skipsRefs` set, below a `$ref` read merged, a list keyword both schemas hold, such as an `allOf` inside a property both declare, indexes the merged list, so the entry it reads can be the other schema's.
+
+#### Parameters
+
+- rootSchema: S - The form's root schema
+- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
+- [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+- [skipsRefs=false]: boolean - The engine leaves every `$ref` out of the path, as `@rjsf/validator-ata` does, so a key after a `$ref` schema can index either that schema or its target
+
+#### Returns
+
+- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, since the path can index either one's, unless merging combines the two: the key is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, or an `items`, `prefixItems` or `additionalItems`, which merging joins as a whole schema or position by position, with no key merging doesn't join, such as an `allOf`, further along the path (a key further down is read from the merge); or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object, such as the `properties` map holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 
 Gets the id of a field's label, for a widget or template that draws it or names a control by it: the id the field's plan gives the label, whoever draws it, which is `${id}__optionLabel`, numbered `__optionLabel2` and so on further down, beneath a label a field above draws under `fieldLabelId(id)`, or [fieldLabelId()](#fieldlabelid) for one rendered without a plan.
@@ -2902,6 +2923,43 @@ Returns the values of the stars a rating widget draws: one for each whole number
 
 - number[]: The value of each star to draw, in order
 
+### renderedOptionTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns, for each option a field renders, the title of an option built by merging lists, as `MultiSchemaField` and `LayoutMultiSchemaField` label it.
+An option built by merging the field's own list with one an `allOf` entry, `then` or `else` holds is titled after each option it was built from, in the order they were merged, the names joined pairwise with `TranslatableString.MergedOptionTitle`: the field's own option by the `ui:title` of its `uiSchema.anyOf`/`uiSchema.oneOf` entry, merged with the `ui:definitions` entry its `$ref` names, or else its `title`, and each other option by its `title`, an option written as a `$ref` taking its definition's `title` where none is written beside it.
+Where one of them is named, an untitled one is named by its place in its list with `TranslatableString.OptionPrefix`, as "A, Option 2".
+An option built from a single option, or from options with no two different names, has no title and is labelled as any other option is.
+So is one whose entry has a `ui:title` where the field has no list of its own, as when its lists sit only in `allOf` entries, since the entries then describe the options at their positions.
+
+#### Parameters
+
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema
+- view: S - The field's schema as `retrieveSchema()` handed it out
+- rootSchema: S - The root schema
+- translateString: Registry&lt;T, S, F>['translateString'] - The registry's string translator
+- [uiSchemaDefinitions]: Registry&lt;T, S, F>['uiSchemaDefinitions'] - The registry's `ui:definitions`, whose entry for an option of the field's own list written as a `$ref` titles it where its `uiSchema` entry gives no `ui:title`
+
+#### Returns
+
+- (string | undefined)[] | undefined: The title of each option, or `undefined` where the field offers no options
+
+### renderedOptionsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the `uiSchema.anyOf`/`uiSchema.oneOf` entries of a field in the order of the options it renders, to look an option's entry up by its position among them with `selectOptionUiSchema()`.
+An entry describes the option at its index in the field's list as written.
+Where an `allOf` entry, or a `then` or `else`, holds a list beside the field's own, each option the field renders is one of its own options merged with one of the other list's, and it reads the entry of the option of its own list it was built from.
+The entries come back as they stand where the field declares no list of its own, as one whose lists sit only in `allOf` entries, or under a `customMergeAllOf`, whose merged options keep no record of what they were built from; each option then reads the entry at its own position.
+
+#### Parameters
+
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema
+- view: S - The field's schema as `retrieveSchema()` handed it out
+- rootSchema: S - The root schema
+
+#### Returns
+
+- UiSchema&lt;T, S, F>[] | undefined: The entries in the order of the options the field renders, or `undefined` where `uiSchema` lists none
+
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
@@ -3781,7 +3839,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 Determines which of the given `options` provided most closely matches the `formData`.
 An option whose discriminator property's `const` or `enum` holds the data's value wins outright; otherwise the one option the data matches is returned when exactly one does.
 Otherwise the options the data matches, or all of them when it matches none, are the candidates, and the one scoring best is returned.
-A tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
+A tie among options the data matches goes to the one holding each key its scope requires and declaring the most keys the data holds. A tied `selectedOption` written in the list keeps the tie, and one a merge of lists built, as a `then` list merged with the field's own builds its pairs or a `customMergeAllOf` merges two or more lists an `allOf` brings together, keeps it only where it ranks as well. Any other tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
 
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.

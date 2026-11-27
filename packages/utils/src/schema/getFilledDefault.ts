@@ -227,6 +227,7 @@ function writtenOf(fill: FieldFill): Written | typeof UNREAD {
     // `allOf: 'populateDefaults'`
     const isLeftOut =
       typeof key === 'string' &&
+      !isExtraKey &&
       isObject(childSchema) &&
       !(ALL_OF_KEY in childSchema) &&
       !(REF_KEY in childSchema) &&

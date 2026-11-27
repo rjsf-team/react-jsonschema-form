@@ -404,7 +404,7 @@ export default function omitExtraData<
       // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
       // that is then applied with it, to omit them
       const discriminator = getDiscriminatorFieldFromSchema<S>(childSchema);
-      winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, 0, true, discriminator)];
+      winning = oneOf[closestOption<S, F>(context, rootSchema, source, oneOf, -1, true, discriminator)];
     }
     // An index naming no option, as -1 does for none shown, keeps nothing the options describe, as a `false` option does.
     // The field renders the option retrieved for its data, its `allOf`, `if`/`then` and `dependencies` merged in, so
