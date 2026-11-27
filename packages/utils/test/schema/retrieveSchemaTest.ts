@@ -553,6 +553,52 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ).toBe(true);
       });
     });
+    describe("leaves out a property's additionalProperties: true a schema outside the pair closes (#5958)", () => {
+      const a: RJSFSchema = { type: 'string' };
+      const closed: RJSFSchema = { properties: { a }, unevaluatedProperties: false };
+      const list: RJSFSchema = { oneOf: [{ properties: { p: { properties: { a } } } }] };
+      const base: RJSFSchema = {
+        type: 'object',
+        oneOf: [{ properties: { p: { type: 'object', additionalProperties: true } } }],
+        allOf: [list],
+      };
+      it.each<[string, RJSFSchema]>([
+        ["the root's own declaration", { ...base, properties: { p: closed } }],
+        ['the entry holding the other list', { ...base, allOf: [{ ...list, properties: { p: closed } }] }],
+        ['another entry', { ...base, allOf: [list, { properties: { p: { unevaluatedProperties: false } } }] }],
+        ["the root's matching pattern", { ...base, patternProperties: { '^p': closed } }],
+        ["the root's additionalProperties", { ...base, additionalProperties: closed }],
+        ["the root's then", { ...base, if: { required: ['p'] }, then: { properties: { p: closed } } }],
+        ["the root's anyOf", { ...base, anyOf: [{ properties: { p: closed } }] }],
+        [
+          "another entry's $ref, which isn't resolved there",
+          { ...base, $defs: { closed }, allOf: [list, { properties: { p: { $ref: '#/$defs/closed' } } }] },
+        ],
+      ])('in %s', (_, schema) => {
+        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' ? property.additionalProperties : property).toBeUndefined();
+      });
+      it("in another entry's $ref a level deeper", () => {
+        const q = (declaration: RJSFSchema): RJSFSchema => ({ properties: { p: { properties: { q: declaration } } } });
+        const schema: RJSFSchema = {
+          type: 'object',
+          $defs: { closed },
+          oneOf: [q({ type: 'object', additionalProperties: true })],
+          allOf: [{ oneOf: [q({ properties: { a } })] }, q({ $ref: '#/$defs/closed' })],
+        };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        expect(typeof option === 'object' && option.properties?.p).toEqual({
+          properties: { q: { type: 'object', properties: { a } } },
+        });
+      });
+      it("keeps it beside another entry's declaration that doesn't close it", () => {
+        const schema: RJSFSchema = { ...base, allOf: [list, { properties: { p: { required: ['a'] } } }] };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' && property.additionalProperties).toBe(true);
+      });
+    });
     it("leaves out a property's additionalProperties: true a pattern beside the other option's declaration closes (#5958)", () => {
       const a: RJSFSchema = { type: 'string' };
       const schema: RJSFSchema = {

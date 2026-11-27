@@ -786,7 +786,9 @@ function rebuiltLists(schemas: readonly object[]): [string, ReturnType<typeof me
       return Array.isArray(list) ? [list] : [];
     });
     const [first, ...rest] = lists;
-    const options = first !== undefined && rest.length > 0 ? recorded(mergeOptionLists(first, rest)) : undefined;
+    const beside = schemas.map((schema) => withoutKeys(schema as RJSFSchema, keyword));
+    const options =
+      first !== undefined && rest.length > 0 ? recorded(mergeOptionLists(first, rest, beside)) : undefined;
     return options === undefined ? [] : [[keyword, options]];
   });
 }
@@ -1250,7 +1252,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         Array.isArray(own) &&
         Array.isArray(other) &&
         !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
-          ? recorded(mergeOptionLists(own, [other], branchPair, false))
+          ? recorded(mergeOptionLists(own, [other], [], branchPair, false))
           : undefined;
       if (
         options !== undefined &&

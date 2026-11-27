@@ -47,6 +47,9 @@ function closesSiblingKeys(entry: JSONSchema7): boolean {
   );
 }
 
+/** A sibling closing every key, see `closesSiblingKeys()` */
+const CLOSED = { unevaluatedProperties: false } as JSONSchema7;
+
 /** Returns the object subschemas of `objects` that describe the value of `key`: an entry's declaration of it and the
  * `patternProperties` subschemas matching it, or, in an entry with neither, its `additionalProperties`
  */
@@ -87,14 +90,17 @@ function withInPlaceSubschemas(entry: JSONSchema7): JSONSchema7[] {
  * JSON Schema reads an absent keyword as `true`, so the merge drops one saying only that, where the form reads an
  * absent one as `additionalPropertiesWhenAbsent` says. The merge keeps a `false` or a schema in any entry, so a dropped
  * keyword was `true` or `{}` in every entry naming it. Each property is read the same way against the subschemas of
- * `scope` that describe it (see `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere
- * else keeps what the merge made of it.
+ * `objects` and `outside`, and those they apply in place (see `withInPlaceSubschemas()`), that describe it (see
+ * `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere else keeps what the merge made
+ * of it. A property's subschema of `unchecked` holding a `$ref` is read as closing it, since the reference isn't resolved
+ * here and the form, which resolves it, never meets it beside the merged property.
  */
 function withOpenAdditionalProperties(
   merged: JSONSchema7Definition,
   objects: readonly JSONSchema7[],
   siblings: readonly JSONSchema7[],
-  scope: readonly JSONSchema7[] = objects.flatMap(withInPlaceSubschemas),
+  outside: readonly JSONSchema7[] = [],
+  unchecked: readonly JSONSchema7[] = [],
 ): JSONSchema7Definition {
   if (typeof merged === 'boolean') {
     return merged;
@@ -114,14 +120,18 @@ function withOpenAdditionalProperties(
     return result;
   }
   let kept: Record<string, JSONSchema7Definition> | undefined;
+  let scope: JSONSchema7[] | undefined;
   for (const [key, property] of Object.entries(properties)) {
     const declared = subschemasOf(key, objects);
     // A property only one subschema describes is that declaration, which the merge left as it stands
     if (declared.length > 1) {
       // An option, or a `then`, `else`, `dependencies` or `dependentSchemas` subschema, describes the property only under
       // a choice or condition the form resolves after reading this merge, so one that closes it is read as closing it
+      scope ??= [...objects.flatMap(withInPlaceSubschemas), ...outside];
       const describing = subschemasOf(key, scope).flatMap(withInPlaceSubschemas);
-      const open = withOpenAdditionalProperties(property, declared, describing, describing);
+      const beyond = subschemasOf(key, unchecked).flatMap(withInPlaceSubschemas);
+      const closers = beyond.some((subschema) => subschema.$ref !== undefined) ? [...describing, CLOSED] : describing;
+      const open = withOpenAdditionalProperties(property, declared, closers, describing, beyond);
       if (open !== property) {
         kept ??= { ...properties };
         kept[key] = open;
@@ -169,15 +179,23 @@ export interface MergedOption {
 /** Returns `left` and `right` merged as the merge of option lists merges a pair, their own `allOf` entries kept rather
  * than flattened, which would keep only the first `$ref` among them, or undefined for a pair the merge rejects. The
  * result is a new object, since a pair holding an empty option merges to the other, whose recorded sources it would
- * otherwise overwrite
+ * otherwise overwrite. `outside`, the subschemas of the schemas the lists sit in, can close a property of the pair but
+ * never opens one; the merge that later meets one of them holding a `$ref` sees the property as the pair left it
  */
 export function mergedPair(
   left: JSONSchema7Definition,
   right: JSONSchema7Definition,
+  outside: readonly JSONSchema7[] = [],
 ): JSONSchema7Definition | undefined {
   try {
     const objects = [left, right].filter((entry) => typeof entry !== 'boolean');
-    const merged = withOpenAdditionalProperties(mergeArrayOfSchemaDefinitions([left, right]), objects, objects);
+    const merged = withOpenAdditionalProperties(
+      mergeArrayOfSchemaDefinitions([left, right]),
+      objects,
+      objects,
+      outside,
+      outside,
+    );
     return typeof merged === 'boolean' ? merged : { ...merged };
   } catch {
     return undefined;
@@ -192,23 +210,30 @@ export function mergedPair(
  *
  * @param first - The first list, in the order their schemas are merged
  * @param rest - The lists after it
- * @param [pair] - Merges an option built so far with one of the next list, or rejects the pair; the shallow merge's
- *        by default
+ * @param beside - The schemas holding the lists, without the keyword holding them
+ * @param [pair] - Merges an option built so far with one of the next list, given the subschemas of `beside`, or rejects
+ *        the pair; the shallow merge's by default
  * @param [dropEqual=true] - Whether a pair equal to an option already kept is dropped, as the shallow merge drops it
  * @returns - The options, or undefined where no pair merges, which the merge rejects
  */
 export function mergeOptionLists(
   first: readonly JSONSchema7Definition[],
   rest: readonly (readonly JSONSchema7Definition[])[],
-  pair: (left: JSONSchema7Definition, right: JSONSchema7Definition) => JSONSchema7Definition | undefined = mergedPair,
+  beside: readonly JSONSchema7[],
+  pair: (
+    left: JSONSchema7Definition,
+    right: JSONSchema7Definition,
+    outside: readonly JSONSchema7[],
+  ) => JSONSchema7Definition | undefined = mergedPair,
   dropEqual = true,
 ): MergedOption[] | undefined {
+  const outside = beside.flatMap(withInPlaceSubschemas);
   let merged: MergedOption[] = first.map((option) => ({ option, sources: [option] }));
   for (const list of rest) {
     const next: MergedOption[] = [];
     for (const left of merged) {
       for (const right of list) {
-        const option = pair(left.option, right);
+        const option = pair(left.option, right, outside);
         if (
           option !== undefined &&
           !(dropEqual && next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0))
