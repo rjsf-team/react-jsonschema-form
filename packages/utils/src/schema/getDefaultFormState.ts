@@ -3840,8 +3840,18 @@ export function fieldFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends F
   let handedDown: HandedDown = { defaults: undefined, givenConst: undefined };
   let reachedDefault = false;
   // A handed-out schema stands for the field it was retrieved from, which the fold would plan again with no data. A copy
-  // is planned from its own keywords, in the field's place, so its `$ref`s resolve where they were written
-  const read = isHandedOut(schema) ? { ...schema } : schema;
+  // is planned from its own keywords, in the field's place, so its `$ref`s resolve where they were written. The extra
+  // keys `retrieveSchema()` stubbed among its properties are the data's, so they are left out: with no data the fold
+  // reaches an extra key only through the object's default, by the subschemas that take it, as it does on mount, not
+  // through a stub that merged an `allOf` the fill may skip
+  const properties = Object.entries(schema.properties ?? {});
+  const unstubbed = properties.filter(([, property]) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG));
+  let read = schema;
+  if (unstubbed.length < properties.length) {
+    read = { ...schema, properties: Object.fromEntries(unstubbed) };
+  } else if (isHandedOut(schema)) {
+    read = { ...schema };
+  }
   const parentDefaults = fill.inheritedDefault;
   const value = foldField<unknown, S, F>(context, callRoot<S>(rootSchema, read), {
     parentDefaults,
