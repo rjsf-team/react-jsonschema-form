@@ -1477,7 +1477,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return branches ? [{ ...condition, branches }] : [];
     });
     const valid =
-      flips.length === flipping.length
+      flipping.length > 0 && flips.length === flipping.length
         ? end.cycle.filter(({ filled }) => filled !== undefined && flips.every((flip) => meets(context, flip, filled)))
         : [];
     if (valid.length === 1) {

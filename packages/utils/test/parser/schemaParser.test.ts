@@ -162,6 +162,14 @@ describe('getValidationSchemas()', () => {
       { $ref: '#/properties/nested/then' },
     ]);
   });
+  it('lists no then or else without an if beside it, which applies to no value (#5916)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { nested: { then: { title: 'n' }, else: { title: 'm' } } },
+      then: { title: 'x' },
+    };
+    expect(listed(schema)).toEqual([schema]);
+  });
   it('lists each if and branch of a schema whose allOf, dependencies and condition multiply into 8192 forms once, without warning', () => {
     resetLogOnce();
     const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);

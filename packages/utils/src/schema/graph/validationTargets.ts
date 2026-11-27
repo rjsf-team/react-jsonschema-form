@@ -152,12 +152,13 @@ function reachedFrom<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Node
   const condition = graph.child(id, IF_KEY);
   if (condition !== undefined) {
     reached.push({ role: IF_KEY, id: condition, place: childPointer(place, [IF_KEY]) });
-  }
-  for (const keyword of [THEN_KEY, ELSE_KEY]) {
-    // A boolean branch accepts every value or none, which needs no validator to say
-    const branch = graph.child(id, keyword);
-    if (branch !== undefined && graph.node(branch).kind === 'schema') {
-      reached.push({ role: BRANCH_ROLE, id: branch, place: childPointer(place, [keyword]) });
+    // A `then` or `else` with no `if` beside it applies to no value. A boolean branch accepts every value or none,
+    // which needs no validator to say
+    for (const keyword of [THEN_KEY, ELSE_KEY]) {
+      const branch = graph.child(id, keyword);
+      if (branch !== undefined && graph.node(branch).kind === 'schema') {
+        reached.push({ role: BRANCH_ROLE, id: branch, place: childPointer(place, [keyword]) });
+      }
     }
   }
   for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
