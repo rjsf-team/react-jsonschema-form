@@ -12065,6 +12065,59 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         );
         expect(defaultsOf({ type: 'boolean', default: true, oneOf: untitled })).toStrictEqual({ b: true });
       });
+      const letters: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
+      const numbers: RJSFSchema = { oneOf: [{ const: 1 }, { const: 2 }] };
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        [
+          'strings inside an option of an untyped anyOf',
+          { anyOf: [letters, { type: 'number' }] },
+          { anyOf: [{ enum: ['a', 'b'] }, { type: 'number' }] },
+        ],
+        [
+          'strings inside a typed option of an untyped anyOf',
+          { anyOf: [{ ...letters, type: 'string' }, { type: 'number' }] },
+          { anyOf: [{ type: 'string', enum: ['a', 'b'] }, { type: 'number' }] },
+        ],
+        [
+          'numbers inside an option of an untyped anyOf',
+          { anyOf: [numbers, { type: 'string' }] },
+          { anyOf: [{ enum: [1, 2] }, { type: 'string' }] },
+        ],
+        [
+          'strings inside an option of an untyped oneOf of such lists',
+          {
+            oneOf: [
+              { title: 'letters', ...letters },
+              { title: 'nums', ...numbers },
+            ],
+          },
+          {
+            oneOf: [
+              { title: 'letters', enum: ['a', 'b'] },
+              { title: 'nums', enum: [1, 2] },
+            ],
+          },
+        ],
+      ])('leaves a list of %s empty, as its enum, since it is no boolean', (_, b, asEnum) => {
+        expect(fill(b, true)).toEqual(fill(asEnum, true));
+        expect(fill(b, true)).toEqual({});
+        expect(fill(b, false)).toEqual({});
+      });
+      it.each<[string, RJSFSchema]>([
+        ['an untyped anyOf', { anyOf: [{ oneOf: untitled }, { type: 'number' }] }],
+        [
+          'an untyped oneOf',
+          {
+            oneOf: [
+              { title: 'flag', oneOf: titled },
+              { title: 'nums', ...numbers },
+            ],
+          },
+        ],
+      ])('starts a list of true and false inside an option of %s at false, as a boolean option', (_, b) => {
+        expect(fill(b, true)).toEqual(fill({ anyOf: [{ type: 'boolean' }, { type: 'number' }] }, true));
+        expect(fill(b, true)).toEqual({ b: false });
+      });
     });
     describe('a list of one constant leaves nothing to choose, so it fills (#5944)', () => {
       type Behavior = DefaultFormStateBehavior;
