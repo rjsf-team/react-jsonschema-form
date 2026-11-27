@@ -96,8 +96,11 @@ export interface ArrayMinItems {
    * `SchemaContext`, schema, and root schema.
    * If the function returns true, the array will not be populated with default values.
    * If the function returns false, the array will be populated with default values according to the `populate` option.
-   * @param context - The `SchemaContext` in effect, to pass along to any schema function the callback calls. Within a
-   *        `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+   * @param context - The `SchemaContext` in effect, to pass along to any schema function the callback calls. Within
+   *        an option of a `oneOf`/`anyOf` of several const values, unless `constAsDefaults` is `'always'`, and, under
+   *        `constAsDefaults: 'skipOneOf'`, within the option of a non-empty `oneOf` on a field with a single primitive
+   *        `type` or none, or on a select over object or array const values with a single `type` or none, its
+   *        `constAsDefaults` is `'never'`
    * @param schema - The array schema whose defaults are being computed
    * @param [rootSchema] - The root schema that will be forwarded to all the APIs
    * @returns A boolean indicating whether to skip populating the array with default values.
@@ -167,17 +170,25 @@ export interface DefaultFormStateBehavior {
    */
   mergeDefaultsIntoFormData?: 'useFormDataIfPresent' | 'useDefaultIfFormDataUndefined';
   /** Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with
-   * undefined values, defaulting to `always`. The defaulting behavior for this flag will always be controlled by the
-   * `emptyObjectField` flag value. For instance, if `populateRequiredDefaults` is set and the const value is not
-   * required, it will not be set.
-   * - `always`: A const value will always be merged into the form as a default. If there is are const values in a
-   *        `oneOf` (for instance to create an enumeration with title different from the values), the first const value
-   *        will be defaulted
-   * - `skipOneOf`: If const is in a `oneOf` it will NOT pick the first value as a default
+   * undefined values. The defaulting behavior for this flag will always be controlled by the `emptyObjectField` flag
+   * value. For instance, if `populateRequiredDefaults` is set and the const value is not required, it will not be set.
+   * - `always`: A const value will always be merged into the form as a default. If there are const values in a
+   *        `oneOf`/`anyOf` (for instance to create an enumeration with title different from the values), the first
+   *        const value will be defaulted
+   * - `skipOneOf`: Deprecated, leave the flag unset instead. A `oneOf`/`anyOf` of several const values is left unpicked,
+   *        as it is with the flag unset. It differs from unset only for a non-empty `oneOf` on a field with a single
+   *        primitive `type` or none, or on a select over object or array const values with a single `type` or none: no
+   *        const inside the option that field shows, such as the const of a property the option declares or the one
+   *        const value of the `oneOf`, is used as a default
    * - `never`: A const value will never be used as a default
    *
-   * Left unset, a const value is used as a default as under `always`, but only an explicit `always` lets it take the
-   * place of a value the `formData` holds, or of a `default` that names none of the constants of a `oneOf`/`anyOf`.
+   * Left unset, a field's own const value, and the const of a property inside the `oneOf`/`anyOf` option a field
+   * shows, is used as a default as under `always`, while a `oneOf`/`anyOf` whose options are several const values is a
+   * choice left unpicked, as an `enum` is: it starts on the value its `default` names, and is otherwise left empty. A
+   * `oneOf`/`anyOf` of one const value leaves nothing to choose, so that value is used as a default, except that a
+   * `default` wins over it. Only an explicit `always` picks the first const value of a list of several, lets a const
+   * value take the place of a value the `formData` holds, or of a `default` that names none of the constants of a
+   * `oneOf`/`anyOf`.
    */
   constAsDefaults?: 'always' | 'skipOneOf' | 'never';
   /** Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping
@@ -188,7 +199,8 @@ export interface DefaultFormStateBehavior {
   nestedDefaultsPrecedence?: 'descendantWins' | 'ancestorWins';
   /** Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default`
    * of its own, is populated with `false`, defaulting to `populateFalse`.
-   * - `populateFalse`: A required boolean with no `default` is set to `false`
+   * - `populateFalse`: A required boolean with no `default` is set to `false`, unless the values its schema lists leave
+   *        `false` out
    * - `skip`: No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains
    *        a validation concern
    */

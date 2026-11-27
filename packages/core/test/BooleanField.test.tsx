@@ -4,6 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import {
   createFormComponent,
+  elementOf,
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   setupConsoleWarnSuppression,
@@ -1085,7 +1086,7 @@ describe('BooleanField', () => {
       expect(texts(node)).toEqual(['', 'Yes', 'No']);
     });
 
-    it('should show the default the constant options give as selected', () => {
+    it('should start a required one on its placeholder where the enum leaves out the false its options offer', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'object',
@@ -1104,7 +1105,7 @@ describe('BooleanField', () => {
         uiSchema: { a: { 'ui:widget': 'select' } },
       });
 
-      expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_a')!)).toBe('No way');
+      expect(getSelectedOptionValue(elementOf(node, 'select#root_a', HTMLSelectElement))).toBe('');
     });
 
     it('should keep a chosen option the enum excludes, and fail it on submit', async () => {

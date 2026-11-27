@@ -1,9 +1,14 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import {
+  createFormRef,
   elementOf,
   expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
+  getSelectedOptionValue,
+  handleOf,
   setupConsoleErrorSuppression,
   submitForm,
   describeRepeated,
@@ -1520,6 +1525,260 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       await user.type(elementOf(node, '#root_other'), 'v');
 
       expectToHaveBeenCalledWithFormData(onChange, { other: 'v', list: [{ q: 1, c: 'c' }] }, 'root_other');
+    });
+  });
+
+  describe('a select over titled constants with no default (#5944)', () => {
+    const choice: RJSFSchema = {
+      type: 'string',
+      title: 'Choice',
+      oneOf: [
+        { const: 'a', title: 'First' },
+        { const: 'b', title: 'Second' },
+      ],
+    };
+
+    it.each(['oneOf', 'anyOf'] as const)('mounts an optional %s empty, on its placeholder option', async (keyword) => {
+      const { oneOf, ...field } = choice;
+      const schema: RJSFSchema = { type: 'object', properties: { choice: { ...field, [keyword]: oneOf } } };
+      const { node, onSubmit, getFormData } = createFormComponent({ schema });
+
+      const select = elementOf(node, '#root_choice', HTMLSelectElement);
+      expect(select).toHaveValue('');
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'First', 'Second']);
+      expect(getFormData()).toEqual({});
+
+      await submitForm(node, user);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+    });
+
+    it('mounts on the constant its default names, with no placeholder option', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { choice: { ...choice, default: 'b' } } };
+      const { node, getFormData } = createFormComponent({ schema });
+
+      const select = elementOf(node, '#root_choice', HTMLSelectElement);
+      expect(getSelectedOptionValue(select)).toBe('Second');
+      expect([...select.options].map((option) => option.text)).toEqual(['First', 'Second']);
+      expect(getFormData()).toEqual({ choice: 'b' });
+    });
+
+    it("mounts on the first constant under an explicit constAsDefaults: 'always'", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { choice } };
+      const { node, getFormData } = createFormComponent({
+        schema,
+        defaultFormStateBehavior: { constAsDefaults: 'always' },
+      });
+
+      expect(getSelectedOptionValue(elementOf(node, '#root_choice', HTMLSelectElement))).toBe('First');
+      expect(getFormData()).toEqual({ choice: 'a' });
+    });
+
+    it('reports a required one as missing on submit until an option is picked', async () => {
+      const schema: RJSFSchema = { type: 'object', required: ['choice'], properties: { choice } };
+      // The browser's own constraint validation is turned off, since it would block the submit of an empty required
+      // select before the form validates it
+      const { node, onSubmit, onError } = createFormComponent({ schema, noHtml5Validate: true });
+
+      await submitForm(node, user);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(fieldErrorsById(node)).toEqual({ root_choice: ["must have required property 'Choice'"] });
+
+      await user.selectOptions(elementOf(node, '#root_choice', HTMLSelectElement), 'Second');
+      await submitForm(node, user);
+
+      expectToHaveBeenCalledWithFormData(onSubmit, { choice: 'b' }, true);
+    });
+
+    describe('a yes/no boolean', () => {
+      const titled: RJSFSchema = {
+        type: 'boolean',
+        title: 'Agree',
+        oneOf: [
+          { const: true, title: 'Yes' },
+          { const: false, title: 'No' },
+        ],
+      };
+      const mount = (agree: RJSFSchema, required: string[]) => {
+        const { node, onSubmit, getFormData } = createFormComponent({
+          schema: { type: 'object', required, properties: { agree } },
+        });
+        return { node, onSubmit, getFormData, control: elementOf(node, '#root_agree') };
+      };
+
+      it('mounts a required one whose constants have titles, a select, on No, holding false', async () => {
+        const { node, onSubmit, getFormData, control } = mount(titled, ['agree']);
+
+        expect(control).toBeInstanceOf(HTMLSelectElement);
+        expect([...control.querySelectorAll('option')].find((option) => option.selected)).toHaveTextContent('No');
+        expect(getFormData()).toEqual({ agree: false });
+
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
+      });
+
+      it('mounts an optional one whose constants have titles on the empty option', () => {
+        const { getFormData, control } = mount(titled, []);
+
+        expect(control).toBeInstanceOf(HTMLSelectElement);
+        expect(control).toHaveValue('');
+        expect(getFormData()).toEqual({});
+      });
+
+      it('mounts an optional one whose constants have no titles, a checkbox, unticked, and submits it absent', async () => {
+        const { node, onSubmit, getFormData, control } = mount(
+          { type: 'boolean', title: 'Agree', oneOf: [{ const: true }, { const: false }] },
+          [],
+        );
+
+        expect(control).toHaveAttribute('type', 'checkbox');
+        expect(control).not.toBeChecked();
+        expect(getFormData()).toEqual({});
+
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, {}, true);
+      });
+
+      it('mounts a required one whose constants have no titles, a checkbox, unticked, holding false', async () => {
+        const { node, onSubmit, getFormData, control } = mount(
+          { type: 'boolean', title: 'Agree', oneOf: [{ const: true }, { const: false }] },
+          ['agree'],
+        );
+
+        expect(control).toHaveAttribute('type', 'checkbox');
+        expect(control).not.toBeChecked();
+        expect(getFormData()).toEqual({ agree: false });
+
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, { agree: false }, true);
+      });
+
+      describe('a required one whose values leave out false', () => {
+        const mustBeTrue: RJSFSchema = { type: 'boolean', title: 'Agree', enum: [true] };
+        const yesOrNotApplicable: RJSFSchema = {
+          type: ['boolean', 'null'],
+          title: 'Agree',
+          oneOf: [
+            { const: true, title: 'Yes' },
+            { const: null, title: 'N/A' },
+          ],
+        };
+        const mountRequired = (agree: RJSFSchema, noHtml5Validate = false) => {
+          const { node, onSubmit, onError, getFormData } = createFormComponent({
+            schema: { type: 'object', required: ['agree'], properties: { agree } },
+            noHtml5Validate,
+          });
+          return { node, onSubmit, onError, getFormData, control: elementOf(node, '#root_agree') };
+        };
+
+        it('mounts an enum of true, a checkbox, unticked and natively required, holding nothing', async () => {
+          const { node, onSubmit, onError, getFormData, control } = mountRequired(mustBeTrue);
+
+          expect(control).toHaveAttribute('type', 'checkbox');
+          expect(control).not.toBeChecked();
+          expect(control).toBeRequired();
+          expect(getFormData()).toEqual({});
+
+          await submitForm(node, user);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+          expect(onError).not.toHaveBeenCalled();
+        });
+
+        it('reports an enum of true as missing on submit without native validation', async () => {
+          const { node, onSubmit, onError } = mountRequired(mustBeTrue, true);
+
+          await submitForm(node, user);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+          expect(onError).toHaveBeenCalledTimes(1);
+          expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
+        });
+
+        it('mounts a oneOf of true and null, a select, on its placeholder, and reports it missing', async () => {
+          const { node, onSubmit, onError, getFormData, control } = mountRequired(yesOrNotApplicable, true);
+
+          expect(control).toBeInstanceOf(HTMLSelectElement);
+          expect(control).toHaveValue('');
+          expect([...control.querySelectorAll('option')].map((option) => option.text)).toEqual(['', 'Yes', 'N/A']);
+          expect(getFormData()).toEqual({});
+
+          await submitForm(node, user);
+
+          expect(onSubmit).not.toHaveBeenCalled();
+          expect(onError).toHaveBeenCalledTimes(1);
+          expect(fieldErrorsById(node)).toEqual({ root_agree: ["must have required property 'Agree'"] });
+        });
+      });
+    });
+
+    it.each([
+      ['an empty field', {}],
+      ['a field holding the value the list drops', { choice: 'b' }],
+    ])('starts %s on the one value a schema change narrows the list to', (_, initialFormData) => {
+      const schemaOf = (oneOf: RJSFSchema[]): RJSFSchema => ({
+        type: 'object',
+        properties: { choice: { type: 'string', title: 'Choice', oneOf } },
+      });
+      const both = [
+        { const: 'a', title: 'First' },
+        { const: 'b', title: 'Second' },
+      ];
+      const { getFormData, rerender } = createFormComponent({ schema: schemaOf(both), initialFormData });
+      expect(getFormData()).toEqual(initialFormData);
+
+      rerender({ schema: schemaOf(both.slice(0, 1)), initialFormData });
+
+      expect(getFormData()).toEqual({ choice: 'a' });
+    });
+
+    describe('inside the option a field shows', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'A', properties: { kind: { const: 'a' }, choice } },
+          { title: 'B', properties: { kind: { const: 'b' }, other: { type: 'string' } } },
+        ],
+      };
+
+      it('is empty on mount, after a switch away and back, and after a reset, beside the tag the option fills', async () => {
+        const ref = createFormRef();
+        const { node, getFormData } = createFormComponent({ schema, ref });
+        const mounted = { kind: 'a' };
+        expect(getFormData()).toEqual(mounted);
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
+
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'B');
+        expect(getFormData()).toEqual({ kind: 'b' });
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'A');
+
+        expect(getFormData()).toEqual(mounted);
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
+
+        await user.selectOptions(elementOf(node, '#root_choice', HTMLSelectElement), 'Second');
+        expect(getFormData()).toEqual({ kind: 'a', choice: 'b' });
+        act(() => handleOf(ref).reset());
+
+        expect(getFormData()).toEqual(mounted);
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
+      });
+
+      it('is empty after a switch back from an option the user edited', async () => {
+        const { node, getFormData } = createFormComponent({ schema });
+
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'B');
+        await user.type(elementOf(node, '#root_other'), 'v');
+        expect(getFormData()).toEqual({ kind: 'b', other: 'v' });
+        await user.selectOptions(elementOf(node, '#root__oneof_select', HTMLSelectElement), 'A');
+
+        expect(getFormData()).toEqual({ kind: 'a' });
+        expect(elementOf(node, '#root_choice', HTMLSelectElement)).toHaveValue('');
+      });
     });
   });
 

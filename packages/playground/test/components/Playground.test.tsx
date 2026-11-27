@@ -97,4 +97,12 @@ describe('Playground', () => {
     expect(stylesheets()).toEqual(['coreSubtheme.css']);
     expect(screen.getByRole('combobox', { name: 'Subtheme' })).toHaveValue('0');
   });
+
+  it('leaves constAsDefaults unset until one is picked, so a form starts as one given no such setting does', () => {
+    const { container } = render(
+      <Playground themes={{ core: { stylesheet: 'core.css', theme: {} } }} validators={{ AJV8: validator }} />,
+    );
+
+    expect(container.querySelector('#rjsf_options_defaultFormStateBehavior_constAsDefaults')).toHaveValue('');
+  });
 });
