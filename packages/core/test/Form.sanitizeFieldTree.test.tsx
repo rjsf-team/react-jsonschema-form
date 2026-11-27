@@ -5203,4 +5203,34 @@ describe('judging an extra key by the value the fill writes for it, an allOf in 
       expect(handleOf(ref).getFormData()).toEqual({ kind: 't', c: 't' });
     },
   );
+
+  it.each(['skipDefaults', 'populateDefaults'] as const)(
+    'replaces the value the add button filled an extra key with by the new option default, under %s',
+    async (allOf) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: extraKey,
+        oneOf: [
+          { title: 'S', properties: { kind: { const: 's' } } },
+          { title: 'T', properties: { kind: { const: 't' }, newKey: { type: 'string', default: 't' } } },
+        ],
+      };
+      const ref = createRef<FormRef>();
+      const { container } = render(
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={validator}
+          initialFormData={{ kind: 's' }}
+          defaultFormStateBehavior={{ allOf }}
+        />,
+      );
+      await user.click(elementOf(container, `#${buttonId('root__XxxOf', 'add')}`));
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 's', newKey: 'a' });
+
+      await user.selectOptions(elementOf(container, '#root__oneof_select'), 'T');
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 't', newKey: 't' });
+    },
+  );
 });

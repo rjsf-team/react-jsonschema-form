@@ -950,4 +950,14 @@ describe('getFilledDefault() reads what the fill writes', () => {
       );
     },
   );
+
+  it("reads an extra key its object's default doesn't name by the default its stub declares, as the add button writes it (#5954)", () => {
+    const root: RJSFSchema = { type: 'object', additionalProperties: { type: 'string', default: 'x' } };
+    const formData = { d: 'u' };
+    const retrieved = retrieveSchema(descendantWins, root, root, formData);
+    const stub = getByPath<RJSFSchema>(retrieved, ['properties', 'd']);
+    expect(getFilledDefault(descendantWins, stub, root, childFillOf(descendantWins, retrieved, root, {}, 'd'))).toBe(
+      'x',
+    );
+  });
 });
