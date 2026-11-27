@@ -1285,6 +1285,7 @@ Used by the validator packages to name an error by the field it is on.
 Returns the title the form labels the field at the data `path` with: its `ui:title`, then the `title` of its schema as its parent declares it, then the `title` of that schema retrieved for its data, as [`getFieldLabel()`](#getfieldlabel) reads them, without a deprecated field's marker.
 The schema and uiSchema are walked as the form renders the data, each level retrieved for its data, so a `$ref`, an `allOf` and the `if`/`then` the data meets are merged in, an `anyOf`/`oneOf` field's keys are read from the option shown for its data, under its `uiSchema.anyOf`/`oneOf` entry, and an array item's from `items`.
 An extra key the form renders through `additionalProperties` or `patternProperties` is labelled by its key, so it has no title, nor has the root, whose title titles the form, nor a field behind a `$ref` `retrieveSchema()` can't resolve.
+A validator calls it with a `context` of its own, so the title can differ from the label in two cases the form knows of and the validator doesn't: a form's `customMergeAllOf`, where the title is read from the default `allOf` merge, and the `anyOf`/`oneOf` option the user picked, since the option is found from the data alone, so data that matches two options equally, as data failing both can, is read under the first.
 
 #### Parameters
 

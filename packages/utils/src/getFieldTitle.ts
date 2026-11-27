@@ -17,7 +17,11 @@ import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema, UiSc
  * shown for its data, under its `uiSchema.anyOf`/`oneOf` entry, and an array item's from `items`, under the option's
  * entry when an option renders the array. An extra key the form renders through `additionalProperties` or
  * `patternProperties` is labelled by its key, so it has no title, nor has the root, whose title titles the form, nor a
- * field behind a `$ref` `retrieveSchema()` can't resolve.
+ * field behind a `$ref` `retrieveSchema()` can't resolve. A validator calls it with a `context` of its own, so the title
+ * can differ from the label in two cases the form knows of and the validator doesn't: a form's `customMergeAllOf`,
+ * where the title is read from the default `allOf` merge, and the `anyOf`/`oneOf` option the user picked, since the
+ * option is found from the data alone, so data that matches two options equally, as data failing both can, is read
+ * under the first.
  *
  * @param context - The `SchemaContext` of the form
  * @param rootSchema - The form's root schema
