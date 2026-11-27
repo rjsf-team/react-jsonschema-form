@@ -1110,6 +1110,34 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
             expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
             expect(getClosestMatchingOption(context, declaring, { t: 2 }, options, -1, undefined, offeredBy)).toBe(1);
           });
+          // One object in two places could stand for either field, so it is read as it stands whichever comes first
+          it.each<[string, (shared: RJSFSchema) => Record<string, RJSFSchema>]>([
+            ['merged into another field first', (shared) => ({ q: { type: 'object', allOf: [shared] }, p: shared })],
+            ['a field itself first', (shared) => ({ p: shared, q: { type: 'object', allOf: [shared] } })],
+          ])('reads an offeredBy the root holds in two places as it stands, %s', (_, fields) => {
+            const shared: RJSFSchema = { oneOf: options };
+            const declaring: RJSFSchema = { type: 'object', properties: fields(shared) };
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, copies(), -1, undefined, shared)).toBe(0);
+          });
+          it('reads an offeredBy the root holds under two bases as it stands', () => {
+            const shared: RJSFSchema = { oneOf: options };
+            const declaring: RJSFSchema = {
+              type: 'object',
+              $defs: { other: { $id: 'https://example.com/other', type: 'object', allOf: [shared] } },
+              properties: { p: shared },
+            };
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, copies(), -1, undefined, shared)).toBe(0);
+          });
+          // The entry has one node, merged into a holder two fields hold, so it could stand for either of them too
+          it('reads an offeredBy merging into a schema the root holds in two places as it stands', () => {
+            const entry: RJSFSchema = { oneOf: options };
+            const holder: RJSFSchema = { allOf: [entry] };
+            const declaring: RJSFSchema = {
+              type: 'object',
+              properties: { q: { type: 'object', allOf: [holder] }, r: holder },
+            };
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, copies(), -1, undefined, entry)).toBe(0);
+          });
           // What a custom field holds: its schema retrieved for the data, and the options that schema hands out, which
           // are read as retrieval left them, so only copies of them take what `offeredBy` says
           it('reads the options a retrieved field hands out as retrieval left them, whatever offeredBy says', () => {
