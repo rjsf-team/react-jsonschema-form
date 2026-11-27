@@ -966,9 +966,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     tied.length > 1 &&
     (tied[0] !== selectedOption || builtByMerge(optionNodes[selectedOption]))
   ) {
-    const ranks = tied.map((index) =>
-      tieRank<S>(formData, optionNodes[index], scored[index]?.schema ?? options[index]),
-    );
+    const ranks = tied.map((index) => tieRank<S>(formData, optionNodes[index], scored[index]?.schema));
     best = { index: tied[ranks.indexOf(Math.max(...ranks))], score: best.score };
   }
   const score = (validIndexes.includes(best.index) ? 1 : 0) + best.score;
