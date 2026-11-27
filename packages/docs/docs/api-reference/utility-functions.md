@@ -3972,6 +3972,7 @@ The `items` beside `prefixItems` describe only the items past the tuple, so a `p
 
 Checks to see if the `schema` combination represents a multi-select.
 A `prefixItems` tuple never does, since the `items` beside it describe only the items past the tuple.
+The `items` are retrieved with no form data, so where their `type` allows neither an object nor an array, an `enum` a `then` or `else` gives them counts only under an `if` of `true`, `false` or `{}`, which every value gives the same answer; an `if` a value decides picks neither branch, so the array's widget does not change as its items do.
 
 #### Parameters
 
@@ -3987,6 +3988,7 @@ A `prefixItems` tuple never does, since the `items` beside it describe only the 
 
 Checks to see if the `schema` combination represents a select: an `enum`, empty or not, or a non-empty `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
 When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
+The schema is retrieved with no form data, so where its `type` allows neither an object nor an array, an `enum` or options a `then` or `else` gives it count only under an `if` of `true`, `false` or `{}`.
 
 #### Parameters
 
@@ -4006,6 +4008,7 @@ Every subschema handed out carries where it came from, so retrieving it resolves
 A copy carrying `RJSF_REF_CYCLE_KEY: false` is retrieved like any other copy of the field it was made from.
 A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form data keeps an entry for each distinct value until the root changes.
 Like the root, it must not be changed once handed in: calls handed the same content share its result.
+A field whose `type` allows neither an object nor an array takes neither branch of an `if` with no `rawFormData` or a `NaN`, unless the `if` is `true`, `false` or `{}`, which every value gives the same answer; see [`allOf`](./form-props.md#allof) under `defaultFormStateBehavior`.
 
 With a `selectedOption`, the extra keys of the data are stubbed once, for the field and the option selected among the options of the keyword `getXxxOfKey()` reads together.
 A key the option declares is left to the option, which renders it.

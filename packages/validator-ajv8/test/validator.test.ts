@@ -14,7 +14,9 @@ import {
   getDefaultFormState,
   getFirstMatchingOption,
   getValidationTarget,
+  isMultiSelect,
   isSchemaObject,
+  isSelect,
   noop,
   retrieveSchema,
   ROOT_SCHEMA_PREFIX,
@@ -4229,6 +4231,58 @@ describe('an if a number format decides', () => {
     ['the default of the option it shows', { type: 'object', properties: { x: { ...x, anyOf: [{ default: 1e12 }] } } }],
   ])('checks it against %s', (_name, schema) => {
     expect(getDefaultFormState({ validator }, { schema })).toEqual({ x: 1e12 });
+  });
+});
+
+describe('a constant if of a field holding no value (#5916)', () => {
+  const validator = customizeValidator();
+  const enumThen = { then: { enum: ['a', 'b'] } } satisfies RJSFSchema;
+
+  it.each<[string, RJSFSchema]>([
+    ['if: true', { if: true, ...enumThen }],
+    ['if: {}', { if: {}, ...enumThen }],
+    ['if: false', { if: false, else: enumThen.then }],
+  ])('decides %s by its constant, so the branch its enum is in makes a select', (_name, conditional) => {
+    const items: RJSFSchema = { type: 'string', ...conditional };
+    const array: RJSFSchema = { type: 'array', uniqueItems: true, items };
+    expect(isMultiSelect({ validator }, array)).toBe(true);
+    expect(isSelect({ validator }, items)).toBe(true);
+    expect(retrieveSchema({ validator }, items, items).enum).toEqual(['a', 'b']);
+  });
+
+  it("leaves out the enum a then gives an array's items under an if a value decides, as the items are retrieved with no data", () => {
+    const items: RJSFSchema = { type: 'string', if: { minLength: 1 }, ...enumThen };
+    expect(isMultiSelect({ validator }, { type: 'array', uniqueItems: true, items })).toBe(false);
+    expect(retrieveSchema({ validator }, items, items, 'a').enum).toEqual(['a', 'b']);
+  });
+
+  it.each<[string, RJSFSchema]>([
+    ['if: true', { if: true, then: { title: 'T', default: 'x' } }],
+    ['if: {}', { if: {}, then: { title: 'T', default: 'x' } }],
+    ['if: false', { if: false, else: { title: 'T', default: 'x' } }],
+  ])("renders and fills the branch %s picks for an empty field, the branch's default", (_name, conditional) => {
+    const field: RJSFSchema = { type: 'string', ...conditional };
+    const schema: RJSFSchema = { type: 'object', properties: { s: field } };
+    expect(retrieveSchema({ validator }, field, schema).title).toBe('T');
+    expect(getDefaultFormState({ validator }, { schema })).toEqual({ s: 'x' });
+  });
+});
+
+describe('an if of a field holding NaN (#5916)', () => {
+  const validator = customizeValidator();
+  const n: RJSFSchema = {
+    type: 'number',
+    if: { not: { minimum: 10 } },
+    then: { title: 'Small', default: 1 },
+    else: { title: 'Big', default: 99 },
+  };
+
+  it('reads the NaN as an empty field on the render and the defaults paths alike', () => {
+    const retrieved = retrieveSchema({ validator }, n, n, Number.NaN);
+    expect(retrieved.title).toBeUndefined();
+    expect(retrieved.default).toBeUndefined();
+    expect(getDefaultFormState({ validator }, { schema: n, formData: Number.NaN })).toBeNaN();
+    expect(getDefaultFormState({ validator }, { schema: { type: 'object', properties: { n } } })).toEqual({});
   });
 });
 

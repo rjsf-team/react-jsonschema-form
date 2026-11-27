@@ -99,10 +99,6 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
    * neither branch to an absent value, so with no data such a field merges neither its `then` nor its `else`
    */
   readonly noValue?: boolean;
-  /** The value of a boolean `if`, which holds or fails whatever the data, so needs no validator to say, nor a
-   * precompiled one to have a function for the schema it reads as
-   */
-  readonly constant?: boolean;
   /** The `then` and the `else` an `if` selects between; `undefined` for the condition a `dependencies` `oneOf`
    * option is matched on
    */
@@ -419,41 +415,40 @@ export function ownedDepData<S extends StrictRJSFSchema>(
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
  * @param checked - The condition, with the keys its check and its decision are known by, see `CheckedCondition`
- * @param depData - The data to check it against; where there is none, see `CheckedCondition.noValue`
+ * @param depData - The data to check it against; where there is none, or a `NaN`, see `CheckedCondition.noValue`
  * @returns - Whether the condition holds, `undefined` for neither, see `CheckedCondition.satisfied`
  */
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition, noValue, constant, reads }: Omit<CheckedCondition<S>, 'satisfied' | 'branches'>,
+  { key, site, condition, noValue, reads }: Omit<CheckedCondition<S>, 'satisfied' | 'branches'>,
   depData: unknown,
 ): boolean | undefined {
-  if (depData === undefined && noValue === true) {
+  // A `NaN` holds no value, as the defaults that replace it read it, so it is checked as no data
+  const data = Number.isNaN(depData) ? undefined : depData;
+  if (data === undefined && noValue === true) {
     return undefined;
   }
-  if (constant !== undefined) {
-    return constant;
-  }
   const keys = [context.validator, graph, key];
-  if (typeof depData === 'object' && depData !== null) {
-    const isValid = () => context.validator.isValid(condition, depData, graph.rawRoot);
+  if (typeof data === 'object' && data !== null) {
+    const isValid = () => context.validator.isValid(condition, data, graph.rawRoot);
     const check =
-      reads && isObject(depData)
+      reads && isObject(data)
         ? () =>
             readsCheck(
               keys,
-              reads.map((read) => (Object.hasOwn(depData, read) ? depData[read] : ABSENT)),
+              reads.map((read) => (Object.hasOwn(data, read) ? data[read] : ABSENT)),
               isValid,
             )
         : isValid;
-    const owned = ownedDecisions.get(depData);
+    const owned = ownedDecisions.get(data);
     return owned ? (owned.peek([graph, site]) ?? owned.get(keys, check)) : check();
   }
   // A field with no data that isn't one holding no value is checked as the empty object an object field holds:
   // `required` constrains only objects, so the missing data itself would hold every `if` that requires a key. A `null`
   // the field holds is checked as itself, as the validator checks the data
-  return latestCheck(conditionMemo, keys, [depData], () =>
-    context.validator.isValid(condition, depData === undefined ? {} : depData, graph.rawRoot),
+  return latestCheck(conditionMemo, keys, [data], () =>
+    context.validator.isValid(condition, data === undefined ? {} : data, graph.rawRoot),
   );
 }
 
@@ -1545,17 +1540,16 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       : schemaFrom(schema, merged);
   }
 
-  /** Checks `condition`, an `if` of the value `constant` where it is a boolean schema, see `CheckedCondition` */
+  /** Checks `condition`, see `CheckedCondition` */
   private holds(
     key: string,
     condition: S,
     site = key,
-    constant?: boolean,
     branches?: CheckedCondition<S>['branches'],
     reads?: readonly string[],
   ): boolean | undefined {
     this.readsData = true;
-    const checked = { key, site, condition, noValue: this.noValue, constant, branches, reads };
+    const checked = { key, site, condition, noValue: this.noValue, branches, reads };
     const satisfied = checkCondition(this.context, this.graph, checked, this.depData);
     this.checked.push({ ...checked, satisfied });
     return satisfied;
@@ -1580,24 +1574,23 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return without;
     }
     const conditionNode = this.graph.node(condition);
-    const constant =
-      conditionNode.kind === 'schema' ? undefined : conditionNode.kind !== 'boolean' || conditionNode.value;
     const [thenNode, elseNode] = [THEN_KEY, ELSE_KEY].map((key) => {
       const provider = keywords.get(key);
       return provider && this.graph.child(provider.node.id, key);
     });
-    // A boolean `if` is checked only where the field holds no value, which a value it is filled with then decides
+    // A boolean `if`, or `{}`, gives every value the same answer, so it decides an empty field's branch too, and needs
+    // no validator to say, nor a precompiled one to have a function for the schema it reads as
     const satisfied =
-      constant === undefined || this.noValue
-        ? this.holds(
+      conditionNode.kind !== 'schema'
+        ? conditionNode.kind !== 'boolean' || conditionNode.value
+        : Object.keys(conditionNode.raw).length === 0 ||
+          this.holds(
             `if:${condition}`,
             targetOf(this.graph, condition),
             `if:${conditionProvider.node.id}`,
-            constant,
             [thenNode, elseNode],
-            conditionNode.kind === 'schema' ? conditionReads(conditionNode.raw) : undefined,
-          )
-        : constant;
+            conditionReads(conditionNode.raw),
+          );
     if (satisfied === undefined) {
       return without;
     }

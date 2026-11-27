@@ -3313,15 +3313,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ['a $ref', { $ref: '#/$defs/Three' }],
         ['an allOf', { allOf: [{ const: 3 }] }],
       ])(
-        'for a primitive field with no data, merges neither branch, so not the const one reaches through %s',
+        'for a primitive field with no data, merges neither branch of an if a value decides, so not the const one reaches through %s',
         (_name, branch) => {
           testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
           const context = { validator: testValidator };
           const $defs = { Three: { const: 3 } };
-          const takes: RJSFSchema = { type: 'number', if: {}, then: branch, $defs };
+          const takes: RJSFSchema = { type: 'number', if: { type: 'number' }, then: branch, $defs };
           const rejects: RJSFSchema = { type: 'number', if: { type: 'object' }, then: branch, $defs };
+          const constant: RJSFSchema = { type: 'number', if: {}, then: branch, $defs };
           expect(retrieveSchema(context, takes, takes).const).toBeUndefined();
           expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
+          expect(retrieveSchema(context, constant, constant).const).toBe(3);
         },
       );
       it.each<[string, RJSFSchema, RJSFSchema]>([
@@ -3350,6 +3352,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       ])('%s (#5895)', (_name, schema, expected) => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
         expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
+      });
+      it('merges neither branch for a number field holding NaN, as for one holding no value (#5916)', () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const schema: RJSFSchema = {
+          type: 'number',
+          if: { not: { minimum: 10 } },
+          then: { title: 'Small', default: 1 },
+          else: { title: 'Big', default: 99 },
+        };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, Number.NaN)).toEqual({ type: 'number' });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, 3).title).toBe('Small');
       });
       it('merges neither branch for a field with no data, and checks null data as null, in either order (#5916)', () => {
         testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });

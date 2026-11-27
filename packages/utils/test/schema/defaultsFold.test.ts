@@ -1688,10 +1688,10 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
 
   it.each<[string, RJSFSchema, RJSFSchema, unknown, number]>([
     [
-      'an empty primitive field, which takes neither branch of an if of {} with no value',
+      'an empty primitive field, whose if of {} takes the then whatever the value, without the validator',
       { type: 'number' },
       { if: {}, then: { const: 10 } },
-      undefined,
+      10,
       0,
     ],
     [
