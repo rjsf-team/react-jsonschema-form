@@ -10,6 +10,8 @@ import {
 } from '../../../src/index.ts';
 import type { RJSFMarkedSchema, RJSFSchema, SchemaContext } from '../../../src/index.ts';
 import buildPlan, {
+  COMPARED_MEMBERS,
+  conditionReads,
   childSeeds,
   conjunctionOf,
   ownChains,
@@ -368,11 +370,88 @@ describe('buildPlan()', () => {
       expect(validator.calls).toBe(1);
       buildPlan({ context: { validator }, graph, seeds, data: 'y' });
       expect(validator.calls).toBe(2);
-      // An object may be mutated in place between calls, so its condition is checked again
-      const data = { a: 'x' };
-      buildPlan({ context: { validator }, graph, seeds, data });
-      buildPlan({ context: { validator }, graph, seeds, data, policy: { allOf: false } });
+    });
+    it('checks a condition again for an object only once a primitive it reads of it changes (#4051)', () => {
+      const validator = miniValidator();
+      const graph = parseSchemaGraph(schema);
+      const plan = (data: unknown) =>
+        buildPlan({ context: { validator }, graph, seeds: [{ node: graph.root, refPath: [] }], data });
+      const data: Record<string, unknown> = { a: 'x' };
+      plan(data);
+      plan({ a: 'x', other: 1 });
+      expect(validator.calls).toBe(1);
+      // An object may be mutated in place between calls, which the value read of it shows
+      data.a = 'y';
+      expect(plan(data).schema.properties).toHaveProperty('e');
+      expect(validator.calls).toBe(2);
+      // `required` tells a key the data lacks from one it holds as `undefined`
+      plan({});
+      plan({ a: undefined });
       expect(validator.calls).toBe(4);
+    });
+    it('checks a condition again for an array or object it reads only once that value differs from a copy of it (#4051)', () => {
+      const validator = miniValidator();
+      const graph = parseSchemaGraph(schema);
+      const plan = (data: unknown) =>
+        buildPlan({ context: { validator }, graph, seeds: [{ node: graph.root, refPath: [] }], data });
+      const tags: unknown[] = ['t', { n: 1 }, ['x'], null];
+      plan({ a: tags });
+      plan({ a: ['t', { n: 1 }, ['x'], null], other: 1 });
+      expect(validator.calls).toBe(1);
+      // The value may be mutated in place between calls, which the copy shows, at any depth
+      (tags[2] as unknown[]).push('y');
+      plan({ a: tags });
+      expect(validator.calls).toBe(2);
+      // A hole and a `__proto__` key are copied as the data holds them
+      const holed: unknown[] = [];
+      holed[1] = 'h';
+      const keyed = JSON.parse('{ "__proto__": 1 }') as unknown;
+      plan({ a: [holed, keyed] });
+      plan({ a: [holed, keyed] });
+      expect(validator.calls).toBe(3);
+      expect(plan({ a: [[undefined, 'h'], keyed] }).schema.properties).toHaveProperty('e');
+      expect(validator.calls).toBe(3);
+    });
+    it('checks a condition on every call where the value it reads is too large to compare, or no plain value', () => {
+      const validator = miniValidator();
+      const graph = parseSchemaGraph(schema);
+      const plan = (data: unknown) =>
+        buildPlan({ context: { validator }, graph, seeds: [{ node: graph.root, refPath: [] }], data });
+      const nested = [Array.from({ length: COMPARED_MEMBERS }, (_, index) => index)];
+      plan({ a: nested });
+      plan({ a: nested });
+      expect(validator.calls).toBe(2);
+      const keyed = {
+        k: Object.fromEntries(Array.from({ length: COMPARED_MEMBERS + 1 }, (_, index) => [index, index])),
+      };
+      plan({ a: keyed });
+      plan({ a: keyed });
+      expect(validator.calls).toBe(4);
+      const date = new Date(0);
+      plan({ a: [date] });
+      plan({ a: [date] });
+      expect(validator.calls).toBe(6);
+      // A value at the limit is compared
+      const fits = Array.from({ length: COMPARED_MEMBERS }, (_, index) => index);
+      plan({ a: fits });
+      plan({ a: [...fits] });
+      expect(validator.calls).toBe(7);
+    });
+    it('reads the whole data for a condition holding more than properties, required and type', () => {
+      expect(conditionReads({ type: 'object', properties: { a: {} }, required: ['a', 'b'] })).toEqual(['a', 'b']);
+      expect(conditionReads({ required: ['a'] })).toEqual(['a']);
+      expect(conditionReads({ properties: { a: {} }, not: {} })).toBeUndefined();
+      expect(conditionReads({ $ref: D('T') })).toBeUndefined();
+      expect(conditionReads(looseSchema({ properties: { a: { const: { $data: '1/b' } } } }))).toBeUndefined();
+      // The target of a reference may hold a `$data`
+      expect(conditionReads({ properties: { a: { $ref: D('T') } } })).toBeUndefined();
+      expect(conditionReads(looseSchema({ properties: [] }))).toBeUndefined();
+      expect(conditionReads(looseSchema({ required: true }))).toBeUndefined();
+    });
+    it('reads the whole data for a condition whose properties hold themselves', () => {
+      const holdsItself: RJSFSchema = { type: 'string' };
+      holdsItself.not = { not: holdsItself };
+      expect(conditionReads({ properties: { a: holdsItself } })).toBeUndefined();
     });
   });
 

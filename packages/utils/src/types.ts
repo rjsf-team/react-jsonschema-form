@@ -12,6 +12,7 @@ import type {
 } from 'react';
 import type { JSONSchema7 } from 'json-schema';
 
+import type { REUSES_DEFAULTS_FLAG } from './constants.ts';
 import type { TranslatableString } from './enums.ts';
 import type { DateElementFormat } from './getDateElementProps.ts';
 import './jsonSchemaAugmentation.ts';
@@ -233,6 +234,10 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
    * list on the type it resolves to. Only the names are read.
    */
   readonly widgets?: Readonly<Record<string, unknown>>;
+  /** Set by `Form`, which hands `getDefaultFormState()` back the state it returned with an edit, so the defaults of
+   * what the edit left alone are reused, see `REUSES_DEFAULTS_FLAG`
+   */
+  readonly [REUSES_DEFAULTS_FLAG]?: true;
 }
 
 /** What the defaults hand a field, which they fill it by, see `getFilledDefault()`. `{}` is the root's. A field's
@@ -1579,8 +1584,6 @@ export type ArrayFieldItemButtonsTemplateProps<
   hasRemove: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
-  /** A number stating the total number `items` in the array */
-  totalItems: number;
   /** Callback function that adds a new item below this item, or does nothing where its button can't act. React clears the event's `currentTarget` once dispatch ends, so it is `null` in a handler that reads it after an `await` */
   onAddItem: (event?: SyntheticEvent<HTMLElement>) => void;
   /** Callback function that copies this item below itself, or does nothing where its button can't act. Its event follows the same rule as `onAddItem`'s */
@@ -1626,8 +1629,6 @@ export type ArrayFieldItemTemplateProps<
   hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
-  /** A number stating the total number `items` in the array */
-  totalItems: number;
   /** Whether the array item's buttons are read-only, by the array's lock or the item's own; its inputs can stay editable, under an item's `ui:readonly: false` */
   readonly?: boolean;
   /** A stable, unique key for the array item */

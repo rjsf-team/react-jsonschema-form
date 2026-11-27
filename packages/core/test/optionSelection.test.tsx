@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import type { CustomValidator, DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type {
+  CustomMergeAllOf,
+  CustomValidator,
+  DefaultFormStateBehavior,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
 import { isPlainObject, ROOT_FIELD_PATH } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -1837,7 +1844,7 @@ describe('option selection as form state', () => {
         { schema, initialFormData: { p: { t: 2 } }, additionalPropertiesWhenAbsent: absent },
         'root_p__oneof_select',
         'root_x',
-        'B',
+        'B, C',
         { p: { b: 5, t: 2 } },
         { x: 'x', p: { b: 5, t: 2 } },
       );
@@ -1885,12 +1892,494 @@ describe('option selection as form state', () => {
         { schema, initialFormData: { p: { bb: 'y', c: 'z' } }, additionalPropertiesWhenAbsent: absent },
         'root_p__oneof_select',
         'root_x',
-        'B',
+        'B, C',
         { p: { b: 5, bb: 'y', c: 'z' } },
         { x: 'x', p: { b: 5, bb: 'y', c: 'z' } },
       );
     },
   );
+
+  // The data meets the `then`'s list and the field's own alike, so the field offers each option of its own merged
+  // with each of the `then`'s, as it does for an `allOf` entry holding the second list
+  it.each(['forbid', 'allow'] as const)(
+    'fills a typed object from the option it shows on every pass where a then holds a list beside its own, extra keys %s (#5930)',
+    async (additionalPropertiesWhenAbsent) => {
+      const schema = besideX({
+        p: {
+          type: 'object',
+          oneOf: [{ title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } }, splitKeysB],
+          if: true,
+          then: { oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] },
+        },
+      });
+      await expectShownOnEveryPass(
+        { schema, initialFormData: { p: { bb: 'y', c: 'z' } }, additionalPropertiesWhenAbsent },
+        'root_p__oneof_select',
+        'root_x',
+        // An option a merge built is named by each option it was built from
+        'B, C',
+        { p: { b: 5, bb: 'y', c: 'z' } },
+        { x: 'x', p: { b: 5, bb: 'y', c: 'z' } },
+      );
+    },
+  );
+
+  // An entry of `uiSchema.oneOf` describes the option as written, so each option a merge rebuilds reads the entry of
+  // the option of the field's own list it was built from
+  describe.each<[string, RJSFSchema]>([
+    ['an allOf entry', { allOf: [{ oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] }] }],
+    ['a then', { if: true, then: { oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] } }],
+  ])(
+    "reads the uiSchema entry of the written option each option %s's list rebuilds with the field's own was built from (#5930)",
+    (_, rest) => {
+      const schema = besideX({
+        p: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' } } },
+            { title: 'B', properties: { bb: { type: 'string' }, bz: { type: 'string' } } },
+          ],
+          ...rest,
+        },
+      });
+      const uiSchema = {
+        p: {
+          oneOf: [
+            { 'ui:title': 'UI-A' },
+            { 'ui:title': 'UI-B', bb: { 'ui:title': 'BB-B' }, bz: { 'ui:initialValue': 'init' } },
+          ],
+        },
+      };
+
+      it('labels each option and renders the one shown with it', () => {
+        const { node } = createFormComponent({ schema, uiSchema, initialFormData: { p: { bb: 'y', c: 'z' } } });
+        const select = selectOf(node, 'root_p__oneof_select');
+        expect([...select.options].map(({ text }) => text)).toEqual(['UI-A, C', 'UI-A, D', 'UI-B, C', 'UI-B, D']);
+        expect(getSelectedOptionValue(select)).toBe('UI-B, C');
+        expect(elementOf(node, 'label[for="root_p_bb"]')).toHaveTextContent('BB-B');
+      });
+
+      it('fills the option switched to with it', async () => {
+        const ref = createFormRef();
+        const { node } = createFormComponent({ ref, schema, uiSchema, initialFormData: { p: { a: 'q', c: 'z' } } });
+        await user.selectOptions(selectOf(node, 'root_p__oneof_select'), '3');
+        expect(handleOf(ref).getFormData()).toMatchObject({ p: { bz: 'init' } });
+      });
+    },
+  );
+
+  // Each pair keeps both options' `required`, so pairs built from A and from B stay apart and B can be picked
+  it("offers and switches to each pair of a then's list with the field's own whose options differ only by required (#5930)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' }, d: { type: 'string' } },
+      oneOf: [
+        { title: 'A', required: ['a'] },
+        { title: 'B', required: ['b'] },
+      ],
+      if: true,
+      then: {
+        oneOf: [
+          { title: 'C', required: ['c'] },
+          { title: 'D', required: ['d'] },
+        ],
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['A, C', 'A, D', 'B, C', 'B, D']);
+    await user.selectOptions(select, '2');
+    expect(getSelectedOptionValue(select)).toBe('B, C');
+  });
+
+  // `MultiSchemaField` labels a lone option written as a `$ref` by its definition's title, and so a merged one too
+  it("labels each pair of a then's list with the field's own options written as $refs by their definitions' titles (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        A: { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        B: { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      },
+      properties: {
+        p: {
+          oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
+          if: true,
+          then: {
+            oneOf: [
+              { title: 'C', properties: { c: { type: 'string' } } },
+              { title: 'D', properties: { d: { type: 'string' } } },
+            ],
+          },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['A, C', 'A, D', 'B, C', 'B, D']);
+  });
+
+  it("labels each pair an allOf list merges with the field's own $ref options by their ui:definitions titles (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        A: { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        B: { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      },
+      properties: {
+        p: {
+          oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }],
+          allOf: [
+            {
+              oneOf: [
+                { title: 'C', properties: { c: { type: 'string' } } },
+                { title: 'D', properties: { d: { type: 'string' } } },
+              ],
+            },
+          ],
+        },
+      },
+    };
+    const uiSchema = { 'ui:definitions': { '#/definitions/A': { 'ui:title': 'Alpha' } } };
+    const { node } = createFormComponent({ schema, uiSchema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['Alpha, C', 'Alpha, D', 'B, C', 'B, D']);
+  });
+
+  // Otherwise every pair built from the titled option reads alike, as "A", "A", "B", "B"
+  it("labels each pair of a then's list with the field's own by an untitled option's place in its list (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ],
+          if: true,
+          then: { oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual([
+      'A, Option 1',
+      'A, Option 2',
+      'B, Option 1',
+      'B, Option 2',
+    ]);
+  });
+
+  // Without the field's title, the pairs no option names would fall back to "P option 3", numbered in the merged list
+  it("labels each pair of a then's list with the field's own alike where only some options are titled (#5930)", () => {
+    const option = (key: string, title?: string): RJSFSchema => ({
+      ...(title ? { title } : {}),
+      properties: { [key]: { type: 'string' } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          title: 'P',
+          oneOf: [option('a', 'A'), option('b')],
+          if: true,
+          then: { oneOf: [option('c'), option('d')] },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual([
+      'A, Option 1',
+      'A, Option 2',
+      'Option 2, Option 1',
+      'Option 2, Option 2',
+    ]);
+  });
+
+  // Merged, A×X and A×Y would both pin `kind: 'a'`, so the discriminator would always show A×X
+  it("offers a then's list in place of the field's own where a discriminator couldn't tell the pairs apart (#5930)", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          type: 'object',
+          discriminator: { propertyName: 'kind' },
+          oneOf: [
+            { title: 'A', properties: { kind: { const: 'a' }, aa: { type: 'string' } }, required: ['kind'] },
+            { title: 'B', properties: { kind: { const: 'b' }, bb: { type: 'string' } }, required: ['kind'] },
+          ],
+          if: true,
+          then: {
+            oneOf: [
+              { title: 'X', properties: { x: { type: 'string' } }, required: ['x'] },
+              { title: 'Y', properties: { y: { type: 'string' } }, required: ['y'] },
+            ],
+          },
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema, initialFormData: { p: { kind: 'a', y: 'yy' } } });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect([...select.options].map(({ text }) => text)).toEqual(['X', 'Y']);
+    expect(getSelectedOptionValue(select)).toBe('Y');
+    expect(node.querySelector('#root_p_y')).toHaveValue('yy');
+  });
+
+  // Matching passes over the pairs' missing `required` keys and the typed values differ from the defaults, so every
+  // pair holding `b` or `d` scores alike, and the first, A×D, would fill `a`'s default and hide `b`
+  it("shows the pair of a then's list with the field's own whose required keys saved data holds, where their properties have defaults (#5930)", async () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: { type: 'object', oneOf: [option('a'), option('b')], if: true, then: { oneOf: [option('c'), option('d')] } },
+      },
+    };
+    const ref = createFormRef();
+    const formData = { p: { b: 'typed b', d: 'typed d' } };
+    const { node, onSubmit } = createFormComponent({ ref, schema, formData });
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B, D');
+    expect(node.querySelector('#root_p_b')).toHaveValue('typed b');
+    expect(node.querySelector('#root_p_d')).toHaveValue('typed d');
+    expect(handleOf(ref).validateForm()).toBe(true);
+    await submitForm(node, user);
+    expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
+  });
+
+  // The switched-to pair ties with B×D for the restored data, so keeping it would fill `c`'s default and hide `d`
+  it("restores the pair of a then's list with the field's own the saved data fills on reset() after a switch (#5930)", async () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: { type: 'object', oneOf: [option('a'), option('b')], if: true, then: { oneOf: [option('c'), option('d')] } },
+      },
+    };
+    const ref = createFormRef();
+    const formData = { p: { b: 'typed b', d: 'typed d' } };
+    const { node } = createFormComponent({ ref, schema, formData });
+    const select = selectOf(node, 'root_p__oneof_select');
+    await user.selectOptions(select, 'B, C');
+    expect(getSelectedOptionValue(select)).toBe('B, C');
+
+    act(() => handleOf(ref).reset());
+
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B, D');
+    expect(handleOf(ref).getFormData()).toEqual(formData);
+    expect(handleOf(ref).validateForm()).toBe(true);
+  });
+
+  // A custom merge's pairs record nothing of what they were built from, yet it merged two lists, so the switched-to pair
+  // still gives the tie up to the one the restored data fills
+  it("restores the pair a customMergeAllOf builds from an allOf entry's list and the field's own on reset() after a switch (#5930)", async () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` } },
+      required: [key],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: { type: 'object', oneOf: [option('a'), option('b')], allOf: [{ oneOf: [option('c'), option('d')] }] },
+      },
+    };
+    const customMergeAllOf: CustomMergeAllOf = (merged) => {
+      const { allOf, oneOf, ...rest } = merged;
+      const other = (allOf?.[0] as RJSFSchema | undefined)?.oneOf as RJSFSchema[] | undefined;
+      if (!other || !oneOf) {
+        return ((allOf ?? []) as RJSFSchema[]).reduce<RJSFSchema>((acc, entry) => ({ ...acc, ...entry }), rest);
+      }
+      return {
+        ...rest,
+        oneOf: (oneOf as RJSFSchema[]).flatMap((left) =>
+          other.map((right) => ({
+            title: `${left.title}${right.title}`,
+            properties: { ...left.properties, ...right.properties },
+            required: [...(left.required ?? []), ...(right.required ?? [])],
+          })),
+        ),
+      };
+    };
+    const ref = createFormRef();
+    const formData = { p: { b: 'typed b', d: 'typed d' } };
+    const { node } = createFormComponent({ ref, schema, formData, customMergeAllOf });
+    const select = selectOf(node, 'root_p__oneof_select');
+    expect(getSelectedOptionValue(select)).toBe('BD');
+    await user.selectOptions(select, 'BC');
+    expect(getSelectedOptionValue(select)).toBe('BC');
+
+    act(() => handleOf(ref).reset());
+
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('BD');
+    expect(handleOf(ref).getFormData()).toEqual(formData);
+  });
+
+  // The pairs still tie where `required` doesn't tell them apart, so only the keys each declares do
+  it.each([
+    { case: 'neither list requires its keys', own: false, then: false },
+    { case: "only the then's list requires its keys", own: false, then: true },
+    { case: "only the field's own list requires its keys", own: true, then: false },
+  ])(
+    "shows the pair of a then's list with the field's own declaring the keys saved data holds, where $case (#5930)",
+    async ({ own, then }) => {
+      const option = (key: string, required: boolean): RJSFSchema => ({
+        title: key.toUpperCase(),
+        properties: { [key]: { type: 'string', default: `${key}-default` } },
+        ...(required ? { required: [key] } : {}),
+      });
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'object',
+            anyOf: [option('a', own), option('b', own)],
+            if: true,
+            then: { anyOf: [option('c', then), option('d', then)] },
+          },
+        },
+      };
+      const formData = { p: { b: 'typed b', d: 'typed d' } };
+      const { node, onSubmit } = createFormComponent({ schema, formData });
+      expect(getSelectedOptionValue(selectOf(node, 'root_p__anyof_select'))).toBe('B, D');
+      expect(node.querySelector('#root_p_b')).toHaveValue('typed b');
+      expect(node.querySelector('#root_p_d')).toHaveValue('typed d');
+      await submitForm(node, user);
+      expectToHaveBeenCalledWithFormData(onSubmit, formData, true);
+    },
+  );
+
+  // The defaults pick for a written list ties the same way, so it must break the tie as the field does, or it fills A's
+  // default and A then outscores B
+  it('shows the option of a written list whose required keys saved data holds, where their properties have defaults (#5930)', () => {
+    const option = (key: string): RJSFSchema => ({
+      title: key.toUpperCase(),
+      properties: { [key]: { type: 'string', default: `${key}-default` }, d: { type: 'string', default: 'd-default' } },
+      required: [key, 'd'],
+    });
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { p: { type: 'object', oneOf: [option('a'), option('b')] } },
+    };
+    const { node } = createFormComponent({ schema, formData: { p: { b: 'typed b', d: 'typed d' } } });
+    expect(getSelectedOptionValue(selectOf(node, 'root_p__oneof_select'))).toBe('B');
+    expect(node.querySelector('#root_p_a')).toBeNull();
+    expect(node.querySelector('#root_p_b')).toHaveValue('typed b');
+  });
+
+  // The grid's selector writes the selector property, whose value each option of the rebuilt list built from the same
+  // written option shares, so switching to B picks B×C, which reads B's entry
+  it('labels and switches the options of a LayoutMultiSchemaField by the uiSchema entry of the written option each was built from (#5930)', async () => {
+    const schema = besideX({
+      p: {
+        type: 'object',
+        oneOf: [
+          { properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string' } } },
+          { properties: { kind: { type: 'string', const: 'b' }, bb: { type: 'string' }, bz: { type: 'string' } } },
+        ],
+        allOf: [{ oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] }],
+      },
+    });
+    const uiSchema = {
+      p: {
+        'ui:field': 'LayoutMultiSchemaField',
+        'ui:optionsSchemaSelector': 'kind',
+        oneOf: [{ 'ui:title': 'UI-A' }, { 'ui:title': 'UI-B', bz: { 'ui:initialValue': 'init' } }],
+      },
+    };
+    const ref = createFormRef();
+    const { node } = createFormComponent({ ref, schema, uiSchema, initialFormData: { p: { kind: 'a', c: 'z' } } });
+    const select = node.querySelectorAll('select')[0];
+    expect([...select.options].map(({ text }) => text)).toEqual(['', 'UI-A, C', 'UI-A, D', 'UI-B, C', 'UI-B, D']);
+
+    await user.selectOptions(select, 'UI-B, C');
+
+    expect(handleOf(ref).getFormData()).toMatchObject({ p: { kind: 'b', bz: 'init' } });
+  });
+
+  // Under `allOf: 'skipDefaults'` the fill takes only the `const` of the option a nested field's `allOf` offers, B's,
+  // which only the rebuilt list matches better than A's. The form stores its pick for that list, so an edit and a reset
+  // pick B too
+  it('fills the const of the option it shows on every pass where its option lists sit only in allOf entries (#5930)', async () => {
+    const schema = besideX({
+      p: {
+        type: 'object',
+        allOf: [
+          {
+            oneOf: [
+              { title: 'A', properties: { a: { type: 'string' }, c: { type: 'string' }, k: { const: 'a' } } },
+              { ...splitKeysB, properties: { ...splitKeysB.properties, k: { const: 'b' } } },
+            ],
+          },
+          { oneOf: [optionC, { title: 'D', properties: { d: { type: 'string' } } }] },
+        ],
+      },
+    });
+    await expectShownOnEveryPass(
+      { schema, initialFormData: { p: { bb: 'y', c: 'z' } } },
+      'root_p__oneof_select',
+      'root_x',
+      'B, C',
+      { p: { bb: 'y', c: 'z', k: 'b' } },
+      { x: 'x', p: { bb: 'y', c: 'z', k: 'b' } },
+    );
+  });
+
+  // A `ui:widget` that enters a value renders the options that inherit it, not the selector, unless every option has
+  // an entry of its own; here only the options built from N have one
+  it('renders the selector as a select where some options a then rebuilds read no uiSchema entry (#5930)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          oneOf: [
+            { type: 'number', title: 'N' },
+            { type: 'number', title: 'M', minimum: 0 },
+          ],
+          if: true,
+          then: { oneOf: [{ maximum: 9 }, { maximum: 99 }] },
+        },
+      },
+    };
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: { p: { 'ui:widget': 'updown', oneOf: [{}] } },
+      initialFormData: { p: 5 },
+    });
+    expect(elementOf(node, '#root_p__oneof_select').tagName).toBe('SELECT');
+  });
+
+  // A list of constants follows `ui:enumOrder`, so each name is read at its option's position in the schema, before
+  // the list is reordered
+  it("names each option of a LayoutMultiSchemaField's rebuilt list of constants where ui:enumOrder reorders it (#5930)", () => {
+    const schema = besideX({
+      p: {
+        oneOf: [
+          { const: 'a', title: 'A' },
+          { const: 'b', title: 'B' },
+        ],
+        allOf: [{ oneOf: [{ title: 'X' }] }],
+      },
+    });
+    const { node } = createFormComponent({
+      schema,
+      uiSchema: {
+        p: { 'ui:field': 'LayoutMultiSchemaField', 'ui:optionsSchemaSelector': 'kind', 'ui:enumOrder': ['b', '*'] },
+      },
+    });
+    expect([...node.querySelectorAll('select')[0].options].map(({ text }) => text)).toEqual(['', 'B, X', 'A, X']);
+  });
 
   // B's `then` declares `t` only for data holding `z`, so for this data `t` is an extra key B's own
   // `additionalProperties` takes

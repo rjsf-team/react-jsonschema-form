@@ -5,25 +5,31 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  CONST_KEY,
   DEPENDENCIES_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
+  ENUM_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
+  REQUIRED_KEY,
   REF_KEY,
   RJSF_REF_KEY,
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
+import deepEquals from '../../deepEquals.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
+import isPlainObject from '../../isPlainObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
+import setOwn from '../../setOwn.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
+import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
@@ -87,6 +93,8 @@ export interface CheckedCondition<S extends StrictRJSFSchema = RJSFSchema> {
   readonly site: string;
   readonly condition: S;
   readonly satisfied: boolean;
+  /** The keys of the data whose values alone decide the condition, see `conditionReads()`; none where more may */
+  readonly reads?: readonly string[];
 }
 
 /** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
@@ -217,6 +225,121 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
 const conditionMemo = new KeyedMemo<boolean>();
 
+/** The last check of a condition against the values it reads of an object, see `conditionReads()`, with a copy of
+ * those values, which a caller may mutate in place
+ */
+const readsMemo = new KeyedMemo<{ readonly values: unknown; readonly holds: boolean }>();
+
+/** The most array items and object values, at any depth, that the values a condition reads may hold to be copied and
+ * compared: past it, copying and comparing them costs more than the validator's check they would spare (#4051)
+ *
+ * @testSeam Exported for utils' own tests
+ */
+export const COMPARED_MEMBERS = 50;
+
+/** Stands in a copy `comparedCopy()` doesn't make */
+const UNCOPIED = Symbol('uncopied');
+
+/** Returns a copy of `value`, or `UNCOPIED` where it holds more than `limit` members at any depth, or anything but
+ * arrays, plain objects and primitives, whose copy would not stand for them
+ */
+function comparedCopy(value: unknown, limit: number): unknown {
+  let left = limit;
+  const copyOf = (held: unknown): unknown => {
+    if (typeof held !== 'object' || held === null) {
+      return held;
+    }
+    if (!Array.isArray(held) && !isPlainObject(held)) {
+      return UNCOPIED;
+    }
+    // Sized before its members are listed, which a large array would cost on every check
+    left -= Array.isArray(held) ? held.length : Object.keys(held).length;
+    if (left < 0) {
+      return UNCOPIED;
+    }
+    const members = Object.entries(held);
+    const copy: object = Array.isArray(held) ? new Array<unknown>(held.length) : {};
+    for (const [key, member] of members) {
+      const copied = copyOf(member);
+      if (copied === UNCOPIED) {
+        return UNCOPIED;
+      }
+      setOwn(copy, key, copied);
+    }
+    return copy;
+  };
+  return copyOf(value);
+}
+
+/** Returns whether the condition under `keys` holds for `values`, the values it reads of an object: what it held for
+ * the last values it was checked on where they are equal to these, or else what `check` says
+ */
+function readsCheck(keys: unknown[], values: unknown[], check: () => boolean): boolean {
+  // Compared before any copy is made: values deep-equal to a held copy are themselves within what `comparedCopy()`
+  // copies, so a hit costs no copy
+  const held = readsMemo.peek(keys);
+  if (held !== undefined && deepEquals(held.values, values)) {
+    return held.holds;
+  }
+  const holds = check();
+  const copy = comparedCopy(values, COMPARED_MEMBERS + values.length);
+  if (copy !== UNCOPIED) {
+    readsMemo.set(keys, { values: copy, holds });
+  }
+  return holds;
+}
+
+/** Returns what `memo` holds under `keys` for `values`, or else what `check` says, which it then holds */
+function latestCheck(memo: KeyedMemo<boolean>, keys: unknown[], values: unknown[], check: () => boolean): boolean {
+  const memoized = memo.peekLatest(keys, values);
+  if (memoized !== undefined) {
+    return memoized;
+  }
+  const holds = check();
+  memo.setLatest(keys, values, holds);
+  return holds;
+}
+
+/** Stands in the values a condition reads for a key the data doesn't hold, which `required` tells from `undefined` */
+const ABSENT = Symbol('absent');
+
+const READS_ONLY_OWN_KEYS = new Set<string>([PROPERTIES_KEY, REQUIRED_KEY, 'type']);
+
+const conditionReadsMemo = new WeakMap<object, { readonly keys?: readonly string[] }>();
+
+/** Whether `properties` may hold Ajv's `$data`, as do those holding a reference, whose target may hold one, and those
+ * `JSON.stringify()` can't write: a schema holding itself, or a BigInt
+ */
+function mayHoldDataRef(properties: object): boolean {
+  try {
+    return /"\$(data|ref|dynamicRef|recursiveRef)"/.test(JSON.stringify(properties));
+  } catch {
+    return true;
+  }
+}
+
+/** Returns the keys of an object whose values alone decide whether it satisfies `condition`: those its `properties`
+ * and `required` name, where it holds no other keyword but `type`. An edit of another key then leaves the condition
+ * as it was decided (#4051). None for a condition holding Ajv's `$data`, which reads a value beside the one it checks
+ *
+ * @param condition - The `if` as the schema declares it
+ * @returns - The keys, or undefined where the condition may read more of the data
+ * @testSeam Exported for utils' own tests
+ */
+export function conditionReads<S extends StrictRJSFSchema>(condition: S): readonly string[] | undefined {
+  let reads = conditionReadsMemo.get(condition);
+  if (reads === undefined) {
+    const { properties, required } = condition;
+    const readsOwnKeys =
+      Object.keys(condition).every((keyword) => READS_ONLY_OWN_KEYS.has(keyword)) &&
+      (properties === undefined || (isObject(properties) && !mayHoldDataRef(properties))) &&
+      (required === undefined || Array.isArray(required));
+    reads = readsOwnKeys ? { keys: [...new Set([...Object.keys(properties ?? {}), ...(required ?? [])])] } : {};
+    conditionReadsMemo.set(condition, reads);
+  }
+  return reads.keys;
+}
+
 /** How the conditions checked against dependency data a fill of the defaults copied for itself are decided, by the
  * copy: each the fill fixed, under its graph and site, as fixed, and each other, under the validator too, as the
  * validator first checked it
@@ -261,9 +384,10 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 }
 
 /** Returns whether `data` satisfies `checked.condition`, a condition of `graph`. A check of data that
- * is no object is memoized for the last data it was made on. One of an object is memoized only for a copy
- * `ownedDepData()` made, which also decides the conditions fixed for it; another object is checked on every call,
- * since a caller may mutate it in place between checks
+ * is no object is memoized for the last data it was made on. One of an object is memoized for the values the condition
+ * reads of it last checked, see `conditionReads()`, compared with a copy of them where they hold no more than
+ * `COMPARED_MEMBERS` members, and for a copy `ownedDepData()` made, which also decides the conditions fixed for it; any
+ * other is checked on every call, since a caller may mutate it in place between checks
  *
  * @param context - The `SchemaContext` whose validator checks the condition
  * @param graph - The graph the condition is a node of
@@ -274,24 +398,29 @@ export function ownedDepData<S extends StrictRJSFSchema>(
 export function checkCondition<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   graph: SchemaGraph<S>,
-  { key, site, condition }: Omit<CheckedCondition<S>, 'satisfied'>,
+  { key, site, condition, reads }: Omit<CheckedCondition<S>, 'satisfied'>,
   data: unknown,
 ): boolean {
-  if (typeof data === 'object' && data !== null) {
-    const owned = ownedDecisions.get(data);
-    const check = () => context.validator.isValid(condition, data, graph.rawRoot);
-    return owned ? (owned.peek([graph, site]) ?? owned.get([context.validator, graph, key], check)) : check();
-  }
   const keys = [context.validator, graph, key];
-  const memoized = conditionMemo.peekLatest(keys, [data]);
-  if (memoized !== undefined) {
-    return memoized;
+  if (typeof data === 'object' && data !== null) {
+    const isValid = () => context.validator.isValid(condition, data, graph.rawRoot);
+    const check =
+      reads && isObject(data)
+        ? () =>
+            readsCheck(
+              keys,
+              reads.map((read) => (Object.hasOwn(data, read) ? data[read] : ABSENT)),
+              isValid,
+            )
+        : isValid;
+    const owned = ownedDecisions.get(data);
+    return owned ? (owned.peek([graph, site]) ?? owned.get(keys, check)) : check();
   }
   // A field with no data is checked as an empty object: `required` constrains only objects, so the missing data
   // itself would hold every `if` that requires a key
-  const holds = context.validator.isValid(condition, data ?? {}, graph.rawRoot);
-  conditionMemo.setLatest(keys, [data], holds);
-  return holds;
+  return latestCheck(conditionMemo, keys, [data], () =>
+    context.validator.isValid(condition, data ?? {}, graph.rawRoot),
+  );
 }
 
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
@@ -315,7 +444,20 @@ export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType
   unmerged?: S,
 ): S | JSONSchema7Definition {
   try {
-    return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
+    if (!context.customMergeAllOf) {
+      return shallowAllOfMerge(schema);
+    }
+    const merged = context.customMergeAllOf(schema);
+    const holders = ([] as unknown[]).concat(schema, schema[ALL_OF_KEY]);
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+      const list: unknown = getByPath(merged, keyword);
+      const lists = holders.map((holder): unknown => getByPath(holder, keyword)).filter(Array.isArray);
+      if (Array.isArray(list) && lists.length > 1) {
+        const written = new Set(lists.flat());
+        list.filter((option) => isObject(option) && !written.has(option)).forEach((option) => customBuilt.add(option));
+      }
+    }
+    return merged;
   } catch (error) {
     logOnce('could not merge subschemas in allOf:\n', { error });
     return unmerged ?? withoutKeys(schema, ALL_OF_KEY);
@@ -601,8 +743,24 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     : schemaFrom(graph.rawRoot, {});
 }
 
-/** The options of the lists each option a merge of lists rebuilt was built from, see `rebuiltLists()` */
+/** The options of the lists each option a merge of lists rebuilt was built from, see `recorded()` */
 const optionSources = new WeakMap<object, readonly unknown[]>();
+
+/** The options a `customMergeAllOf` returned under a keyword two or more of the lists it merged hold, other than one
+ * of those lists' own options, which keep no record of what they were built from. The set is module-wide, so a
+ * written option handed back unchanged is never marked, or it would read as built in every form
+ */
+const customBuilt = new WeakSet<object>();
+
+/** Returns whether a merge of lists built the option `option`: one the form's merge rebuilt, see `sourcesOfOption()`,
+ * or one a `customMergeAllOf` returned for two or more lists under its keyword
+ *
+ * @param option - The option
+ * @returns - Whether a merge of lists built it
+ */
+export function isMergeBuilt(option: object): boolean {
+  return optionSources.has(option) || customBuilt.has(option);
+}
 
 /** Returns the options of the `anyOf`/`oneOf` lists the option `option` a plan's merge of lists rebuilt was built from,
  * one from each list in the order they were merged, or undefined for an option no such merge built
@@ -628,17 +786,117 @@ function rebuiltLists(schemas: readonly object[]): [string, ReturnType<typeof me
       return Array.isArray(list) ? [list] : [];
     });
     const [first, ...rest] = lists;
-    const options = first !== undefined && rest.length > 0 ? mergeOptionLists(first, rest) : undefined;
-    if (options === undefined) {
-      return [];
-    }
-    for (const { option, sources } of options) {
-      if (isObject(option)) {
-        optionSources.set(option, sources);
-      }
-    }
-    return [[keyword, options]];
+    const options = first !== undefined && rest.length > 0 ? recorded(mergeOptionLists(first, rest)) : undefined;
+    return options === undefined ? [] : [[keyword, options]];
   });
+}
+
+/** Returns `options`, each recording the options it was built from, see `sourcesOfOption()` */
+function recorded(options: ReturnType<typeof mergeOptionLists>): ReturnType<typeof mergeOptionLists> {
+  for (const { option, sources } of options ?? []) {
+    if (isObject(option)) {
+      optionSources.set(option, sources);
+    }
+  }
+  return options;
+}
+
+/** The meta-data keywords a branch's option relabels a field's option by, where the pair's constraints are both's */
+const ANNOTATION_KEYS = ['title', 'description', 'default', 'examples', 'deprecated', 'readOnly', 'writeOnly'];
+
+/** Returns the option a field's `left` and a branch's `right` merge to: the data meets both, so the pair keeps both's
+ * constraints, merged as an `allOf` pair is with the field's keys first, and the branch's annotations, so a `then`
+ * still relabels the field's options. A pair no data can meet, which the merge rejects or whose `$ref`s or `const`s
+ * differ, is undefined, as is one holding `false`
+ */
+function branchPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
+  if (isObject(left) && isObject(right) && pairConflicts(left, right)) {
+    return undefined;
+  }
+  const merged = mergedPair(left, right);
+  return merged === undefined || merged === false ? undefined : withAnnotationsOf(merged, right);
+}
+
+/** Returns whether `left` and `right`, or two properties they both declare, name different `$ref`s or `const`s, which
+ * the merge would keep the first of, or a `const` the other's `enum` leaves out, which it keeps beside it. shortcut:
+ * two `$ref`s are compared by name, not by what they resolve to; upgrade if a branch's options reference definitions
+ * the field's own options also meet
+ */
+function pairConflicts(left: object, right: object): boolean {
+  const [ref, otherRef] = [left, right].map((schema): unknown => Reflect.get(schema, REF_KEY));
+  const [value, other] = [left, right].map((schema): unknown => Reflect.get(schema, CONST_KEY));
+  const [values, otherValues] = [left, right].map((schema): unknown => Reflect.get(schema, ENUM_KEY));
+  if (
+    (typeof ref === 'string' && typeof otherRef === 'string' && ref !== otherRef) ||
+    (value !== undefined && other !== undefined && !deepEquals(value, other)) ||
+    outsideEnum(value, otherValues) ||
+    outsideEnum(other, values)
+  ) {
+    return true;
+  }
+  const [properties, others] = [left, right].map((schema): unknown => Reflect.get(schema, PROPERTIES_KEY));
+  return (
+    isObject(properties) &&
+    isObject(others) &&
+    Object.keys(others).some((key) => {
+      const [one, another]: unknown[] = [Reflect.get(properties, key), Reflect.get(others, key)];
+      return Object.hasOwn(properties, key) && isObject(one) && isObject(another) && pairConflicts(one, another);
+    })
+  );
+}
+
+/** Returns whether two of the `options` a `schema` naming a `discriminator` offers pin its property to a value in
+ * common, its `const` or else one of its `enum`, or both by neither, so the discriminator, which picks the first option
+ * holding the data's value, can't tell them apart for that value. shortcut: two options pinning it by neither count as
+ * alike even where neither declares the property, which the validator tells apart, since a pin through a `$ref` or a
+ * `pattern` reads as neither too; upgrade by reading the declarations through `declaredProperties()` if such a field
+ * needs its merged options
+ */
+function sharesDiscriminator(schema: object, options: readonly unknown[]): boolean {
+  const name: unknown = getByPath(schema, DISCRIMINATOR_PATH);
+  if (typeof name !== 'string') {
+    return false;
+  }
+  const pins = options.map((option) => {
+    const [value, values] = [CONST_KEY, ENUM_KEY].map((keyword) => getByPath(option, [PROPERTIES_KEY, name, keyword]));
+    if (value !== undefined) {
+      return [value];
+    }
+    return Array.isArray(values) ? values : undefined;
+  });
+  return pins.some((pin, at) =>
+    pins.slice(0, at).some((other) => (pin && other ? pin.some((one) => !outsideEnum(one, other)) : pin === other)),
+  );
+}
+
+/** Returns whether `values` is an `enum` leaving out `value`, a `const` */
+function outsideEnum(value: unknown, values: unknown): boolean {
+  return value !== undefined && Array.isArray(values) && !values.some((one) => deepEquals(one, value));
+}
+
+/** Returns `merged` with the annotations of `branch` laid over it, its properties' too. shortcut: annotations in the
+ * branch option's `$ref` definition or in its subschemas other than `properties`, such as `items`, don't win; upgrade
+ * if a `then` relabels those
+ */
+function withAnnotationsOf(merged: JSONSchema7Definition, branch: unknown): JSONSchema7Definition {
+  if (typeof merged === 'boolean' || !isObject(branch)) {
+    return merged;
+  }
+  const result: Record<string, unknown> = { ...merged };
+  for (const key of ANNOTATION_KEYS.filter((annotation) => Object.hasOwn(branch, annotation))) {
+    result[key] = Reflect.get(branch, key);
+  }
+  const { properties } = merged;
+  const others: unknown = Reflect.get(branch, PROPERTIES_KEY);
+  if (properties !== undefined && isObject(others)) {
+    result[PROPERTIES_KEY] = Object.fromEntries(
+      Object.entries(properties).map(([key, property]) => [
+        key,
+        Object.hasOwn(others, key) ? withAnnotationsOf(property, Reflect.get(others, key)) : property,
+      ]),
+    );
+  }
+  return result;
 }
 
 /** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
@@ -969,6 +1227,48 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     };
   }
 
+  /** Merges the `then`/`else` or `dependencies` schema declared at `node` into `part`, see `mergeBranch()`. The data
+   * meets a list the branch holds and one the part holds under the same keyword alike, so the field offers each option
+   * of the part's merged with each of the branch's, see `branchPair()`, where the branch's list would otherwise
+   * replace the part's. A pair equal to one already kept is kept too, since the branch's annotations can make pairs
+   * built from options differing only in theirs equal, which would leave one of them unoffered. The branch's list
+   * replaces the part's where a `discriminator` couldn't tell two merged options apart, see `sharesDiscriminator()`,
+   * since the field would only ever show the first. A list the plan chose an option of stays as the merge leaves it,
+   * since the fold tells the lists it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list
+   * replaces the part's, since that merge reads its first entry as winning where the branch's annotations win; upgrade
+   * if such a field needs both lists offered
+   */
+  private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId): Part<S> {
+    const merged = mergeBranch(part, branch, 'b', node);
+    if (this.context.customMergeAllOf) {
+      return merged;
+    }
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+      const own: unknown = Reflect.get(part.schema, keyword);
+      const other: unknown = Reflect.get(branch.schema, keyword);
+      const options =
+        Array.isArray(own) &&
+        Array.isArray(other) &&
+        !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
+          ? recorded(mergeOptionLists(own, [other], branchPair, false))
+          : undefined;
+      if (
+        options !== undefined &&
+        !sharesDiscriminator(
+          merged.schema,
+          options.map(({ option }) => option),
+        )
+      ) {
+        Reflect.set(
+          merged.schema,
+          keyword,
+          options.map(({ option }) => option),
+        );
+      }
+    }
+    return merged;
+  }
+
   private mergeAll(schema: S, unmerged: S): S {
     const merged = mergeAllOf(this.context, schema, unmerged);
     return merged === unmerged || (isSchemaObject<S>(merged) && this.context.customMergeAllOf)
@@ -976,10 +1276,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       : schemaFrom(schema, merged);
   }
 
-  private holds(key: string, condition: S, site = key): boolean {
+  private holds(key: string, condition: S, site = key, reads?: readonly string[]): boolean {
     this.readsData = true;
-    const satisfied = checkCondition(this.context, this.graph, { key, site, condition }, this.depData);
-    this.checked.push({ key, site, condition, satisfied });
+    const satisfied = checkCondition(this.context, this.graph, { key, site, condition, reads }, this.depData);
+    this.checked.push({ key, site, condition, satisfied, reads });
     return satisfied;
   }
 
@@ -1005,7 +1305,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     // function for the schema it reads as
     const satisfied =
       conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, targetOf(this.graph, condition), `if:${conditionProvider.node.id}`)
+        ? this.holds(
+            `if:${condition}`,
+            targetOf(this.graph, condition),
+            `if:${conditionProvider.node.id}`,
+            conditionReads(conditionNode.raw),
+          )
         : conditionNode.kind !== 'boolean' || conditionNode.value;
     const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
     const branchProvider = keywords.get(branchKey);
@@ -1013,7 +1318,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
     return branchPart === undefined || branchNode === undefined
       ? without
-      : mergeBranch(without, branchPart, 'b', branchNode);
+      : this.mergeBranchOver(without, branchPart, branchNode);
   }
 
   private branch(
@@ -1075,7 +1380,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         const dependent = this.expandBranch(dependency, provider.refPath, 'dependency', key);
         if (dependent !== undefined) {
           Object.keys(dependent.schema.properties ?? {}).forEach((name) => declared?.add(name));
-          next = mergeBranch(next, dependent, 'b', dependency);
+          next = this.mergeBranchOver(next, dependent, dependency);
         }
       }
     }
@@ -1126,7 +1431,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const chosen = this.expandBranch(valid[0], provider.refPath, 'dependency');
-    return chosen === undefined ? part : mergeBranch(part, withoutProperty(chosen, key), 'b', valid[0]);
+    return chosen === undefined ? part : this.mergeBranchOver(part, withoutProperty(chosen, key), valid[0]);
   }
 
   private applyOption(
