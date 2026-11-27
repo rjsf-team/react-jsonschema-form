@@ -113,7 +113,6 @@ export default function applyValidatorErrorTitles<
           ? keywordParentSchemaAt<S>(
               schema,
               [...path.split('/').slice(1, -1).map(decodeSchemaPathKey), PROPERTIES_KEY, name],
-              'title',
               skipsRefs,
             )
           : undefined) ?? getByPath(holder, [PROPERTIES_KEY, name]));
