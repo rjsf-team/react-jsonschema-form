@@ -960,4 +960,18 @@ describe('getFilledDefault() reads what the fill writes', () => {
       'x',
     );
   });
+
+  it("fills an object holding only extra keys its default doesn't name with none of them, as it holds no data (#5954)", () => {
+    const root: RJSFSchema = { type: 'object', additionalProperties: { type: 'string', default: 'x' } };
+    const retrieved = retrieveSchema(descendantWins, root, root, { d: 'x' });
+    expect(getFilledDefault(descendantWins, retrieved, root)).toBeUndefined();
+    expect(
+      getFilledDefault(
+        descendantWins,
+        getByPath<RJSFSchema>(retrieved, ['properties', 'd']),
+        root,
+        childFillOf(descendantWins, retrieved, root, {}, 'd'),
+      ),
+    ).toBe('x');
+  });
 });

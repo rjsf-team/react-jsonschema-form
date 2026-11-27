@@ -5160,6 +5160,7 @@ describe('judging an extra key by the value the fill writes for it, an allOf in 
   const keywords = {
     additionalProperties: { additionalProperties: extraKey },
     patternProperties: { patternProperties: { '^c': extraKey } },
+    unevaluatedProperties: { unevaluatedProperties: extraKey },
     'a $ref to an allOf': {
       $defs: { Extra: extraKey },
       additionalProperties: { $ref: '#/$defs/Extra' },
@@ -5231,6 +5232,70 @@ describe('judging an extra key by the value the fill writes for it, an allOf in 
       await user.selectOptions(elementOf(container, '#root__oneof_select'), 'T');
 
       expect(handleOf(ref).getFormData()).toEqual({ kind: 't', newKey: 't' });
+    },
+  );
+
+  it.each(['skipDefaults', 'populateDefaults'] as const)(
+    "replaces the value it filled from the object default where the old option's additionalProperties merges into the object's, under %s",
+    async (allOf) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        default: { c: 'p' },
+        additionalProperties: extraKey,
+        oneOf: [
+          { title: 'S', properties: { kind: { const: 's' } }, additionalProperties: { type: 'string' } },
+          { title: 'T', properties: { kind: { const: 't' }, c: { type: 'string', default: 't' } } },
+        ],
+      };
+      const ref = createRef<FormRef>();
+      const { container } = render(
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={validator}
+          initialFormData={{ kind: 's' }}
+          defaultFormStateBehavior={{ allOf }}
+        />,
+      );
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 's', c: allOf === 'populateDefaults' ? 'a' : 'p' });
+
+      await user.selectOptions(elementOf(container, '#root__oneof_select'), 'T');
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 't', c: 't' });
+    },
+  );
+
+  it.each(['skipDefaults', 'populateDefaults'] as const)(
+    'keeps an object holding only a key the add button filled, as the user added it, under %s',
+    async (allOf) => {
+      const holder = (fill: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        additionalProperties: { type: 'string', default: 'x' },
+        ...fill,
+      });
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { title: 'S', properties: { kind: { const: 's' }, o: holder({}) } },
+          { title: 'T', properties: { kind: { const: 't' }, o: holder({ default: { d: 't' } }) } },
+        ],
+      };
+      const ref = createRef<FormRef>();
+      const { container } = render(
+        <Form
+          ref={ref}
+          schema={schema}
+          validator={validator}
+          initialFormData={{ kind: 's' }}
+          defaultFormStateBehavior={{ allOf }}
+        />,
+      );
+      await user.click(elementOf(container, `#${buttonId('root_o', 'add')}`));
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 's', o: { newKey: 'x' } });
+
+      await user.selectOptions(elementOf(container, '#root__oneof_select'), 'T');
+
+      expect(handleOf(ref).getFormData()).toEqual({ kind: 't', o: { newKey: 'x' } });
     },
   );
 });
