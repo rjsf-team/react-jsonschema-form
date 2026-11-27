@@ -3860,7 +3860,7 @@ An object other than an array or a plain object, such as a `Date`, is kept in th
 - options: S[] - The list of options to find a matching options from
 - [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
 - [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
-- [offeredBy]: S | undefined - The schema of the field offering the options, as written where it offers them, a `$ref` and the keywords beside it included, which says under `additionalPropertiesWhenAbsent: 'allow'` whether an option takes the data's extra keys an absent keyword takes; it has no effect on the options `retrieveSchema()` hands out, which are read as retrieval left them, so copy a retrieved field's own `oneOf`/`anyOf` options, or retrieve each, before passing them with it
+- [offeredBy]: S | undefined - The schema of the field offering the options, as written where it offers them, a `$ref` and the keywords beside it included, which says under `additionalPropertiesWhenAbsent: 'allow'` whether an option takes the data's extra keys an absent keyword takes; it has no effect on the options `retrieveSchema()` hands out, which are read as retrieval left them, so copy a retrieved field's own `oneOf`/`anyOf` options, or retrieve each, before passing them with it; an object the root holds in two or more places is read as it stands, so name the field itself where it merges into another
 
 #### Returns
 

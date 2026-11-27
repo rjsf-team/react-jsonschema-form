@@ -114,6 +114,10 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
    * parsed from it
    */
   byObject(raw: object, outerBase?: string): NodeId | undefined;
+  /** Whether the root graph reached the object node `id` in two or more places, as a root holding one object twice
+   * does; a graph extending it answers only for the schemas it parsed itself
+   */
+  isShared(id: NodeId): boolean;
   /** Returns the node `raw` parsed to, parsing a schema from outside the root into a graph that extends this one with
    * it, once per content and base. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an
    * option spread over its parent, is such a schema: its `$ref`s resolve against the root like any other, or against
@@ -281,6 +285,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   private readonly own: SchemaNode<S>[] = [];
   /** The nodes parsed from each object, in the order they were: one per base URI it was reached under */
   private readonly objects = new WeakMap<object, ObjectNode<S>[]>();
+  private readonly shared = new Set<NodeId>();
   /** The nodes parsed from data, which a `$ref` reached through a keyword holding no subschemas */
   private readonly dataNodes = new Set<NodeId>();
   private readonly pointers = new Map<string, NodeId>();
@@ -325,6 +330,10 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
 
   byObject(raw: object, outerBase?: string): NodeId | undefined {
     return (outerBase === undefined ? undefined : this.knownObject(raw, outerBase))?.id ?? this.knownObject(raw)?.id;
+  }
+
+  isShared(id: NodeId): boolean {
+    return this.shared.has(id);
   }
 
   child(id: NodeId, keyword: string, key?: string): NodeId | undefined {
@@ -496,7 +505,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (nodes === undefined) {
       this.objects.set(node.raw, [node]);
     } else {
+      // Reached again under another base, the object is held in two places as much as one reached under the same base
       nodes.push(node);
+      nodes.forEach(({ id }) => this.shared.add(id));
     }
   }
 
@@ -508,6 +519,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (known !== undefined) {
       if (!this.pointers.has(pointer)) {
         this.pointers.set(pointer, known.id);
+        this.shared.add(known.id);
       }
       return known;
     }

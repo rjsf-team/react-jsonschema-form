@@ -216,12 +216,18 @@ function fieldMergedInto<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: 
 
 /** Returns the field a caller's `offeredBy` stands for: where the root holds it, the field it merges into, as the
  * field holding a list the root declares is found, so naming the `allOf` entry or `then` holding the list reads the
- * same as naming the field; any other schema as it stands
+ * same as naming the field; any other schema, or one the root holds in two or more places, which could stand for any
+ * of their fields, as it stands
  */
 function offeringField<S extends StrictRJSFSchema>(offeredBy: S, rootSchema: S): S {
   const graph = parseSchemaGraph<S>(rootSchema);
   const id = graph.byObject(offeredBy);
-  const field = id === undefined ? undefined : graph.node(fieldMergedInto<S>(graph, id));
+  // A schema merging into one the root holds in two or more places could stand for any of their fields too
+  let shared = false;
+  for (let up = id; up !== undefined && !shared; up = mergedInto<S>(graph, up)) {
+    shared = graph.isShared(up);
+  }
+  const field = id === undefined || shared ? undefined : graph.node(fieldMergedInto<S>(graph, id));
   return field?.kind === 'schema' ? field.raw : offeredBy;
 }
 
@@ -542,7 +548,8 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
       }, schema)
     : schema;
   // An option of a list no field is known to offer, as one built in code or a copy passed without its `offeredBy`,
-  // reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys itself
+  // reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys itself;
+  // so does a handed-out option, which is read as retrieval left it whatever `offeredBy` says
   const stubContext: SchemaContext<S, F> =
     (readsAbsent && plan !== undefined) || !readsAbsentAsAllowed<S, F>(context)
       ? context
@@ -1020,7 +1027,8 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  *          the data's extra keys an absent keyword takes, or the field takes them beside it; without it, that is read
  *          off the field the root declares the options in, and options it declares nowhere take none. It has no effect on
  *          the options `retrieveSchema()` hands out, which are read as retrieval left them, so copy a retrieved field's
- *          own options, or retrieve each, before passing them with it
+ *          own options, or retrieve each, before passing them with it. An object the root holds in two or more places is
+ *          read as it stands, so name the field itself where it merges into another
  * @returns - The index of the option that is the closest match to the `formData`, or the `selectedOption` when there
  *          are no options
  */
