@@ -12008,6 +12008,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           { type: ['boolean', 'null'], anyOf: [{ oneOf: trueOrNull }, { title: 'any' }] },
         ],
         [
+          'options that are not constants, starting on an enum of true',
+          { type: 'boolean', anyOf: [{ enum: [true] }, { title: 'any' }] },
+        ],
+        [
+          'an untyped anyOf starting on a boolean enum of true and null',
+          { anyOf: [{ type: ['boolean', 'null'], enum: [true, null] }, { const: true }] },
+        ],
+        [
+          'a oneOf starting on a const of true',
+          { type: 'boolean', oneOf: [{ const: true, description: 'yes' }, { type: 'boolean' }] },
+          { constAsDefaults: 'never' },
+        ],
+        [
           'a list of true and null inside an option of an untyped anyOf',
           { anyOf: [{ oneOf: trueOrNull }, { type: 'number' }] },
         ],
@@ -12048,7 +12061,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a plain boolean', { type: 'boolean' }],
         ['a boolean or null', { type: ['boolean', 'null'] }],
         ['a const spelled out as undefined', { type: 'boolean', const: undefined }],
-        ['options that are not constants', { type: 'boolean', anyOf: [{ enum: [true] }, { title: 'any' }] }],
+        [
+          'options that are not constants, starting on one that lists false',
+          { type: 'boolean', anyOf: [{ enum: [true, false] }, { title: 'any' }] },
+        ],
+        [
+          'options that are not constants, starting on one that lists nothing',
+          { type: 'boolean', anyOf: [{ title: 'any' }, { enum: [true] }] },
+        ],
+        [
+          'an untyped anyOf starting on a boolean enum of false and true',
+          { anyOf: [{ type: 'boolean', enum: [false, true] }, { const: true }] },
+        ],
         [
           'a list of true and false inside an option of a list that is not one',
           { type: ['boolean', 'null'], anyOf: [{ oneOf: untitled }, { title: 'any' }] },
