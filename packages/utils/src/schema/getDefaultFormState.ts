@@ -3846,9 +3846,11 @@ export function fieldFillOf<S extends StrictRJSFSchema = RJSFSchema, F extends F
   // through a stub that merged an `allOf` the fill may skip
   const properties = Object.entries(schema.properties ?? {});
   const unstubbed = properties.filter(([, property]) => !hasSchemaMarker(property, ADDITIONAL_PROPERTY_FLAG));
-  let read = isHandedOut(schema) ? { ...schema } : schema;
+  let read = schema;
   if (unstubbed.length < properties.length) {
     read = { ...schema, properties: Object.fromEntries(unstubbed) };
+  } else if (isHandedOut(schema)) {
+    read = { ...schema };
   }
   const parentDefaults = fill.inheritedDefault;
   const value = foldField<unknown, S, F>(context, callRoot<S>(rootSchema, read), {
