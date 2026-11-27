@@ -98,6 +98,21 @@ export default function requiredTitleTests(buildValidator: () => ValidatorType) 
         'UI name',
         itemUiSchema,
       ],
+      [
+        'required by a then branch of a property another property’s $ref names',
+        { type: 'object', properties: { x: item(requiredThen), y: { $ref: '#/properties/x' } } },
+        { y: { flag: true } },
+        'Full name',
+      ],
+      [
+        'required by a then branch of the root, inside an array item a recursive $ref names it in',
+        item({
+          ...requiredThen,
+          properties: { ...item({}).properties, kids: { type: 'array', items: { $ref: '#' } } },
+        }),
+        { kids: [{ flag: true }] },
+        'Full name',
+      ],
     ])('%s', (_, schema, formData, title, uiSchema) => {
       const required = buildValidator()
         .validateFormData(formData, schema, undefined, undefined, uiSchema)

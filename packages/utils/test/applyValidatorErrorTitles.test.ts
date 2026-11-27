@@ -119,6 +119,111 @@ describe('applyValidatorErrorTitles()', () => {
     expect(titles).toEqual(new Map());
   });
 
+  it('reads no field of the root for an equal branch the root leads along the schemaPath to another instance', () => {
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.a',
+      schemaPath: '#/allOf/0/required',
+      parentSchema: { required: ['name'] },
+      uiSchema: { name: { 'ui:title': 'Root UI name' } },
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+        allOf: [{ required: ['name'] }],
+      },
+    });
+    expect(titles).toEqual(new Map());
+  });
+
+  // The root a recursive `$ref: '#'` names is reached again at each kid, any number of times, and nowhere else
+  it.each<[string, string, Map<string, string>]>([
+    ['a kid of a kid', '.kids.0.kids.1', new Map([['name', 'Root name']])],
+    ['another instance', '.a', new Map()],
+  ])(
+    'reads the root along a schemaPath the root leads along to %s through a recursive $ref',
+    (_, property, expected) => {
+      const { titles } = applyValidatorErrorTitles({
+        message,
+        names: ['name'],
+        quote: "'",
+        property,
+        schemaPath: '#/allOf/0/required',
+        parentSchema: { required: ['name'] },
+        schema: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', title: 'Root name' },
+            kids: { type: 'array', items: { $ref: '#' } },
+            a: { $ref: '#/$defs/F' },
+          },
+          allOf: [{ required: ['name'] }],
+        },
+      });
+      expect(titles).toEqual(expected);
+    },
+  );
+
+  // A `$ref: '#'` inside a definition sits wherever a `$ref` names the definition, so the root is reached anywhere
+  it('reads the root along a schemaPath anywhere where a recursive $ref to it sits in a definition', () => {
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.kids.0',
+      schemaPath: '#/allOf/0/required',
+      parentSchema: { required: ['name'] },
+      schema: {
+        $defs: { Kids: { type: 'array', items: { $ref: '#' } } },
+        type: 'object',
+        properties: { name: { type: 'string', title: 'Root name' }, kids: { $ref: '#/$defs/Kids' } },
+        allOf: [{ required: ['name'] }],
+      },
+    });
+    expect(titles).toEqual(new Map([['name', 'Root name']]));
+  });
+
+  it('reads a property of the root its $ref target declares where the parentSchema is the root as written', () => {
+    const schema: RJSFSchema = {
+      $defs: { R: { properties: { name: { type: 'string', title: 'R name' } } } },
+      $ref: '#/$defs/R',
+      required: ['name'],
+    };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '',
+      schemaPath: '#/required',
+      parentSchema: schema,
+      schema,
+    });
+    expect(titles).toEqual(new Map([['name', 'R name']]));
+  });
+
+  it('reads the field holding the branch along a schemaPath into a definition, which a $ref anywhere reaches', () => {
+    const item: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Full name' } },
+      then: { required: ['name'] },
+    };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.arr.0',
+      schemaPath: '#/$defs/Item/then/required',
+      parentSchema: item.then,
+      schema: {
+        $defs: { Item: item },
+        type: 'object',
+        properties: { arr: { type: 'array', items: { $ref: '#/$defs/Item' } } },
+      },
+    });
+    expect(titles).toEqual(new Map([['name', 'Full name']]));
+  });
+
   it('reads the parentSchema as it is where the root leads along the schemaPath to another schema', () => {
     const { titles } = applyValidatorErrorTitles({
       message,

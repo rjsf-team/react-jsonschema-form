@@ -1,11 +1,29 @@
-import { ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from './constants.ts';
+import {
+  ADDITIONAL_ITEMS_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
+  CONTAINS_KEY,
+  DEFINITIONS_KEY,
+  DEPENDENCIES_KEY,
+  DEPENDENT_SCHEMAS_KEY,
+  ITEMS_KEY,
+  ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
+  UNEVALUATED_ITEMS_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
+} from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import getFieldSchemaPath from './getFieldSchemaPath.ts';
 import getKeywordParentSchema, { keywordParentSchemaAt } from './getKeywordParentSchema.ts';
 import getUiOptions from './getUiOptions.ts';
 import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
-import { stringKeyword } from './schema/graph/parseSchemaGraph.ts';
+import parseSchemaGraph, { childPointer, stringKeyword, unescapeToken } from './schema/graph/parseSchemaGraph.ts';
+import type { ObjectNode } from './schema/graph/parseSchemaGraph.ts';
 import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
@@ -35,6 +53,74 @@ export interface ValidatorErrorTitleSource<
   parentSchema?: unknown;
   /** The form's root schema */
   schema?: S;
+}
+
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const INSTANCE_STEP_KEYS = new Set([
+  PROPERTIES_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
+  ITEMS_KEY,
+  ADDITIONAL_ITEMS_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
+  CONTAINS_KEY,
+  UNEVALUATED_ITEMS_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
+]);
+const NAMED_KEYS = new Set([
+  PROPERTIES_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PREFIX_ITEMS_KEY,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
+  DEPENDENT_SCHEMAS_KEY,
+  DEPENDENCIES_KEY,
+  '$defs',
+  DEFINITIONS_KEY,
+]);
+
+/** Whether the instance a schema path's `keys` lead to from the root is the one at `property`: a `properties` step names
+ * its key, and an `items`, `additionalProperties` or other such step stands for any. A schema a `$ref` names other than
+ * the root, such as a definition, is reached from anywhere, so a path into one only has to end at the `property`. The
+ * root a recursive `$ref: '#'` names is reached again where each such `$ref` sits, any number of times
+ *
+ * @param keys - The decoded keys of the path from the root to the schema holding the keyword
+ * @param property - The error's property path, as `applyValidatorErrorTitles()` takes it
+ * @param schema - The form's root schema
+ * @returns - Whether the path leads to the instance at `property`
+ */
+function leadsToProperty<S extends StrictRJSFSchema>(keys: string[], property: string, schema: S): boolean {
+  const graph = parseSchemaGraph<S>(schema);
+  const nodes = Array.from({ length: graph.size }, (_, id) => graph.node(id) as ObjectNode<S>);
+  // The JSON pointers the `$ref`s name
+  const refTargets = new Set(nodes.map((node) => node.refPointer));
+  // The instance steps of a schema path from the root, or `.*` and those after it where it passes a schema a `$ref`
+  // other than the root names
+  const stepsOf = (path: string[], anyStep: string) => {
+    let pattern = '';
+    // Runs once past the last key, for a `$ref` naming the schema holding the keyword
+    for (let index = 0; index <= path.length; index++) {
+      const key = path[index];
+      if (index > 0 && refTargets.has(childPointer('', path.slice(0, index)))) {
+        pattern = '.*';
+      }
+      if (INSTANCE_STEP_KEYS.has(key)) {
+        pattern += key === PROPERTIES_KEY ? `\\.${escapeRegExp(path[index + 1])}` : anyStep;
+      }
+      // The next key is a name or an index, never a keyword
+      if (NAMED_KEYS.has(key) || (key === ITEMS_KEY && /^\d+$/.test(path[index + 1]))) {
+        index += 1;
+      }
+    }
+    return pattern;
+  };
+  // A repeated step matches one key, so a repetition can't backtrack through the keys it spans
+  const repeats = nodes
+    .filter((node) => node.refPointer === '')
+    .map((node) => stepsOf(node.pointer.split('/').slice(1).map(unescapeToken), '\\.[^.]+'));
+  const start = repeats.some((steps) => steps.startsWith('.*')) ? '.*' : `(?:${repeats.join('|')})*`;
+  return new RegExp(`^${start}${stepsOf(keys, '\\..+')}$`).test(property);
 }
 
 /** Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
@@ -77,13 +163,15 @@ export default function applyValidatorErrorTitles<
       .map(decodeSchemaPathKey);
   const schemaPathParts = uiSchemaPathParts(schemaPath);
   // Ajv starts the path of a keyword in a `$ref` target it compiles on its own at that target, so a path the root
-  // doesn't lead along to the engine's own schema names no field of the root. One `skipsRefs` reads as `null` does lead
-  // along it, to a branch of a field it names either way
+  // doesn't lead along to the error's instance and the engine's own schema names no field of the root. One `skipsRefs`
+  // reads as `null` does lead along it, to a branch of a field it names either way
   const pathParent = schema && getKeywordParentSchema<S>(schema, schemaPath, decodeSchemaPathKey, skipsRefs);
   // The path's schema is read resolved where it holds a `$ref`, which Ajv's `parentSchema`, as written, doesn't
   const pathKeys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
   const leadsToParent =
     isObject(pathParent) &&
+    schema !== undefined &&
+    leadsToProperty(pathKeys, property, schema) &&
     (parentSchema === undefined ||
       deepEquals(pathParent, parentSchema) ||
       deepEquals(pathKeys.length > 0 ? getByPath(schema, pathKeys) : schema, parentSchema));
@@ -140,7 +228,7 @@ export default function applyValidatorErrorTitles<
   // Every name, untitled ones too, longest first, so a titled `'it'` doesn't match the start of an untitled `'it's'`
   const quotedNames = [...names]
     .sort((a, b) => b.length - a.length)
-    .map((name) => `${quote}${name}${quote}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    .map((name) => escapeRegExp(`${quote}${name}${quote}`));
   const titled = message.replace(new RegExp(quotedNames.join('|'), 'g'), (quoted) => {
     const title = titles.get(quoted.slice(quote.length, -quote.length));
     return title ? `'${title}'` : quoted;
