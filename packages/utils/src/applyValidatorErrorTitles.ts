@@ -43,8 +43,9 @@ export interface ValidatorErrorTitleSource<
  * A name's title is its `ui:title` (see `getValidatorErrorUiTitle()`), then the `title` the uiSchema holds at the
  * `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch
  * the keyword sits in, then in the root `schema`. A schema that is a `$ref` is read resolved, its own `title` kept over
- * its target's and read where its `$ref` can't be merged. Each name with a title is replaced, in one pass so a title that matches another name isn't replaced
- * again, by its title in single quotes. The title is written as it is, `$` patterns included.
+ * its target's and read where its `$ref` can't be merged. Each name with a title is replaced, in one pass so a title
+ * that matches another name isn't replaced again, by its title in single quotes. The title is written as it is, `$`
+ * patterns included.
  *
  * @param source - The error's message and what its names' titles are looked up in
  * @returns - The `message` with each name that has a title replaced by it, and the title of each such name
