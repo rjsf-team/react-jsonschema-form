@@ -5,9 +5,11 @@ import {
   ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  CONST_KEY,
   DEPENDENCIES_KEY,
   DISCRIMINATOR_PATH,
   ELSE_KEY,
+  ENUM_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
@@ -18,12 +20,13 @@ import {
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from '../../constants.ts';
+import deepEquals from '../../deepEquals.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import logOnce from '../../logOnce.ts';
 import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import shallowAllOfMerge, { mergeOptionLists } from '../shallowAllOfMerge.ts';
+import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
@@ -315,7 +318,20 @@ export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType
   unmerged?: S,
 ): S | JSONSchema7Definition {
   try {
-    return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
+    if (!context.customMergeAllOf) {
+      return shallowAllOfMerge(schema);
+    }
+    const merged = context.customMergeAllOf(schema);
+    const holders = ([] as unknown[]).concat(schema, schema[ALL_OF_KEY]);
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+      const list: unknown = getByPath(merged, keyword);
+      const lists = holders.map((holder): unknown => getByPath(holder, keyword)).filter(Array.isArray);
+      if (Array.isArray(list) && lists.length > 1) {
+        const written = new Set(lists.flat());
+        list.filter((option) => isObject(option) && !written.has(option)).forEach((option) => customBuilt.add(option));
+      }
+    }
+    return merged;
   } catch (error) {
     logOnce('could not merge subschemas in allOf:\n', { error });
     return unmerged ?? withoutKeys(schema, ALL_OF_KEY);
@@ -601,8 +617,24 @@ export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     : schemaFrom(graph.rawRoot, {});
 }
 
-/** The options of the lists each option a merge of lists rebuilt was built from, see `rebuiltLists()` */
+/** The options of the lists each option a merge of lists rebuilt was built from, see `recorded()` */
 const optionSources = new WeakMap<object, readonly unknown[]>();
+
+/** The options a `customMergeAllOf` returned under a keyword two or more of the lists it merged hold, other than one
+ * of those lists' own options, which keep no record of what they were built from. The set is module-wide, so a
+ * written option handed back unchanged is never marked, or it would read as built in every form
+ */
+const customBuilt = new WeakSet<object>();
+
+/** Returns whether a merge of lists built the option `option`: one the form's merge rebuilt, see `sourcesOfOption()`,
+ * or one a `customMergeAllOf` returned for two or more lists under its keyword
+ *
+ * @param option - The option
+ * @returns - Whether a merge of lists built it
+ */
+export function isMergeBuilt(option: object): boolean {
+  return optionSources.has(option) || customBuilt.has(option);
+}
 
 /** Returns the options of the `anyOf`/`oneOf` lists the option `option` a plan's merge of lists rebuilt was built from,
  * one from each list in the order they were merged, or undefined for an option no such merge built
@@ -628,17 +660,117 @@ function rebuiltLists(schemas: readonly object[]): [string, ReturnType<typeof me
       return Array.isArray(list) ? [list] : [];
     });
     const [first, ...rest] = lists;
-    const options = first !== undefined && rest.length > 0 ? mergeOptionLists(first, rest) : undefined;
-    if (options === undefined) {
-      return [];
-    }
-    for (const { option, sources } of options) {
-      if (isObject(option)) {
-        optionSources.set(option, sources);
-      }
-    }
-    return [[keyword, options]];
+    const options = first !== undefined && rest.length > 0 ? recorded(mergeOptionLists(first, rest)) : undefined;
+    return options === undefined ? [] : [[keyword, options]];
   });
+}
+
+/** Returns `options`, each recording the options it was built from, see `sourcesOfOption()` */
+function recorded(options: ReturnType<typeof mergeOptionLists>): ReturnType<typeof mergeOptionLists> {
+  for (const { option, sources } of options ?? []) {
+    if (isObject(option)) {
+      optionSources.set(option, sources);
+    }
+  }
+  return options;
+}
+
+/** The meta-data keywords a branch's option relabels a field's option by, where the pair's constraints are both's */
+const ANNOTATION_KEYS = ['title', 'description', 'default', 'examples', 'deprecated', 'readOnly', 'writeOnly'];
+
+/** Returns the option a field's `left` and a branch's `right` merge to: the data meets both, so the pair keeps both's
+ * constraints, merged as an `allOf` pair is with the field's keys first, and the branch's annotations, so a `then`
+ * still relabels the field's options. A pair no data can meet, which the merge rejects or whose `$ref`s or `const`s
+ * differ, is undefined, as is one holding `false`
+ */
+function branchPair(left: JSONSchema7Definition, right: JSONSchema7Definition): JSONSchema7Definition | undefined {
+  if (isObject(left) && isObject(right) && pairConflicts(left, right)) {
+    return undefined;
+  }
+  const merged = mergedPair(left, right);
+  return merged === undefined || merged === false ? undefined : withAnnotationsOf(merged, right);
+}
+
+/** Returns whether `left` and `right`, or two properties they both declare, name different `$ref`s or `const`s, which
+ * the merge would keep the first of, or a `const` the other's `enum` leaves out, which it keeps beside it. shortcut:
+ * two `$ref`s are compared by name, not by what they resolve to; upgrade if a branch's options reference definitions
+ * the field's own options also meet
+ */
+function pairConflicts(left: object, right: object): boolean {
+  const [ref, otherRef] = [left, right].map((schema): unknown => Reflect.get(schema, REF_KEY));
+  const [value, other] = [left, right].map((schema): unknown => Reflect.get(schema, CONST_KEY));
+  const [values, otherValues] = [left, right].map((schema): unknown => Reflect.get(schema, ENUM_KEY));
+  if (
+    (typeof ref === 'string' && typeof otherRef === 'string' && ref !== otherRef) ||
+    (value !== undefined && other !== undefined && !deepEquals(value, other)) ||
+    outsideEnum(value, otherValues) ||
+    outsideEnum(other, values)
+  ) {
+    return true;
+  }
+  const [properties, others] = [left, right].map((schema): unknown => Reflect.get(schema, PROPERTIES_KEY));
+  return (
+    isObject(properties) &&
+    isObject(others) &&
+    Object.keys(others).some((key) => {
+      const [one, another]: unknown[] = [Reflect.get(properties, key), Reflect.get(others, key)];
+      return Object.hasOwn(properties, key) && isObject(one) && isObject(another) && pairConflicts(one, another);
+    })
+  );
+}
+
+/** Returns whether two of the `options` a `schema` naming a `discriminator` offers pin its property to a value in
+ * common, its `const` or else one of its `enum`, or both by neither, so the discriminator, which picks the first option
+ * holding the data's value, can't tell them apart for that value. shortcut: two options pinning it by neither count as
+ * alike even where neither declares the property, which the validator tells apart, since a pin through a `$ref` or a
+ * `pattern` reads as neither too; upgrade by reading the declarations through `declaredProperties()` if such a field
+ * needs its merged options
+ */
+function sharesDiscriminator(schema: object, options: readonly unknown[]): boolean {
+  const name: unknown = getByPath(schema, DISCRIMINATOR_PATH);
+  if (typeof name !== 'string') {
+    return false;
+  }
+  const pins = options.map((option) => {
+    const [value, values] = [CONST_KEY, ENUM_KEY].map((keyword) => getByPath(option, [PROPERTIES_KEY, name, keyword]));
+    if (value !== undefined) {
+      return [value];
+    }
+    return Array.isArray(values) ? values : undefined;
+  });
+  return pins.some((pin, at) =>
+    pins.slice(0, at).some((other) => (pin && other ? pin.some((one) => !outsideEnum(one, other)) : pin === other)),
+  );
+}
+
+/** Returns whether `values` is an `enum` leaving out `value`, a `const` */
+function outsideEnum(value: unknown, values: unknown): boolean {
+  return value !== undefined && Array.isArray(values) && !values.some((one) => deepEquals(one, value));
+}
+
+/** Returns `merged` with the annotations of `branch` laid over it, its properties' too. shortcut: annotations in the
+ * branch option's `$ref` definition or in its subschemas other than `properties`, such as `items`, don't win; upgrade
+ * if a `then` relabels those
+ */
+function withAnnotationsOf(merged: JSONSchema7Definition, branch: unknown): JSONSchema7Definition {
+  if (typeof merged === 'boolean' || !isObject(branch)) {
+    return merged;
+  }
+  const result: Record<string, unknown> = { ...merged };
+  for (const key of ANNOTATION_KEYS.filter((annotation) => Object.hasOwn(branch, annotation))) {
+    result[key] = Reflect.get(branch, key);
+  }
+  const { properties } = merged;
+  const others: unknown = Reflect.get(branch, PROPERTIES_KEY);
+  if (properties !== undefined && isObject(others)) {
+    result[PROPERTIES_KEY] = Object.fromEntries(
+      Object.entries(properties).map(([key, property]) => [
+        key,
+        Object.hasOwn(others, key) ? withAnnotationsOf(property, Reflect.get(others, key)) : property,
+      ]),
+    );
+  }
+  return result;
 }
 
 /** Returns the `allOf` entries `schemas` hold themselves, which merging the schemas as the `allOf` of them leaves as they
@@ -969,6 +1101,48 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     };
   }
 
+  /** Merges the `then`/`else` or `dependencies` schema declared at `node` into `part`, see `mergeBranch()`. The data
+   * meets a list the branch holds and one the part holds under the same keyword alike, so the field offers each option
+   * of the part's merged with each of the branch's, see `branchPair()`, where the branch's list would otherwise
+   * replace the part's. A pair equal to one already kept is kept too, since the branch's annotations can make pairs
+   * built from options differing only in theirs equal, which would leave one of them unoffered. The branch's list
+   * replaces the part's where a `discriminator` couldn't tell two merged options apart, see `sharesDiscriminator()`,
+   * since the field would only ever show the first. A list the plan chose an option of stays as the merge leaves it,
+   * since the fold tells the lists it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list
+   * replaces the part's, since that merge reads its first entry as winning where the branch's annotations win; upgrade
+   * if such a field needs both lists offered
+   */
+  private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId): Part<S> {
+    const merged = mergeBranch(part, branch, 'b', node);
+    if (this.context.customMergeAllOf) {
+      return merged;
+    }
+    for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
+      const own: unknown = Reflect.get(part.schema, keyword);
+      const other: unknown = Reflect.get(branch.schema, keyword);
+      const options =
+        Array.isArray(own) &&
+        Array.isArray(other) &&
+        !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
+          ? recorded(mergeOptionLists(own, [other], branchPair, false))
+          : undefined;
+      if (
+        options !== undefined &&
+        !sharesDiscriminator(
+          merged.schema,
+          options.map(({ option }) => option),
+        )
+      ) {
+        Reflect.set(
+          merged.schema,
+          keyword,
+          options.map(({ option }) => option),
+        );
+      }
+    }
+    return merged;
+  }
+
   private mergeAll(schema: S, unmerged: S): S {
     const merged = mergeAllOf(this.context, schema, unmerged);
     return merged === unmerged || (isSchemaObject<S>(merged) && this.context.customMergeAllOf)
@@ -1013,7 +1187,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
     return branchPart === undefined || branchNode === undefined
       ? without
-      : mergeBranch(without, branchPart, 'b', branchNode);
+      : this.mergeBranchOver(without, branchPart, branchNode);
   }
 
   private branch(
@@ -1075,7 +1249,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         const dependent = this.expandBranch(dependency, provider.refPath, 'dependency', key);
         if (dependent !== undefined) {
           Object.keys(dependent.schema.properties ?? {}).forEach((name) => declared?.add(name));
-          next = mergeBranch(next, dependent, 'b', dependency);
+          next = this.mergeBranchOver(next, dependent, dependency);
         }
       }
     }
@@ -1126,7 +1300,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const chosen = this.expandBranch(valid[0], provider.refPath, 'dependency');
-    return chosen === undefined ? part : mergeBranch(part, withoutProperty(chosen, key), 'b', valid[0]);
+    return chosen === undefined ? part : this.mergeBranchOver(part, withoutProperty(chosen, key), valid[0]);
   }
 
   private applyOption(

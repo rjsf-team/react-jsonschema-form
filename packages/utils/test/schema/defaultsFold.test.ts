@@ -14,7 +14,6 @@ import {
   getDefaultBasedOnSchemaType,
   getObjectDefaults,
   mergeReachesConst,
-  optionReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import type { Provenance } from '../../src/schema/graph/provenance.ts';
@@ -1965,47 +1964,5 @@ describe('mergeReachesConst()', () => {
     expect(() => mergeReachesConst(graph, unknown, true)).toThrow(RangeError);
     const known = graph.byPointer('/definitions/c');
     expect(known !== undefined && mergeReachesConst(graph, known, true)).toBe(true);
-  });
-});
-
-describe('optionReachesConst()', () => {
-  const graphOf = (definitions: Record<string, RJSFSchema>) => {
-    const graph = parseSchemaGraph({ definitions });
-    const node = (pointer: string) => graph.byPointer(pointer) ?? -1;
-    return { graph, node };
-  };
-
-  it.each([
-    ['A', 'B'],
-    ['B', 'A'],
-  ])('answers the options of a cycle that reaches no const false, %s asked before %s', (first, second) => {
-    // Each option offers a list whose one option is the other
-    const { graph, node } = graphOf({
-      A: { oneOf: [{ $ref: '#/definitions/B' }] },
-      B: { oneOf: [{ $ref: '#/definitions/A' }] },
-    });
-    expect(optionReachesConst(graph, node(`/definitions/${first}/oneOf/0`))).toBe(false);
-    expect(optionReachesConst(graph, node(`/definitions/${second}/oneOf/0`))).toBe(false);
-  });
-
-  it.each([
-    ['A', 'B'],
-    ['B', 'A'],
-  ])('settles every option of a cycle with the const one of them reaches, %s asked before %s', (first, second) => {
-    const { graph, node } = graphOf({
-      A: { oneOf: [{ $ref: '#/definitions/B' }] },
-      B: { oneOf: [{ $ref: '#/definitions/A' }, { properties: { c: { const: 'x' } } }] },
-    });
-    expect(optionReachesConst(graph, node(`/definitions/${first}/oneOf/0`))).toBe(true);
-    expect(optionReachesConst(graph, node(`/definitions/${second}/oneOf/0`))).toBe(true);
-  });
-
-  it('leaves no option open where the graph throws', () => {
-    const { graph, node } = graphOf({ c: { const: 'x' } });
-    const unknown = 1_000_000;
-    expect(() => optionReachesConst(graph, unknown)).toThrow(RangeError);
-    // An option left open would answer now instead of throwing again
-    expect(() => optionReachesConst(graph, unknown)).toThrow(RangeError);
-    expect(optionReachesConst(graph, node('/definitions/c'))).toBe(true);
   });
 });

@@ -49,6 +49,8 @@ import {
   fieldPathToList,
   toFieldPath,
   fieldPathToId,
+  renderedOptionsUiSchema,
+  selectOptionUiSchema,
   resolveUiSchema,
   isObject,
   logOnce,
@@ -657,10 +659,16 @@ export default function ObjectField<
       const xxxOfKey = getXxxOfKey<S>(currentSchema);
       return {
         properties: optionProperties,
-        uiSchema: xxxOfKey ? getOptionUiSchema<T, S, F>(uiSchema, xxxOfKey, shown.index) : uiSchema,
+        uiSchema: xxxOfKey
+          ? selectOptionUiSchema<T, S, F>(
+              renderedOptionsUiSchema<T, S, F>(uiSchema, currentSchema, rootSchema),
+              uiSchema,
+              shown.index,
+            )
+          : uiSchema,
       };
     },
-    [uiSchema],
+    [uiSchema, rootSchema],
   );
 
   /** Returns the schema the object says describes `key`: the one it, or the option it shows, declares under that name,

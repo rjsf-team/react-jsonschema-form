@@ -2902,6 +2902,43 @@ Returns the values of the stars a rating widget draws: one for each whole number
 
 - number[]: The value of each star to draw, in order
 
+### renderedOptionTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns, for each option a field renders, the title of an option built by merging lists, as `MultiSchemaField` and `LayoutMultiSchemaField` label it.
+An option built by merging the field's own list with one an `allOf` entry, `then` or `else` holds is titled after each option it was built from, in the order they were merged, the names joined pairwise with `TranslatableString.MergedOptionTitle`: the field's own option by the `ui:title` of its `uiSchema.anyOf`/`uiSchema.oneOf` entry, merged with the `ui:definitions` entry its `$ref` names, or else its `title`, and each other option by its `title`, an option written as a `$ref` taking its definition's `title` where none is written beside it.
+Where one of them is named, an untitled one is named by its place in its list with `TranslatableString.OptionPrefix`, as "A, Option 2".
+An option built from a single option, or from options with no two different names, has no title and is labelled as any other option is.
+So is one whose entry has a `ui:title` where the field has no list of its own, as when its lists sit only in `allOf` entries, since the entries then describe the options at their positions.
+
+#### Parameters
+
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema
+- view: S - The field's schema as `retrieveSchema()` handed it out
+- rootSchema: S - The root schema
+- translateString: Registry&lt;T, S, F>['translateString'] - The registry's string translator
+- [uiSchemaDefinitions]: Registry&lt;T, S, F>['uiSchemaDefinitions'] - The registry's `ui:definitions`, whose entry for an option of the field's own list written as a `$ref` titles it where its `uiSchema` entry gives no `ui:title`
+
+#### Returns
+
+- (string | undefined)[] | undefined: The title of each option, or `undefined` where the field offers no options
+
+### renderedOptionsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns the `uiSchema.anyOf`/`uiSchema.oneOf` entries of a field in the order of the options it renders, to look an option's entry up by its position among them with `selectOptionUiSchema()`.
+An entry describes the option at its index in the field's list as written.
+Where an `allOf` entry, or a `then` or `else`, holds a list beside the field's own, each option the field renders is one of its own options merged with one of the other list's, and it reads the entry of the option of its own list it was built from.
+The entries come back as they stand where the field declares no list of its own, as one whose lists sit only in `allOf` entries, or under a `customMergeAllOf`, whose merged options keep no record of what they were built from; each option then reads the entry at its own position.
+
+#### Parameters
+
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The field's uiSchema
+- view: S - The field's schema as `retrieveSchema()` handed it out
+- rootSchema: S - The root schema
+
+#### Returns
+
+- UiSchema&lt;T, S, F>[] | undefined: The entries in the order of the options the field renders, or `undefined` where `uiSchema` lists none
+
 ### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
@@ -3781,7 +3818,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 Determines which of the given `options` provided most closely matches the `formData`.
 An option whose discriminator property's `const` or `enum` holds the data's value wins outright; otherwise the one option the data matches is returned when exactly one does.
 Otherwise the options the data matches, or all of them when it matches none, are the candidates, and the one scoring best is returned.
-A tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
+A tie among options the data matches goes to the one holding each key its scope requires and declaring the most keys the data holds. A tied `selectedOption` written in the list keeps the tie, and one a merge of lists built, as a `then` list merged with the field's own builds its pairs or a `customMergeAllOf` merges two or more lists an `allOf` brings together, keeps it only where it ranks as well. Any other tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
 
 The score is the number of matching properties, more heavily favoring options with matching default or const values.
 A property written as a `$ref` is scored as the definition it names, and each `$ref` scoring follows resolves in the resource of the declaration holding it, including one in a property declared both beside a `$ref` and in the definition it names.
