@@ -92,8 +92,9 @@ function withInPlaceSubschemas(entry: JSONSchema7): JSONSchema7[] {
  * keyword was `true` or `{}` in every entry naming it. Each property is read the same way against the subschemas of
  * `objects` and `outside`, and those they apply in place (see `withInPlaceSubschemas()`), that describe it (see
  * `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere else keeps what the merge made
- * of it. A property's subschema of `unchecked` holding a `$ref` is read as closing it, since the reference isn't resolved
- * here and the form, which resolves it, never meets it beside the merged property.
+ * of it. A property's subschema of `unchecked` holding a `$ref` is read as closing it and every property below it, which
+ * keep what the merge made of them, since the reference isn't resolved here and the form, which resolves it, never meets
+ * it beside the merged property.
  */
 function withOpenAdditionalProperties(
   merged: JSONSchema7Definition,
@@ -130,8 +131,9 @@ function withOpenAdditionalProperties(
       scope ??= [...objects.flatMap(withInPlaceSubschemas), ...outside];
       const describing = subschemasOf(key, scope).flatMap(withInPlaceSubschemas);
       const beyond = subschemasOf(key, unchecked).flatMap(withInPlaceSubschemas);
-      const closers = beyond.some((subschema) => subschema.$ref !== undefined) ? [...describing, CLOSED] : describing;
-      const open = withOpenAdditionalProperties(property, declared, closers, describing, beyond);
+      const open = beyond.some((subschema) => subschema.$ref !== undefined)
+        ? withOpenAdditionalProperties(property, [], [CLOSED])
+        : withOpenAdditionalProperties(property, declared, describing, describing, beyond);
       if (open !== property) {
         kept ??= { ...properties };
         kept[key] = open;

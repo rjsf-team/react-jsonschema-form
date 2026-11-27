@@ -593,6 +593,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: { q: { type: 'object', properties: { a } } },
         });
       });
+      describe('below a $ref outside the pair, which closes every level beneath it', () => {
+        const nested = (declaration: RJSFSchema): RJSFSchema => ({
+          properties: { p: { type: 'object', properties: { q: { type: 'object', properties: { r: declaration } } } } },
+        });
+        const $defs = { P: { properties: { q: { properties: { r: closed } } } } };
+        it.each<[string, RJSFSchema]>([
+          ["the root's own declaration", { properties: { p: { $ref: '#/$defs/P' } } }],
+          [
+            'another entry',
+            { allOf: [{ oneOf: [nested({ properties: { a } })] }, { properties: { p: { $ref: '#/$defs/P' } } }] },
+          ],
+          ["an allOf at the root's declaration", { properties: { p: { allOf: [{ $ref: '#/$defs/P' }] } } }],
+        ])('in %s', (_, outside) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            $defs,
+            oneOf: [nested({ type: 'object', additionalProperties: true })],
+            allOf: [{ oneOf: [nested({ properties: { a } })] }],
+            ...outside,
+          };
+          const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+          const p = typeof option === 'object' ? option.properties?.p : undefined;
+          const q = typeof p === 'object' ? p.properties?.q : undefined;
+          expect(typeof q === 'object' && q.properties?.r).toEqual({ type: 'object', properties: { a } });
+        });
+      });
       it("keeps it beside another entry's declaration that doesn't close it", () => {
         const schema: RJSFSchema = { ...base, allOf: [list, { properties: { p: { required: ['a'] } } }] };
         const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
