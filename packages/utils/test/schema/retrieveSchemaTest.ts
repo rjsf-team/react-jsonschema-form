@@ -574,6 +574,45 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           "another entry's $ref, which isn't resolved there",
           { ...base, $defs: { closed }, allOf: [list, { properties: { p: { $ref: '#/$defs/closed' } } }] },
         ],
+        [
+          "the definition a $ref in the root's anyOf names, describing the object",
+          { ...base, $defs: { A: { properties: { p: closed } } }, anyOf: [{ $ref: '#/$defs/A' }] },
+        ],
+        [
+          "the definition the root's own $ref names, applied beside the lists",
+          { ...base, $defs: { D: { properties: { p: closed } } }, $ref: '#/$defs/D' },
+        ],
+        [
+          'the definition a $ref names in an option a merge of lists built',
+          {
+            ...base,
+            $defs: { A: { properties: { p: closed } } },
+            allOf: [list, { anyOf: [{ $ref: '#/$defs/A' }], allOf: [{ anyOf: [{ $ref: '#/$defs/A' }] }] }],
+          },
+        ],
+        [
+          'the definition a $ref names for it in the definition of a $ref in the root',
+          {
+            ...base,
+            $defs: { A: { properties: { p: { $ref: '#/$defs/P' } } }, P: closed },
+            anyOf: [{ $ref: '#/$defs/A' }],
+          },
+        ],
+        [
+          'the declaration of the root holding the entry whose own allOf holds the other list',
+          { type: 'object', properties: { p: closed }, allOf: [{ oneOf: base.oneOf, allOf: [list] }] },
+        ],
+        [
+          'an option of the root holding the entry whose own allOf holds the other list',
+          { type: 'object', anyOf: [{ properties: { p: closed } }], allOf: [{ oneOf: base.oneOf, allOf: [list] }] },
+        ],
+        [
+          'another entry, beside the entry whose then holds the other list',
+          {
+            type: 'object',
+            allOf: [{ oneOf: base.oneOf, if: { required: ['p'] }, then: list }, { properties: { p: closed } }],
+          },
+        ],
       ])('in %s', (_, schema) => {
         const option = retrieveSchema({ validator: testValidator }, schema, schema, { p: { a: 'x', extra: 'y' } })
           .oneOf?.[0];
@@ -619,11 +658,92 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect(typeof q === 'object' && q.properties?.r).toEqual({ type: 'object', properties: { a } });
         });
       });
+      it.each<[string, RJSFSchema['$defs'], string]>([
+        ["whose definition doesn't describe it", { A: { properties: { z: { type: 'string' } } } }, '#/$defs/A'],
+        ['naming a boolean definition', { A: true }, '#/$defs/A'],
+        ['naming nothing', {}, '#/$defs/missing'],
+      ])("keeps it beside a $ref in the root's anyOf %s", (_, $defs, $ref) => {
+        const schema: RJSFSchema = { ...base, $defs, anyOf: [{ $ref }] };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' && property.additionalProperties).toBe(true);
+      });
+      it("keeps it beside a $ref in the root's anyOf whose definition declares it with a $ref of its own", () => {
+        const schema: RJSFSchema = {
+          ...base,
+          $defs: { A: { properties: { p: { $ref: '#/$defs/P' } } }, P: { type: 'object' } },
+          anyOf: [{ $ref: '#/$defs/A' }],
+        };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' && property.additionalProperties).toBe(true);
+      });
+      it("in the root's own declaration, beside the options a then merges with the root's", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { p: closed, k: { type: 'string' } },
+          oneOf: [{ properties: { p: { type: 'object', additionalProperties: true } } }],
+          if: { required: ['k'] },
+          then: { oneOf: [{ properties: { p: { properties: { a } } } }] },
+        };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema, { k: 'x', p: { a: 'x' } })
+          .oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' ? property.additionalProperties : property).toBeUndefined();
+      });
+      it("keeps it beside the root's own $ref, whose definition doesn't describe it", () => {
+        const schema: RJSFSchema = { ...base, $defs: { D: { type: 'object' } }, $ref: '#/$defs/D' };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' && property.additionalProperties).toBe(true);
+      });
       it("keeps it beside another entry's declaration that doesn't close it", () => {
         const schema: RJSFSchema = { ...base, allOf: [list, { properties: { p: { required: ['a'] } } }] };
         const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
         const property = typeof option === 'object' ? option.properties?.p : undefined;
         expect(typeof property === 'object' && property.additionalProperties).toBe(true);
+      });
+      it.each<[string, (lists: RJSFSchema) => RJSFSchema]>([
+        ['its own', (lists) => lists],
+        ["an allOf entry's", (lists) => ({ allOf: [true, lists] })],
+        ["a then's", (lists) => ({ if: { required: ['p'] }, then: lists })],
+        ['one beside a $ref', (lists) => ({ $ref: '#/$defs/D', ...lists })],
+      ])(
+        "only in the outer pairs with the option that closes it, where an enclosing allOf's other entry holds it in %s list",
+        (_, entry) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            $defs: { D: { type: 'object' } },
+            allOf: [
+              base,
+              entry({ oneOf: [{ properties: { p: { unevaluatedProperties: false } } }, { properties: { q: a } }] }),
+            ],
+          };
+          // Data a then's `if` holds on, for a validator that checks it
+          const options = retrieveSchema({ validator: testValidator }, schema, schema, { p: { a: 'x' } }).oneOf ?? [];
+          const additional = options.map((option) => {
+            const property = typeof option === 'object' ? option.properties?.p : undefined;
+            return typeof property === 'object' ? property.additionalProperties : property;
+          });
+          expect(additional).toEqual([undefined, true]);
+        },
+      );
+      it("in an allOf's other entry, beside the options a then of an entry merges with the entry's", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            { properties: { p: closed, k: { type: 'string' } } },
+            {
+              oneOf: [{ properties: { p: { type: 'object', additionalProperties: true } } }],
+              if: { required: ['k'] },
+              then: { oneOf: [{ properties: { p: { properties: { a } } } }] },
+            },
+          ],
+        };
+        const option = retrieveSchema({ validator: testValidator }, schema, schema, { k: 'x', p: { a: 'x' } })
+          .oneOf?.[0];
+        const property = typeof option === 'object' ? option.properties?.p : undefined;
+        expect(typeof property === 'object' ? property.additionalProperties : property).toBeUndefined();
       });
     });
     it("leaves out a property's additionalProperties: true a pattern beside the other option's declaration closes (#5958)", () => {

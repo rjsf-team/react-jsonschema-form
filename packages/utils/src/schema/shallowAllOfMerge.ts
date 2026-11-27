@@ -85,6 +85,30 @@ function withInPlaceSubschemas(entry: JSONSchema7): JSONSchema7[] {
   return [entry, ...inPlace.flatMap(withInPlaceSubschemas)];
 }
 
+/** Returns the subschemas `entries` apply to their own value (see `withInPlaceSubschemas()`), each `$ref` among them
+ * followed to the definition `resolve` finds for it, once each, so a definition describing the object is read as one
+ *
+ * @param entries - The schemas
+ * @param [resolve] - Returns the definition a schema's `$ref` names, if it is known
+ * @returns - The subschemas, the definitions followed included
+ */
+function inPlaceResolved(
+  entries: readonly JSONSchema7[],
+  resolve?: (schema: JSONSchema7) => JSONSchema7 | undefined,
+): JSONSchema7[] {
+  const seen = new Set<JSONSchema7>();
+  const visit = (entry: JSONSchema7): JSONSchema7[] =>
+    withInPlaceSubschemas(entry).flatMap((subschema) => {
+      const target = subschema.$ref === undefined ? undefined : resolve?.(subschema);
+      if (target === undefined || seen.has(target)) {
+        return [subschema];
+      }
+      seen.add(target);
+      return [subschema, ...visit(target)];
+    });
+  return entries.flatMap(visit);
+}
+
 /** Returns `merged`, the merge of `objects`, holding the `additionalProperties` of `true` or `{}` the merge dropped,
  * unless one of `siblings` closes the keys it takes (see `closesSiblingKeys()`), where one the merge kept is left out.
  * JSON Schema reads an absent keyword as `true`, so the merge drops one saying only that, where the form reads an
@@ -94,7 +118,8 @@ function withInPlaceSubschemas(entry: JSONSchema7): JSONSchema7[] {
  * `subschemasOf()`), every one of which is a sibling of the others; a subschema anywhere else keeps what the merge made
  * of it. A property's subschema of `unchecked` holding a `$ref` is read as closing it and every property below it, which
  * keep what the merge made of them, since the reference isn't resolved here and the form, which resolves it, never meets
- * it beside the merged property.
+ * it beside the merged property. Any other `$ref` describing a property is followed to the definition `resolve` finds
+ * for it.
  */
 function withOpenAdditionalProperties(
   merged: JSONSchema7Definition,
@@ -102,6 +127,7 @@ function withOpenAdditionalProperties(
   siblings: readonly JSONSchema7[],
   outside: readonly JSONSchema7[] = [],
   unchecked: readonly JSONSchema7[] = [],
+  resolve?: (schema: JSONSchema7) => JSONSchema7 | undefined,
 ): JSONSchema7Definition {
   if (typeof merged === 'boolean') {
     return merged;
@@ -129,11 +155,11 @@ function withOpenAdditionalProperties(
       // An option, or a `then`, `else`, `dependencies` or `dependentSchemas` subschema, describes the property only under
       // a choice or condition the form resolves after reading this merge, so one that closes it is read as closing it
       scope ??= [...objects.flatMap(withInPlaceSubschemas), ...outside];
-      const describing = subschemasOf(key, scope).flatMap(withInPlaceSubschemas);
+      const describing = inPlaceResolved(subschemasOf(key, scope), resolve);
       const beyond = subschemasOf(key, unchecked).flatMap(withInPlaceSubschemas);
       const open = beyond.some((subschema) => subschema.$ref !== undefined)
         ? withOpenAdditionalProperties(property, [], [CLOSED])
-        : withOpenAdditionalProperties(property, declared, describing, describing, beyond);
+        : withOpenAdditionalProperties(property, declared, describing, describing, beyond, resolve);
       if (open !== property) {
         kept ??= { ...properties };
         kept[key] = open;
@@ -182,12 +208,15 @@ export interface MergedOption {
  * than flattened, which would keep only the first `$ref` among them, or undefined for a pair the merge rejects. The
  * result is a new object, since a pair holding an empty option merges to the other, whose recorded sources it would
  * otherwise overwrite. `outside`, the subschemas of the schemas the lists sit in, can close a property of the pair but
- * never opens one; the merge that later meets one of them holding a `$ref` sees the property as the pair left it
+ * never opens one; the merge that later meets one of `unchecked`, those of them not reached through a `$ref`, holding a
+ * `$ref` sees the property as the pair left it
  */
 export function mergedPair(
   left: JSONSchema7Definition,
   right: JSONSchema7Definition,
   outside: readonly JSONSchema7[] = [],
+  unchecked: readonly JSONSchema7[] = outside,
+  resolve?: (schema: JSONSchema7) => JSONSchema7 | undefined,
 ): JSONSchema7Definition | undefined {
   try {
     const objects = [left, right].filter((entry) => typeof entry !== 'boolean');
@@ -196,7 +225,8 @@ export function mergedPair(
       objects,
       objects,
       outside,
-      outside,
+      unchecked,
+      resolve,
     );
     return typeof merged === 'boolean' ? merged : { ...merged };
   } catch {
@@ -216,6 +246,8 @@ export function mergedPair(
  * @param [pair] - Merges an option built so far with one of the next list, given the subschemas of `beside`, or rejects
  *        the pair; the shallow merge's by default
  * @param [dropEqual=true] - Whether a pair equal to an option already kept is dropped, as the shallow merge drops it
+ * @param [resolve] - Returns the definition a `$ref` among the subschemas of `beside` names, so one describing the
+ *        object, or a property a followed definition declares, can close a property of a pair
  * @returns - The options, or undefined where no pair merges, which the merge rejects
  */
 export function mergeOptionLists(
@@ -226,16 +258,21 @@ export function mergeOptionLists(
     left: JSONSchema7Definition,
     right: JSONSchema7Definition,
     outside: readonly JSONSchema7[],
+    unchecked: readonly JSONSchema7[],
+    resolve?: (schema: JSONSchema7) => JSONSchema7 | undefined,
   ) => JSONSchema7Definition | undefined = mergedPair,
   dropEqual = true,
+  resolve?: (schema: JSONSchema7) => JSONSchema7 | undefined,
 ): MergedOption[] | undefined {
-  const outside = beside.flatMap(withInPlaceSubschemas);
+  const outside = inPlaceResolved(beside, resolve);
+  // A `$ref` the pair can't follow, one declaring a property outside any followed definition, is read as closing it
+  const unchecked = beside.flatMap(withInPlaceSubschemas);
   let merged: MergedOption[] = first.map((option) => ({ option, sources: [option] }));
   for (const list of rest) {
     const next: MergedOption[] = [];
     for (const left of merged) {
       for (const right of list) {
-        const option = pair(left.option, right, outside);
+        const option = pair(left.option, right, outside, unchecked, resolve);
         if (
           option !== undefined &&
           !(dropEqual && next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0))
