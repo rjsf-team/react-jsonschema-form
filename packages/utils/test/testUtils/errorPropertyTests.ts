@@ -228,6 +228,23 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
         expect.objectContaining({ property: '.obj.extra', title }),
       ]);
     });
+
+    it.each<[string, UiSchema]>([
+      ['ui:title', { obj: { additionalProperties: { 'ui:title': 'Extra ui' } } }],
+      ['title', { obj: { additionalProperties: { title: 'Extra raw' } } }],
+    ])("doesn't name a missing undeclared property by the %s additionalProperties gives every key", (_, uiSchema) => {
+      const required: RJSFSchema = {
+        type: 'object',
+        properties: { obj: { type: 'object', required: ['foo', 'bar'], additionalProperties: { type: 'string' } } },
+      };
+      const { errors } = buildValidator().validateFormData({ obj: {} }, required, undefined, undefined, uiSchema);
+      const missingFoo = { message: expect.stringContaining('foo'), title: expect.not.stringContaining('Extra') };
+      const missingBar = { message: expect.stringContaining('bar'), title: expect.not.stringContaining('Extra') };
+      expect(errors.filter((error) => error.name === 'required')).toEqual([
+        expect.objectContaining(missingFoo),
+        expect.objectContaining(missingBar),
+      ]);
+    });
   });
 
   describe('an error under a $ref to another property', () => {

@@ -259,7 +259,8 @@ function namesNoOtherProperty(keys: string[], dataPath: string[]): boolean {
 
 /** Used by the validator packages to find the `ui:title` of the field an error names: of the `name` under the error's
  * `property`, or of the `property` itself when no `name` is given. It is read at that field's data path, an array
- * item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`. A `name` with none there
+ * item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`. The `name` is read as the
+ * key it is, never as an item or an additional property. A `name` with none there
  * has it read along the `schemaPath`, where `#/properties/a/properties/b/required` points into the uiSchema at `['a',
  * 'b']`, then along it with the branches the keyword sits in removed (see `getFieldSchemaPath()`). A schema path that
  * names another property than the data path at the same level, as Ajv's does for a keyword behind a `$ref` to another
@@ -293,7 +294,9 @@ export default function getValidatorErrorUiTitle<
   if (dataPath.length === 0) {
     return undefined;
   }
-  const { title } = getUiOptions<T, S, F>(uiSchemaAtDataPath<T, S, F>(uiSchema, dataPath, schema));
+  const atProperty = uiSchemaAtDataPath<T, S, F>(uiSchema, propertyPath, schema);
+  // A required name is a property name, never an item, and the form labels an additional property by its key
+  const { title } = getUiOptions<T, S, F>(name === undefined ? atProperty : getByPath(atProperty, name));
   if (title !== undefined || name === undefined) {
     return title;
   }

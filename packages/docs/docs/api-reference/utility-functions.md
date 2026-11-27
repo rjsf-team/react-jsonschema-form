@@ -1950,7 +1950,7 @@ A schema [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfsche
 ### getValidatorErrorUiTitle&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getvalidatorerroruititle}
 
 Used by the validator packages to find the `ui:title` of the field an error names: of the `name` under the error's `property`, or of the `property` itself when no `name` is given.
-It is read at that field's data path, an array item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`, though a key that looks like an index is read as the key when the uiSchema holds it or the schema at that point declares it or, when known, has no items, and a key the uiSchema doesn't hold and the known schema doesn't declare is read from `additionalProperties`, as the form renders an additional property. A schema holding a `$ref`, `allOf`, `anyOf`, `oneOf`, `if`, `dependencies` or `dependentSchemas` isn't known, since those can declare more keys and items.
+It is read at that field's data path, an array item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`, though a key that looks like an index is read as the key when the uiSchema holds it or the schema at that point declares it or, when known, has no items, and a key the uiSchema doesn't hold and the known schema doesn't declare is read from `additionalProperties`, as the form renders an additional property. A schema holding a `$ref`, `allOf`, `anyOf`, `oneOf`, `if`, `dependencies` or `dependentSchemas` isn't known, since those can declare more keys and items. The `name` is read as the key it is, never as an item or an additional property.
 A `name` with none there has it read along the `schemaPath`, where `#/properties/a/properties/b/required` points into the uiSchema at `['a', 'b']`, which reaches one under `additionalProperties`, then along it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)).
 The branches are kept when the root `schema` doesn't lead along the `schemaPath` to the keyword, as for a keyword in a `$ref` target Ajv compiles on its own.
 A `schemaPath` that names another property than the data path at the same level, as Ajv's does for a keyword behind a `$ref` to another property, or that stops short of the data path, as for one behind a `$ref` to the root, isn't read; one into `definitions` or `$defs` is, since every `$ref` to that definition shares its uiSchema.
@@ -3564,7 +3564,6 @@ Dots and brackets are always separators, so quoted keys are not recognized and k
 ```typescript
 toPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
 toPath('a.0.b'); // ['a', '0', 'b']
-getByPath(formData, toPath(error.property)); // the usual pairing with the path utilities
 ```
 
 ### uiBooleanOption()

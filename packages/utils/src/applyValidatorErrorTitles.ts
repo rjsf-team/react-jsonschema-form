@@ -117,7 +117,7 @@ export default function applyValidatorErrorTitles<
   const titles = new Map<string, string>();
   for (const name of names) {
     // A sub-field named `title` sits at the same path as a raw `title`
-    const rawUiTitle = getByPath(uiSchemaAtDataPath<T, S, F>(uiSchema, [...propParts, name], schema), 'title');
+    const rawUiTitle = getByPath(uiSchemaAtDataPath<T, S, F>(uiSchema, propParts, schema), [name, 'title']);
     const title =
       (getValidatorErrorUiTitle<T, S, F>({ property, name, schemaPath, decodeSchemaPathKey, uiSchema, schema }) ??
         (typeof rawUiTitle === 'string' ? rawUiTitle : undefined)) ||
