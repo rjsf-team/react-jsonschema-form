@@ -31,6 +31,12 @@ export const ERRORS_KEY = '__errors';
  * in turn
  */
 export const EXTRA_KEYS_ELSEWHERE_FLAG = Symbol('__extra_keys_elsewhere');
+/** Set by `Form` on the `SchemaContext` it builds, which hands `getDefaultFormState()` the state it returned with an
+ * edit: under it, the defaults of each array or object the data holds as an earlier call saw it are reused rather
+ * than computed again (#3183). A caller computing the defaults once would pay for the snapshots that takes and reuse
+ * none
+ */
+export const REUSES_DEFAULTS_FLAG = Symbol('__reuses_defaults');
 /** Set by `retrieveSchema()` on the stub of an extra key that only the selected `anyOf`/`oneOf` option's extra-key
  * keywords describe, the object offering it declaring none: that option, as `anyOf[1]`, which a warning about the stub's
  * schema is named after, since the object renders the key whichever option describes it

@@ -7,14 +7,23 @@
  */
 export default function getDecimalSeparator(languages?: string | string[]): string {
   const locales = languages || (typeof navigator !== 'undefined' ? navigator.languages : undefined);
-  if (locales) {
-    try {
-      const formatter = new Intl.NumberFormat(locales);
-      const parts = formatter.formatToParts(1.1);
-      return parts.find((part) => part.type === 'decimal')?.value || '.';
-    } catch (e) {
-      // Fallback
-    }
+  if (!locales) {
+    return '.';
   }
-  return '.';
+  // Every number field asks on every render, and building an `Intl.NumberFormat` is slow
+  // As JSON, so a list of locales is not kept as the string that joins them, which names no locale
+  const key = JSON.stringify(locales);
+  let separator = separators.get(key);
+  if (separator === undefined) {
+    try {
+      const parts = new Intl.NumberFormat(locales).formatToParts(1.1);
+      separator = parts.find((part) => part.type === 'decimal')?.value || '.';
+    } catch (e) {
+      separator = '.';
+    }
+    separators.set(key, separator);
+  }
+  return separator;
 }
+
+const separators = new Map<string, string>();
