@@ -798,7 +798,7 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   onHandDown?: (defaults: unknown, givenConst: unknown) => void;
   /** Whether a required boolean the field this is the option of starts at `false`, see `startsFalse()`. The option holds
    * one entry of the field's list, or a schema of its own, merged in, so it is the field that says what a required
-   * boolean may start at. Asked only where a required boolean has nothing else to start at, with whether the value is
+   * boolean may start at, beside a list of constants the option offers itself. Asked only where a required boolean has nothing else to start at, with whether the value is
    * known to be a boolean, for a field whose own schema neither types nor lists it
    */
   fieldStartsFalse?: (isBoolean: boolean) => boolean;
@@ -1886,7 +1886,8 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         const { onHandDown } = props;
         const optionHandDown =
           onHandDown && constDefault ? (optionDefaults: unknown) => onHandDown(optionDefaults, givenConst) : onHandDown;
-        // A list inside an option is no list of the field's, so the field this is an option of keeps the say
+        // A list inside an option is no list of the field's, so the field this is an option of keeps its say beside the
+        // list's own, see `unpickedStart()`
         const fieldStartsFalse =
           props.fieldStartsFalse ??
           ((isBoolean: boolean) => viewStartsFalse<S, F>(context, view, isBoolean, choice.listedConstants));
@@ -3813,11 +3814,8 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
       if (
         !props.isUnpickedOption &&
         defaults === undefined &&
-        startsRequiredFalse<T, S, F>(
-          context,
-          props,
-          props.fieldStartsFalse ?? ((isBoolean: boolean) => viewStartsFalse<S, F>(context, view, isBoolean)),
-          true,
+        startsRequiredFalse<T, S, F>(context, props, () =>
+          (props.fieldStartsFalse ?? ((isBoolean) => viewStartsFalse<S, F>(context, view, isBoolean)))(true),
         )
       ) {
         return false;
@@ -3838,23 +3836,23 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
 function startsRequiredFalse<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   { required }: FoldProps<T, S, F>,
-  fieldStartsFalse: (isBoolean: boolean) => boolean,
-  isBoolean: boolean,
+  allowsFalse: () => boolean,
 ): boolean {
   return (
     context.defaultFormStateBehavior?.requiredBooleanDefault !== 'skip' &&
     !(SKIPS_DEFAULTS in context) &&
     required === true &&
-    fieldStartsFalse(isBoolean)
+    allowsFalse()
   );
 }
 
 /** What a field offering a list of several constants left unpicked starts at, where its option gives nothing: `false`
  * for a required boolean, see `startsRequiredFalse()`, or the `null` a field whose own type is `null` holds, see
- * `rendersNull()`. The field decides, not the constant its option holds, so a list whose first constant is `null` or
- * `false` starts as it would with that constant anywhere else in it, as an `enum` does. The list, `constants`, is what
- * the value is picked from, so it tells whether the value is a boolean where the field it is an option of has no
- * `type` and lists nothing: a list of strings in an untyped option is no boolean
+ * `rendersNull()`. The list decides, not the constant its option holds, so a list whose first constant is `null` or
+ * `false` starts as it would with that constant anywhere else in it, as an `enum` does. Where the list, `constants`,
+ * sits in an option of a field's list that isn't one of constants, the value must be one of the list's and satisfy
+ * the field too, so it starts at `false` only where both allow it: a list of strings, or of `true` and `null`, in an
+ * option of a field that types or lists nothing never holds `false`
  */
 function unpickedStart<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -3863,8 +3861,8 @@ function unpickedStart<T, S extends StrictRJSFSchema, F extends FormContextType>
   fieldStartsFalse: (isBoolean: boolean) => boolean,
   constants: S[] | undefined,
 ): false | null | undefined {
-  const isBoolean = isBooleanSchema<S>(viewMergedSchema<S, F>(context, view), constants);
-  if (startsRequiredFalse<T, S, F>(context, props, fieldStartsFalse, isBoolean)) {
+  const listStartsFalse = () => viewStartsFalse<S, F>(context, view, false, constants) && fieldStartsFalse(true);
+  if (startsRequiredFalse<T, S, F>(context, props, listStartsFalse)) {
     return false;
   }
   if (rendersNull<T, S, F>(context, view, props)) {
@@ -3874,20 +3872,10 @@ function unpickedStart<T, S extends StrictRJSFSchema, F extends FormContextType>
   return undefined;
 }
 
-/** The schema of `view` with its `allOf` and condition merged, as `rendersNull()` reads its type, so a `type`, `enum`
- * or `const` an `allOf` or the branch its condition takes brings counts as its own
- */
-function viewMergedSchema<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  view: DefaultsView<S>,
-): S {
-  const { schema } = view;
-  return ALL_OF_KEY in schema || IF_KEY in schema ? mergedSchemaOf<S, F>(context, view) : schema;
-}
-
-/** Whether a required boolean the field of `view` is starts at `false`, see `startsFalse()`, its schema read as
- * `viewMergedSchema()` reads it. `constants` are those of the list of constant `anyOf`/`oneOf` options the field
- * offers, as `chooseOption()` reads it
+/** Whether a required boolean the field of `view` is starts at `false`, see `startsFalse()`: its `type`, `enum` and
+ * `const` are read with its `allOf` and condition merged, as `rendersNull()` reads its type, so one an `allOf` or the
+ * branch its condition takes brings counts as its own. `constants` are those of the list of constant `anyOf`/`oneOf`
+ * options the field offers, as `chooseOption()` reads it
  */
 function viewStartsFalse<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -3895,7 +3883,12 @@ function viewStartsFalse<S extends StrictRJSFSchema, F extends FormContextType>(
   isBoolean: boolean,
   constants?: S[],
 ): boolean {
-  return startsFalse<S>(viewMergedSchema<S, F>(context, view), isBoolean, constants);
+  const { schema } = view;
+  return startsFalse<S>(
+    ALL_OF_KEY in schema || IF_KEY in schema ? mergedSchemaOf<S, F>(context, view) : schema,
+    isBoolean,
+    constants,
+  );
 }
 
 /** The values `schema` lists: those of its `enum` and `const` and `constants`, where each lists any. A `const` that is

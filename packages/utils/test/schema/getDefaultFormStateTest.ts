@@ -12003,6 +12003,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           'an enum of true beside options that are not constants',
           { type: 'boolean', enum: [true], anyOf: [{ title: 'a' }, { title: 'b' }] },
         ],
+        [
+          'a list of true and null inside an option of a list that is not one',
+          { type: ['boolean', 'null'], anyOf: [{ oneOf: trueOrNull }, { title: 'any' }] },
+        ],
+        [
+          'a list of true and null inside an option of an untyped anyOf',
+          { anyOf: [{ oneOf: trueOrNull }, { type: 'number' }] },
+        ],
+        [
+          'a list of true and null inside an option of an untyped oneOf',
+          {
+            oneOf: [
+              { title: 'flag', oneOf: trueOrNull },
+              { title: 'nums', oneOf: [{ const: 1 }, { const: 2 }] },
+            ],
+          },
+        ],
+        [
+          'a list of true and null inside an option of an untyped anyOf, two levels down',
+          { anyOf: [{ anyOf: [{ oneOf: trueOrNull }, { type: 'number' }] }, { type: 'number' }] },
+        ],
       ])('is left empty for %s, whose values leave out false', (_, b, behavior) => {
         expect(fill(b, true, behavior)).toEqual({});
       });
@@ -12029,8 +12050,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ['a const spelled out as undefined', { type: 'boolean', const: undefined }],
         ['options that are not constants', { type: 'boolean', anyOf: [{ enum: [true] }, { title: 'any' }] }],
         [
-          'a list of constants inside an option of a list that is not one',
-          { type: ['boolean', 'null'], anyOf: [{ oneOf: [{ const: true }, { const: null }] }, { title: 'any' }] },
+          'a list of true and false inside an option of a list that is not one',
+          { type: ['boolean', 'null'], anyOf: [{ oneOf: untitled }, { title: 'any' }] },
         ],
         ['a not that rules false out', { type: 'boolean', not: { const: false } }],
       ])('starts at false for %s, whose values include it or are not listed', (_, b, behavior) => {
