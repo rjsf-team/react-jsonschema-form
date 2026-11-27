@@ -640,6 +640,8 @@ The seed of the form's data, the way `defaultValue` works on an `<input>`. It is
 
 The form's data shares its unchanged parts with the object you pass, so don't mutate that object afterwards; change a copy. In development the form freezes it from its first edit, validation, submit or reset on, so a mutation throws.
 
+Like [`formData`](#formdata), it must not hold a reference to itself.
+
 ## nameGenerator
 
 The `nameGenerator` prop allows you to customize how HTML `name` attributes are generated for form fields. This is essential when submitting form data to backend frameworks that expect specific naming conventions for structured data.
