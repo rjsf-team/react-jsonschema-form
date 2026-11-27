@@ -4096,7 +4096,7 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
     ['an allOf branch', { allOf: [{ required: ['name'] }] }, {}],
     ['a then branch', { if: { required: ['flag'] }, then: { required: ['name'] } }, { flag: 1 }],
   ])(
-    'takes no title or ui:title from a root property of the same name where the root holds %s equal to the target’s',
+    'names a property by the target’s title, not a root property’s title or ui:title, where the root holds %s equal to the target’s',
     (_, branch, a) => {
       const schema: RJSFSchema = {
         $defs: {
@@ -4116,13 +4116,17 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
         uiSchema,
       );
       expect(errors.find((error) => error.name === 'required')).toEqual(
-        expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+        expect.objectContaining({
+          property: '.a.name',
+          title: 'F name',
+          message: "must have required property 'F name'",
+        }),
       );
     },
   );
 
   // The root a recursive `$ref: '#'` names is reached again only at its kids, so `.a` still doesn't lead to it
-  it('takes no ui:title from a root property of the same name where the root also names itself in a recursive $ref', () => {
+  it('names a property by the target’s title, not a root property’s ui:title, where the root also names itself in a recursive $ref', () => {
     const branch: RJSFSchema = { allOf: [{ required: ['name'] }] };
     const schema: RJSFSchema = {
       $defs: {
@@ -4146,7 +4150,11 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
       uiSchema,
     );
     expect(errors.find((error) => error.name === 'required')).toEqual(
-      expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+      expect.objectContaining({
+        property: '.a.name',
+        title: 'F name',
+        message: "must have required property 'F name'",
+      }),
     );
   });
 
