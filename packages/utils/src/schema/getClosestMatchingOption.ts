@@ -507,8 +507,8 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
   readsAbsent = false,
 ): Scored<S> {
   const { graph, seeds } = where ?? whereOf<S>(option, rootSchema);
-  // A handed-out option is read as retrieval left it, which stubbed the keys an absent keyword takes where its field
-  // leaves them to it
+  // A handed-out option is read as retrieval left it. One retrieved for the data declares the extra keys it stubbed,
+  // so they aren't stubbed again; the options a retrieved field hands out stub none
   const plan =
     isHandedOut(option) && typeof option[REF_KEY] !== 'string' ? undefined : planAt<S, F>(context, { graph, seeds });
   let retrieved: S | undefined;
@@ -541,12 +541,13 @@ function scoredOption<S extends StrictRJSFSchema, F extends FormContextType>(
         return value === undefined ? withoutKeys<S>(copy, keyword) : { ...copy, [keyword]: value };
       }, schema)
     : schema;
-  // An option of a list no field is known to offer, as one built in code or a copy passed without its `offeredBy`,
-  // reads an absent keyword as `'forbid'`, since only the field offering it says whether it stubs those keys itself
+  // An option of a list no field is known to offer, as one built in code, a copy or one a retrieved field hands out,
+  // passed without its `offeredBy`, reads an absent keyword as `'forbid'`, since only the field offering it says
+  // whether it stubs those keys itself
   const stubContext: SchemaContext<S, F> =
-    (readsAbsent && plan !== undefined) || !readsAbsentAsAllowed<S, F>(context)
-      ? context
-      : { ...context, additionalPropertiesWhenAbsent: 'forbid' };
+    !readsAbsent && readsAbsentAsAllowed<S, F>(context)
+      ? { ...context, additionalPropertiesWhenAbsent: 'forbid' }
+      : context;
   if (!isObject(formData) || !allowsAdditionalProperties<S, F>(stubContext, keyed)) {
     return { schema, plan };
   }
@@ -1016,9 +1017,10 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
  * @param [offeredBy] - The schema of the field offering the options, as written where it offers them, a `$ref` and the
- *          keywords beside it included. Under `additionalPropertiesWhenAbsent: 'allow'` it says whether an option takes
- *          the data's extra keys an absent keyword takes, or the field takes them beside it; without it, that is read
- *          off the field the root declares the options in, and options it declares nowhere take none
+ *          keywords beside it included, or as `retrieveSchema()` returns it. Under `additionalPropertiesWhenAbsent:
+ *          'allow'` it says whether an option takes the data's extra keys an absent keyword takes, or the field takes
+ *          them beside it; without it, that is read off the field the root declares the options in, and options it
+ *          declares nowhere take none
  * @returns - The index of the option that is the closest match to the `formData`, or the `selectedOption` when there
  *          are no options
  */
