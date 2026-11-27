@@ -244,6 +244,14 @@ describe('getKeywordParentSchema()', () => {
       };
       expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/n/type')).toBe(n);
     });
+    it('reads `properties` after a `$ref` written into the path from its target alone where a merge further along fails', () => {
+      const x: RJSFSchema = { title: 'TX', minimum: 1 };
+      const schema: RJSFSchema = {
+        $defs: { T: { $ref: '#/$defs/U', type: 'string', properties: { x } }, U: { type: 'number' } },
+        properties: { a: { $ref: '#/$defs/T', properties: { y: { title: 'AY' } } } },
+      };
+      expect(getKeywordParentSchema(schema, '#/properties/a/$ref/properties/x/minimum')).toBe(x);
+    });
     it('keeps the `$ref` schema as written for a path ending in a `$ref` or a chain of them written into it', () => {
       const a: RJSFSchema = { $ref: '#/$defs/T', type: 'string', title: 'W' };
       const schema: RJSFSchema = {
@@ -293,6 +301,7 @@ describe('getKeywordParentSchema()', () => {
         properties: { a: { $ref: '#/$defs/J', type: 'string', title: 'Wrapper' } },
       };
       expect(getKeywordParentSchema(schema, '#/properties/a/type', undefined, true)).toBe(schema.properties!.a);
+      expect(getKeywordParentSchema(schema, '#/properties/a/$ref')).toBe(schema.properties!.a);
     });
     it('reads a key only the target holds from the target, and keeps the `$ref` schema at its keyword, where merging fails', () => {
       const t0 = { title: 'T0', minimum: 5 };

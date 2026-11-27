@@ -138,7 +138,6 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
     let seeds: object[] = [];
     let endsAtNameMap = false;
     const keys = schemaPath.split('/').slice(1, -1).map(decodeSchemaPathKey);
-    const keyword = decodeSchemaPathKey(schemaPath.slice(schemaPath.lastIndexOf('/') + 1));
     for (let index = 0; index < keys.length; index++) {
       const key = keys[index];
       const hasRef = stringKeyword(node, REF_KEY) !== undefined;
@@ -156,7 +155,7 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
           index += refs - 1;
         } else {
           const own = ownRef<S>(graph, seeds, node as S);
-          if (readsJoined(rest) && Object.hasOwn(own.resolved, rest[0])) {
+          if (!own.failed && readsJoined(rest) && Object.hasOwn(own.resolved, rest[0])) {
             node = own.resolved;
             seeds = own.seeds;
             index += refs - 1;
@@ -217,8 +216,8 @@ export default function getKeywordParentSchema<S extends StrictRJSFSchema = RJSF
     if (stringKeyword(node, REF_KEY) !== undefined) {
       const { resolved, failed } = ownRef<S>(graph, seeds, node as S);
       // A merge that fails moves the keyword into an `allOf`, away from the `$ref` schema's own title, which a merge
-      // keeps over its target's. The `$ref` itself is never kept by a merge
-      node = keyword !== REF_KEY && failed ? node : resolved;
+      // keeps over its target's
+      node = failed ? node : resolved;
     }
     return isObject(node) && !endsAtNameMap ? (node as S) : undefined;
   } catch {

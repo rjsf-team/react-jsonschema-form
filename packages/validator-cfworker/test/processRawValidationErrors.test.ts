@@ -501,6 +501,24 @@ describe('transformRJSFValidationErrors()', () => {
       expect(titlesOfQ({ a: { n: { q: 5 } } })).toEqual([{ name: 'type', title: 'Right Q' }]);
     });
 
+    it('titles the $ref error of a $ref schema whose merge with its target fails by the $ref schema, as its other errors', () => {
+      const schema: RJSFSchema = {
+        $defs: { I: { type: 'number', title: 'I' } },
+        type: 'object',
+        properties: { a: { type: 'array', items: { $ref: '#/$defs/I', title: 'Own I', type: 'string' } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: [true] }, schema);
+      expect(
+        errors
+          .filter((error) => error.name === '$ref' || error.name === 'type')
+          .map(({ name, title }) => ({ name, title })),
+      ).toEqual([
+        { name: '$ref', title: 'Own I' },
+        { name: 'type', title: 'Own I' },
+        { name: 'type', title: 'Own I' },
+      ]);
+    });
+
     it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
       const schema: RJSFSchema = {
         $id: 'https://example.com/root',
