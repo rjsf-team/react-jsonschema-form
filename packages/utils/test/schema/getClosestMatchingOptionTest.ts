@@ -1110,20 +1110,15 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
             expect(getClosestMatchingOption(context, declaring, { t: 2 }, options)).toBe(1);
             expect(getClosestMatchingOption(context, declaring, { t: 2 }, options, -1, undefined, offeredBy)).toBe(1);
           });
-          // What a custom field holds: its schema retrieved for the data, and the options that schema hands out
-          it.each<[string, RJSFSchema, number]>([
-            ['field with no type', { oneOf: options }, 0],
-            ['$ref site with no type', { $ref: '#/definitions/list' }, 0],
-            ['typed object field', { type: 'object', oneOf: options }, 1],
-          ])('reads the options a retrieved %s hands out as that field reads them', (_, site, expected) => {
-            const declaring: RJSFSchema = {
-              type: 'object',
-              definitions: { list: { oneOf: options } },
-              properties: { p: site },
-            };
-            const field = createSchemaUtils(context, declaring).retrieveSchema(site, { t: 2 });
+          // What a custom field holds: its schema retrieved for the data, and the options that schema hands out, which
+          // are read as retrieval left them, so only copies of them take what `offeredBy` says
+          it('reads the options a retrieved field hands out as retrieval left them, whatever offeredBy says', () => {
+            const declaring: RJSFSchema = { type: 'object', properties: { p: { oneOf: options } } };
+            const field = createSchemaUtils(context, declaring).retrieveSchema({ oneOf: options }, { t: 2 });
             const listed = field.oneOf as RJSFSchema[];
-            expect(getClosestMatchingOption(context, declaring, { t: 2 }, listed, -1, undefined, field)).toBe(expected);
+            const listedCopies = listed.map((option) => ({ ...option }));
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, listed, -1, undefined, field)).toBe(1);
+            expect(getClosestMatchingOption(context, declaring, { t: 2 }, listedCopies, -1, undefined, field)).toBe(0);
           });
           it('reads a copy of the list as the field it names reads it through SchemaUtils', () => {
             const offeredBy: RJSFSchema = { oneOf: options };

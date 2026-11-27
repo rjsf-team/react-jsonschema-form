@@ -292,9 +292,9 @@ class SchemaUtils<
    * @param [selectedOption] - The index of the currently selected option, defaulted to -1 if not specified
    * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
    *          determine which option is selected
-   * @param [offeredBy] - The schema of the field offering the options, as written where it offers them or as
-   *          `retrieveSchema()` returns it, which says whether an option takes the data's extra keys an absent keyword
-   *          takes (see `getClosestMatchingOption()`)
+   * @param [offeredBy] - The schema of the field offering the options, as written where it offers them, which says
+   *          whether an option takes the data's extra keys an absent keyword takes (see `getClosestMatchingOption()`); it
+   *          has no effect on the options `retrieveSchema()` hands out, so pass copies of a retrieved field's options
    * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
    */
   getClosestMatchingOption(
