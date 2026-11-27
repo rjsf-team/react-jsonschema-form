@@ -691,7 +691,7 @@ export function conjunctionOf<S extends StrictRJSFSchema>(
  * list of options only what one of its options allows. An `if` beside them may be checked before the merge, see
  * `holdsNoValue()`
  */
-interface DeclaredTypes {
+export interface DeclaredTypes {
   /** `undefined` where none declares a `type` */
   readonly types: readonly string[] | undefined;
   /** For a field naming no `type`, the types of the values its first `const` or `enum` allows */

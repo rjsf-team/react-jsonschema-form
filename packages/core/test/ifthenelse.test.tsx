@@ -435,3 +435,27 @@ describe('null data checked as null for an if (#5916)', () => {
     expect(label(node)).toMatch(/^Null/);
   });
 });
+
+describe('an option retrieved as part of its field (#5916)', () => {
+  const field: RJSFSchema = {
+    type: 'string',
+    oneOf: [
+      { if: { minLength: 3 }, then: { title: 'long', const: 'abc' } },
+      { title: 'other', maxLength: 1 },
+    ],
+  };
+  const optionLabels = (node: Element) =>
+    [...node.querySelectorAll('#root_x__oneof_select option')].map((option) => option.textContent);
+
+  it("labels an empty field's option as it stands, taking neither branch of its if", () => {
+    const { node } = createFormComponent({ schema: { type: 'object', properties: { x: field } } });
+    expect(optionLabels(node)).toEqual(['Option 1', 'other']);
+  });
+  it('labels the option of a field holding a value by the branch its if takes for the value', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: field } },
+      formData: { x: 'abcd' },
+    });
+    expect(optionLabels(node)).toEqual(['long', 'other']);
+  });
+});

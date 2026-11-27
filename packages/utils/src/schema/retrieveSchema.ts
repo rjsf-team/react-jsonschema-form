@@ -777,7 +777,10 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   selectedOption?: number,
 ): S {
   const { graph, seeds } = field;
-  const policy = renderPolicy(context, root);
+  // An option is retrieved as part of the field offering it, so an empty field's option takes neither branch of its
+  // `if`s, as the field does
+  const declared = field.optionOf?.declared;
+  const policy = declared === undefined ? renderPolicy(context, root) : { ...renderPolicy(context, root), declared };
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
   const plan = planned ?? planOf(seeds, data);
@@ -919,7 +922,11 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
             {
               seeds: [{ node: adopted.node, refPath: [] }],
               chain: optionChain,
-              optionOf: { setKey: plan.setKey, set: plan.set },
+              optionOf: {
+                setKey: plan.setKey,
+                set: plan.set,
+                declared: plan.choices.find((choice) => choice.keyword === keyword)?.declared,
+              },
               stubsOwnExtraKeys: stubsOwnExtraKeys(option),
             },
             adopted.graph,

@@ -3019,6 +3019,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           }
         });
       });
+      it("retrieves a handed-out option as part of its field, so an empty field's option takes neither branch (#5916)", () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const context = { validator: testValidator };
+        const conditional: RJSFSchema = { if: { maxLength: 2 }, then: { title: 'Short' }, else: { title: 'Long' } };
+        const schema: RJSFSchema = { type: 'string', oneOf: [conditional, { title: 'Other' }] };
+        const [option] = retrieveSchema(context, schema, schema).oneOf as RJSFSchema[];
+        expect(retrieveSchema(context, option, schema)).not.toHaveProperty('title');
+        expect(retrieveSchema(context, option, schema, 'ab').title).toBe('Short');
+        expect(retrieveSchema(context, option, schema, 'abcd').title).toBe('Long');
+        // Not handed out with its field, the option names no type, so it is checked against `{}`
+        expect(retrieveSchema(context, conditional, schema).title).toBe('Short');
+      });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected
         testValidator.setReturnValues({
