@@ -116,12 +116,19 @@ export const TranslatableString = {
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType: 'Unknown field type %1',
-  /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField */
+  /** Option prefix, where %1 will be replaced with the option index as provided by MultiSchemaField, or with an untitled
+   * option's place in its list as provided by `renderedOptionTitles()`
+   */
   OptionPrefix: 'Option %1',
   /** Option prefix, where %1 and %2 will be replaced by the schema title and option index, respectively as provided by
    * MultiSchemaField
    */
   TitleOptionPrefix: '%1 option %2',
+  /** Title of an option a merge of option lists built, where %1 will be replaced by the title joined so far, starting
+   * with the name of the first option it was built from, the field's own, and %2 by the name of the next, as provided by
+   * `renderedOptionTitles()`
+   */
+  MergedOptionTitle: '%1, %2',
   /** Key label, where %1 will be replaced by the label as provided by WrapIfAdditionalTemplate */
   KeyLabel: '%1 Key',
   /** Error for an additional property key the object's schema forbids, where %1 will be replaced by the key as

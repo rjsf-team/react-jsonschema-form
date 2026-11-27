@@ -2712,6 +2712,42 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_count')).toHaveValue('0');
     });
 
+    it('should seed from the uiSchema entry of the written option the shown option of a rebuilt list was built from (#5930)', async () => {
+      // The object shows B×C, at 2 of the list its allOf rebuilds, which reads the entry of B, at 1 of its own list.
+      // The entry arrives after mount, since one there at mount would have filled the declared property in already
+      const schema: RJSFSchema = {
+        type: 'object',
+        additionalProperties: { type: 'string' },
+        oneOf: [
+          { properties: { a: { type: 'string' }, c: { type: 'string' } } },
+          { properties: { bb: { type: 'string' }, bz: { type: 'string' } } },
+        ],
+        allOf: [{ oneOf: [{ properties: { c: { type: 'string' } } }, { properties: { d: { type: 'string' } } }] }],
+      };
+      const formData = { bb: 'y', c: 'z' };
+      const { node, onChange, rerender } = createFormComponent({
+        schema,
+        uiSchema: { additionalProperties: { 'ui:initialValue': 'AP' } },
+        initialFormData: formData,
+      });
+      rerender({
+        schema,
+        uiSchema: {
+          additionalProperties: { 'ui:initialValue': 'AP' },
+          oneOf: [{}, { bz: { 'ui:initialValue': 'from B' } }],
+        },
+        initialFormData: formData,
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand')!);
+      const keyInput = elementOf(node, '#root_newKey__key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'bz');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { bb: 'y', c: 'z', bz: 'from B', newKey: undefined }, 'root');
+    });
+
     it('should seed from the uiSchema entry of a declared name whose schema equals the additionalProperties one', async () => {
       // The seed is read for the new name whether or not the two names' schemas differ: a declared name with an equal
       // schema still brings up its own `uiSchema` entry, whose `ui:initialValue` the renamed property takes. The

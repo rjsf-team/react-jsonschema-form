@@ -1,4 +1,4 @@
-import type { RJSFSchema, SchemaContext, SchemaUtilsType } from '../../src/index.ts';
+import type { CustomMergeAllOf, RJSFSchema, SchemaContext, SchemaUtilsType } from '../../src/index.ts';
 import { createSchemaUtils, getByPath, getClosestMatchingOption, isSchemaObject } from '../../src/index.ts';
 import { calculateIndexScore } from '../../src/schema/getClosestMatchingOption.ts';
 import { DECLARED_ABOVE_KEY } from '../../src/schemaMarkers.ts';
@@ -251,6 +251,195 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           OPTIONAL_ONE_OF_SCHEMA_ONEOF,
         ),
       ).toEqual(2);
+    });
+    describe('a tie among matching options whose properties have defaults (#5930)', () => {
+      const withDefault = (key: string): RJSFSchema => ({ type: 'string', default: `${key}-default` });
+      // A then×own pair each, as a `then` list merged with the field's own builds them: matching passes over the
+      // missing `required` key and the typed values differ from the defaults, so both score 0
+      const options: RJSFSchema[] = [
+        { properties: { a: withDefault('a'), d: withDefault('d') }, required: ['a', 'd'] },
+        { properties: { b: withDefault('b'), d: withDefault('d') }, required: ['b', 'd'] },
+      ];
+      const rootSchema: RJSFSchema = { oneOf: options };
+      it('goes to the first option holding each key it requires', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'typed b', d: 'typed d' }, options),
+        ).toEqual(1);
+      });
+      it('goes to the option declaring the most keys the data holds where none requires any', () => {
+        const unrequired = options.map(({ properties }) => ({ properties }));
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: unrequired },
+            { b: 'typed b', d: 'typed d' },
+            unrequired,
+          ),
+        ).toEqual(1);
+      });
+      it('ranks holding each key an option requires over declaring more of the keys the data holds', () => {
+        const ranked: RJSFSchema[] = [
+          { properties: { a: withDefault('a'), b: withDefault('b'), d: withDefault('d') }, required: ['a'] },
+          { properties: { d: withDefault('d') }, required: ['d'] },
+        ];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: ranked },
+            { b: 'typed b', d: 'typed d' },
+            ranked,
+          ),
+        ).toEqual(1);
+      });
+      it('passes over a selected pair a merge of lists built where another ranks above it', () => {
+        const merged: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { a: withDefault('a') }, required: ['a'] },
+            { properties: { b: withDefault('b') }, required: ['b'] },
+          ],
+          if: true,
+          then: { oneOf: [{ properties: { d: withDefault('d') }, required: ['d'] }] },
+        };
+        const formData = { b: 'typed b', d: 'typed d' };
+        const { oneOf = [] } = createSchemaUtils({ validator: testValidator }, merged).retrieveSchema(merged, formData);
+        const pairs = oneOf.filter(isSchemaObject);
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(pairs).toHaveLength(2);
+        expect(getClosestMatchingOption({ validator: testValidator }, merged, formData, pairs, 0)).toEqual(1);
+      });
+      // A custom merge builds its pairs as fresh objects, which record nothing of what they were built from
+      const pairing: CustomMergeAllOf = (schema) => {
+        const { allOf, oneOf, ...rest } = schema;
+        const other = (allOf?.[0] as RJSFSchema | undefined)?.oneOf as RJSFSchema[] | undefined;
+        const own = (oneOf ?? other) as RJSFSchema[];
+        return {
+          ...rest,
+          oneOf: (oneOf && other ? oneOf : [{}]).flatMap((left) =>
+            (oneOf && other ? other : own).map((right) => ({
+              properties: { ...(left as RJSFSchema).properties, ...right.properties },
+              required: [...((left as RJSFSchema).required ?? []), ...(right.required ?? [])],
+            })),
+          ),
+        };
+      };
+      it('passes over a selected pair a customMergeAllOf built from two lists where another ranks above it', () => {
+        const merged: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { a: withDefault('a') }, required: ['a'] },
+            { properties: { b: withDefault('b') }, required: ['b'] },
+          ],
+          allOf: [{ oneOf: [{ properties: { d: withDefault('d') }, required: ['d'] }] }],
+        };
+        const formData = { b: 'typed b', d: 'typed d' };
+        const context = { validator: testValidator, customMergeAllOf: pairing };
+        const { oneOf = [] } = createSchemaUtils(context, merged).retrieveSchema(merged, formData);
+        const pairs = oneOf.filter(isSchemaObject);
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(pairs).toHaveLength(2);
+        expect(getClosestMatchingOption(context, merged, formData, pairs, 0)).toEqual(1);
+      });
+      it('keeps a selected option a customMergeAllOf returns for one list, as it merged no lists', () => {
+        const single: RJSFSchema = { type: 'object', allOf: [{ oneOf: options }] };
+        const formData = { b: 'typed b', d: 'typed d' };
+        const context = { validator: testValidator, customMergeAllOf: pairing };
+        const { oneOf = [] } = createSchemaUtils(context, single).retrieveSchema(single, formData);
+        const hoisted = oneOf.filter(isSchemaObject);
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(hoisted).toHaveLength(2);
+        expect(getClosestMatchingOption(context, single, formData, hoisted, 0)).toEqual(0);
+      });
+      it('keeps a selected option a customMergeAllOf hands back unchanged from one of the lists it merges', () => {
+        const own: RJSFSchema = {
+          type: 'object',
+          oneOf: options,
+          allOf: [{ oneOf: [{ properties: { d: withDefault('d') }, required: ['d'] }] }],
+        };
+        const formData = { b: 'typed b', d: 'typed d' };
+        const ownWins: CustomMergeAllOf = ({ allOf, ...rest }) => rest;
+        const context = { validator: testValidator, customMergeAllOf: ownWins };
+        const { oneOf = [] } = createSchemaUtils(context, own).retrieveSchema(own, formData);
+        const written = oneOf.filter(isSchemaObject);
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(written).toHaveLength(2);
+        expect(getClosestMatchingOption(context, own, formData, written, 0)).toEqual(0);
+      });
+      it('keeps a selected `true` option where another ranks above it, as no merge builds one', () => {
+        const withTrue = [true, options[1]] as unknown as RJSFSchema[];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: withTrue },
+            { b: 'typed b', d: 'typed d' },
+            withTrue,
+            0,
+          ),
+        ).toEqual(0);
+      });
+      it('keeps a selected written option where another ranks above it, as an explicit pick', () => {
+        const written: RJSFSchema[] = [
+          { title: 'Card', properties: { name: { type: 'string' }, card: { type: 'string' } } },
+          { title: 'Bank', properties: { name: { type: 'string' }, iban: { type: 'string' } }, required: ['iban'] },
+        ];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, { oneOf: written }, { name: 'Jo' }, written, 1),
+        ).toEqual(1);
+      });
+      it('ranks the tied options where a selected written option scores below them', () => {
+        const written: RJSFSchema[] = [
+          { properties: { name: { type: 'number' } } },
+          { properties: { name: { type: 'string' } } },
+          { properties: { name: { type: 'string' }, b: withDefault('b') }, required: ['b'] },
+        ];
+        testValidator.setReturnValues({ isValid: [true, true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { oneOf: written },
+            { name: 'Jo', b: 'x' },
+            written,
+            0,
+          ),
+        ).toEqual(2);
+      });
+      it('keeps the selected option where it ranks as well', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, rootSchema, { d: 'typed d' }, options, 1),
+        ).toEqual(1);
+      });
+      it('goes to the first option where none holds each key it requires', () => {
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { d: 'typed d' }, options)).toEqual(
+          0,
+        );
+      });
+      it('reads the keys a definition an option names requires', () => {
+        const definitions = { AD: options[0], BD: options[1] };
+        const refs: RJSFSchema[] = [{ $ref: '#/definitions/AD' }, { $ref: '#/definitions/BD' }];
+        testValidator.setReturnValues({ isValid: [true, true] });
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            { definitions, oneOf: refs },
+            { b: 'typed b', d: 'typed d' },
+            refs,
+          ),
+        ).toEqual(1);
+      });
+      it('reads a boolean option as requiring nothing it rejects', () => {
+        const withBoolean = [options[0], true] as unknown as RJSFSchema[];
+        testValidator.setReturnValues({ isValid: [true] });
+        expect(
+          getClosestMatchingOption({ validator: testValidator }, { oneOf: withBoolean }, { d: 'typed d' }, withBoolean),
+        ).toEqual(1);
+      });
     });
     it('returns the second option when data matches for oneOf', () => {
       // From https://github.com/rjsf-team/react-jsonschema-form/issues/2944

@@ -26,24 +26,28 @@ import {
 } from '@rjsf/utils';
 
 /** Gets the index of the selected option in the list of `options`, using the `selectorField` to search inside each
- * `option` for the `properties[selectorField].default(or const)` that matches the given `value`
+ * `option` for the `properties[selectorField].default(or const)` that matches the given `value`. Options a merge of
+ * lists built from the same option share its value, so where several hold it, `pick` chooses among their indices
  *
  * @param options - The list of schemas each representing a choice in the `oneOf`
  * @param selectorField - The name of the field that is common in all of the schemas that represents the selector field
  * @param value - The current value of the selector field from the data
+ * @param [pick] - Chooses among the indices of several options holding `value`, the first of them when not given
  * @returns - The index of the selected option, or -1 when none matches
  */
 export function getSelectedOptionIndex<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
   selectorField: string,
   value: unknown,
+  pick?: (indices: number[]) => number,
 ): number {
   const defaultValue = '!@#!@$@#$!@$#';
-  return options.findIndex(({ schema: option }) => {
+  const holding = options.flatMap(({ schema: option }, index) => {
     const selector = option![PROPERTIES_KEY]?.[selectorField];
     const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
-    return result === value;
+    return result === value ? [index] : [];
   });
+  return holding.length > 1 && pick ? pick(holding) : (holding[0] ?? -1);
 }
 
 /** Returns the `option` with its selector property read as `getOptionSelectorSchema()` reads it, so a selector written

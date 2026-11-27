@@ -6,7 +6,14 @@ import { userEvent } from '@testing-library/user-event';
 import FieldTemplate from '../src/components/templates/FieldTemplate/index.ts';
 import RadioWidget from '../src/components/widgets/RadioWidget.tsx';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_SCHEMAS, withTypelessSelector } from './testData/layoutData.ts';
-import { createFormComponent, createFormRef, handleOf, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  getSelectedOptionValue,
+  handleOf,
+  setupConsoleWarnSuppression,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1124,6 +1131,134 @@ describe('a cell in options with no discriminator', () => {
 
     expect(screen.getByLabelText('B')).toBeInTheDocument();
     expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+  });
+
+  // A×X and A×Y share A's selector value, so the widget offers each by its index
+  it("shows and switches to each option a then's list merge built, where several share a selector value (#5930)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          ...(selectorSchema.properties?.thing as RJSFSchema),
+          if: true,
+          then: {
+            anyOf: [
+              { title: 'X', properties: { x: { type: 'string', title: 'X field' } }, required: ['x'] },
+              { title: 'Y', properties: { y: { type: 'string', title: 'Y field' } }, required: ['y'] },
+            ],
+          },
+        } as RJSFSchema,
+      },
+    };
+    const uiSchema: UiSchema = {
+      ...selectorUiSchema,
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.x', 'thing.y'] }] },
+    };
+    const ref = createFormRef();
+    createFormComponent({ ref, schema, uiSchema, initialFormData: { thing: { kind: 'b', y: 'yy' } } });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+    expect(getSelectedOptionValue(select)).toBe('Option B, Y');
+    expect(screen.getByLabelText(/^Y field/)).toHaveValue('yy');
+
+    // The data holds `y`, yet the entry picked decides
+    await user.selectOptions(select, 'Option A, X');
+
+    expect(getSelectedOptionValue(select)).toBe('Option A, X');
+    expect(screen.getByLabelText(/^X field/)).toBeInTheDocument();
+    expect(screen.queryByLabelText(/^Y field/)).not.toBeInTheDocument();
+    expect(handleOf(ref).getFormData()).toMatchObject({ thing: { kind: 'a' } });
+  });
+
+  // `ui:enumDisabled` and the form's `onFocus` name selector values, though the widget offers the options by index
+  it('disables by selector value and reports focus with it where options share a selector value (#5930)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          ...(selectorSchema.properties?.thing as RJSFSchema),
+          if: true,
+          then: { anyOf: [{ title: 'X' }, { title: 'Y', properties: { y: { type: 'string' } } }] },
+        } as RJSFSchema,
+      },
+    };
+    const uiSchema: UiSchema = {
+      ...selectorUiSchema,
+      thing: { ...selectorCellUiSchema, 'ui:options': { optionsSchemaSelector: 'kind', enumDisabled: ['b'] } },
+    };
+    const onFocus = vi.fn();
+    createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } }, onFocus });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+
+    expect([...select.options].filter((option) => option.disabled).map((option) => option.textContent)).toEqual([
+      'Option B, X',
+      'Option B, Y',
+    ]);
+
+    await user.click(select);
+
+    expect(onFocus).toHaveBeenLastCalledWith(expect.any(String), 'a');
+  });
+
+  // Neither option pins `kind`, so both read `undefined` and the widget offers them by index
+  it("shows the option the form selects where the options don't pin the selector property (#5930)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          anyOf: [
+            { title: 'Option A', properties: { a: { type: 'string', title: 'A' } } },
+            { title: 'Option B', properties: { b: { type: 'string', title: 'B' } } },
+          ],
+        },
+      },
+    };
+    const { onChange } = createFormComponent({ schema, uiSchema: selectorUiSchema, initialFormData: { thing: {} } });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+
+    await user.selectOptions(select, 'Option B');
+
+    expect(getSelectedOptionValue(select)).toBe('Option B');
+    expect(screen.getByLabelText('B')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    // No option pins `kind`, so the switch has no value to write under it
+    expect(onChange.mock.lastCall?.[0].formData.thing).not.toHaveProperty('kind');
+  });
+
+  // A and A2 share `kind: 'a'`, so the widget offers by index, and C declares `kind` without pinning it
+  it("drops the old option's selector value on a switch to an option that declares the selector without pinning it (#5930)", async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          anyOf: [
+            {
+              title: 'Option A',
+              properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+            },
+            {
+              title: 'Option A2',
+              properties: { kind: { type: 'string', const: 'a' }, a2: { type: 'string', title: 'A2' } },
+            },
+            { title: 'Option C', properties: { kind: { type: 'string' }, c: { type: 'string', title: 'C' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      ...selectorUiSchema,
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.a2', 'thing.c'] }] },
+    };
+    const { onChange } = createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } } });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+
+    await user.selectOptions(select, 'Option C');
+
+    expect(getSelectedOptionValue(select)).toBe('Option C');
+    expect(screen.getByLabelText('C')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    expect(onChange.mock.lastCall?.[0].formData.thing).not.toHaveProperty('kind');
   });
 
   // The form's sanitize judges a key only the old option declares, as for the option selector (#5812)

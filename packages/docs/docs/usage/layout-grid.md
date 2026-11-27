@@ -1,7 +1,7 @@
 # Layout Grid
 
-Version 6 of RJSF introduced a new way of generating forms using the `UiSchema`, via the Layout Grid.
-Unlike the original method of showing each field in the JSON Schema, in order, as they appear hierarchically within the
+The Layout Grid is a way of generating forms using the `UiSchema`.
+Unlike the default rendering, which shows each field in the JSON Schema, in order, as they appear hierarchically within the
 nested object hierarchy, the Layout Grid lets you define where each field goes on a grid in any place/order you choose.
 It even adds the ability to pass additional props to the rendering widget for each element being displayed.
 
@@ -1194,5 +1194,3 @@ render(
 These examples are just a tiny fraction of the ways the `LayoutGridField` can be used. Remember, understand the theme's
 grid system and the "syntax" described above and [here](../api-reference/LayoutGridField.md). Play around, you can build
 just about any UI you want and still have it populate the JSON schema's `formData`!
-
-**ENJOY!!**

@@ -421,3 +421,9 @@ const uiSchema: UiSchema = {
 
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
+
+## Long arrays
+
+Typing in an item re-renders that item alone, and moving an item, or adding or removing the last one, re-renders only the one or two items it changes. Adding or removing an item anywhere else renders every item after it again, since an item's position is part of its field ids and of the path its data and errors are kept under. On a list of a few thousand items that can take a noticeable fraction of a second.
+
+For lists that long, render only the items on screen: a custom [`ArrayFieldTemplate`](../advanced-customization/custom-templates.md#arrayfieldtemplate) receives every item in its `items` prop and can hand them to a windowing library such as `react-window`, which mounts only the rows in view, so each change costs about what is visible.

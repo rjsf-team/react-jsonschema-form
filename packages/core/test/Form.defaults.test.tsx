@@ -1522,4 +1522,17 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { other: 'v', list: [{ q: 1, c: 'c' }] }, 'root_other');
     });
   });
+
+  // The defaults read the data only as far as the schema reaches, so data holding itself under a key the schema
+  // doesn't describe is filled as it stands (#3183)
+  it('renders data holding itself under a key the schema does not describe', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'object', properties: { b: { type: 'string', default: 'x' } } }, c: { type: 'string' } },
+    };
+    const inner: Record<string, unknown> = { b: 'y' };
+    inner.self = inner;
+    const { node } = createFormComponent({ schema, initialFormData: { a: inner } });
+    expect(elementOf(node, '#root_a_b')).toHaveValue('y');
+  });
 });
