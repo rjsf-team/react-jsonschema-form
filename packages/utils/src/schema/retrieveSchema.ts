@@ -610,7 +610,7 @@ function ownRefAt<S extends StrictRJSFSchema>(
  * @returns - The schema with its own reference resolved and the subschema it names
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
-function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
+export function requireOwnRef<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S,
   customMergeAllOf?: CustomMergeAllOf<S>,

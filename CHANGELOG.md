@@ -43,6 +43,17 @@ https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/docs/docs/
 - Add `REUSES_DEFAULTS_FLAG`, which `Form` sets on its `SchemaContext` so `getDefaultFormState()`, called with the state it returned and one item edited, computes the defaults of that item alone rather than of every item of an array ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
 - Fix `retrieveSchema()` and `getDefaultFormState()` calling the validator for an `if` again when only a key its `properties` and `required` don't name changed ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#4051](https://github.com/rjsf-team/react-jsonschema-form/issues/4051))
 - Fix `getDecimalSeparator()` building an `Intl.NumberFormat` on every call, which every number field made on every render ([#5942](https://github.com/rjsf-team/react-jsonschema-form/pull/5942), [#3183](https://github.com/rjsf-team/react-jsonschema-form/issues/3183))
+- Add `getKeywordParentSchema()`, which finds the schema holding the keyword a validation error reports ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+
+## @rjsf/validator-ata
+
+- Fix errors under a `$ref` not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix the error for a `false` property taking the schema of a sibling property named `title` as its title ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+
+## @rjsf/validator-cfworker
+
+- Fix errors inside an array item, or under a `$ref`, `allOf`, `if`/`then` or `additionalProperties`, not naming their property by its schema `title` ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
+- Fix errors naming a property that a branch, `patternProperties` entry or `additionalProperties` schema redeclares with its own `title` by the `title` along `properties` rather than the redeclared one ([#5933](https://github.com/rjsf-team/react-jsonschema-form/pull/5933), [#5919](https://github.com/rjsf-team/react-jsonschema-form/issues/5919))
 
 # 7.0.0-beta.1 (2026-11-20)
 

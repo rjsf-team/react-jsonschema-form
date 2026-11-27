@@ -8,6 +8,7 @@ import type {
 } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
   filterDuplicateErrors,
@@ -268,6 +269,325 @@ describe('transformRJSFValidationErrors()', () => {
     ];
     const out = transformRJSFValidationErrors(errors);
     expect(out[0].name).toBe('dependencies');
+  });
+
+  describe('names a property under a $ref by its title', () => {
+    const name = { type: 'string', title: 'Full name' } as const;
+    const item: RJSFSchema = { type: 'object', properties: { name }, required: ['name'] };
+
+    it.each<[string, RJSFSchema, unknown, string]>([
+      [
+        'a missing property',
+        { $defs: { I: item }, type: 'object', properties: { a: { $ref: '#/$defs/I' } } },
+        { a: {} },
+        '.a.name',
+      ],
+      [
+        'a missing property inside an array item',
+        { $defs: { I: item }, type: 'object', properties: { arr: { type: 'array', items: { $ref: '#/$defs/I' } } } },
+        { arr: [{}] },
+        '.arr.0.name',
+      ],
+    ])('for %s', (_, schema, formData, property) => {
+      const { errors } = customizeValidator().validateFormData(formData, schema);
+      expect(errors.find((error) => error.property === property)).toEqual(
+        expect.objectContaining({ title: 'Full name', message: "must have required property 'Full name'" }),
+      );
+    });
+
+    it.each<[string, RJSFSchema, unknown, string]>([
+      [
+        'an error other than required',
+        { $defs: { N: name }, type: 'object', properties: { a: { $ref: '#/$defs/N' } } },
+        { a: 1 },
+        '.a',
+      ],
+      [
+        'an error under a chain of $refs',
+        {
+          $defs: { N: name, P: { type: 'object', properties: { n: { $ref: '#/$defs/N' } } } },
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/P' } },
+        },
+        { a: { n: 1 } },
+        '.a.n',
+      ],
+      [
+        'an error under a $ref beside properties of its own',
+        {
+          $defs: { P: { type: 'object', properties: { n: name } } },
+          type: 'object',
+          properties: { a: { $ref: '#/$defs/P', properties: { extra: {} } } },
+        },
+        { a: { n: 1 } },
+        '.a.n',
+      ],
+    ])('for %s', (_, schema, formData, property) => {
+      const { errors } = customizeValidator().validateFormData(formData, schema);
+      expect(errors.find((error) => error.property === property)).toEqual(
+        expect.objectContaining({ title: 'Full name', stack: "'Full name' must be string" }),
+      );
+    });
+
+    it('keeps the title the $ref schema gives itself', () => {
+      const schema: RJSFSchema = {
+        $defs: { N: name },
+        type: 'object',
+        properties: { a: { title: 'Wrapper', $ref: '#/$defs/N' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 1 }, schema);
+      expect(errors[0]).toEqual(expect.objectContaining({ title: 'Wrapper', stack: "'Wrapper' must be string" }));
+    });
+
+    it('keeps the raw name of a missing property under a $ref to an $anchor', () => {
+      const schema: RJSFSchema = {
+        $defs: { I: { ...item, $anchor: 'i' } },
+        type: 'object',
+        properties: { a: { $ref: '#i' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(errors[0]).toEqual(
+        expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+      );
+    });
+
+    // ata leaves the `$ref` out of the path, so `/allOf/0` can name either list's first branch
+    it('gives no title to an error under a $ref whose schema and target both hold an allOf', () => {
+      const target: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { n: { type: 'string', title: 'Target' } } }],
+      };
+      const schema: RJSFSchema = {
+        $defs: { T: target },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', allOf: [{ properties: { n: { title: 'Own' } } }] } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { n: 5 } }, schema);
+      expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: '', stack: '.a.n must be string' })]);
+    });
+
+    it.each<[string, RJSFSchema, unknown, string[]]>([
+      [
+        'an allOf',
+        {
+          $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },
+          type: 'object',
+          properties: {
+            a: {
+              $ref: '#/$defs/T',
+              allOf: [{ properties: { n: { type: 'string', title: 'Own' } }, required: ['n'] }],
+            },
+          },
+        },
+        { a: { n: 5 } },
+        ['.a.n'],
+      ],
+      [
+        'items',
+        {
+          $defs: { T: { type: 'array', items: { type: 'object' } } },
+          type: 'object',
+          properties: {
+            a: { $ref: '#/$defs/T', items: { properties: { n: { type: 'string', title: 'Own' } }, required: ['n'] } },
+          },
+        },
+        { a: [{ n: 5 }, {}] },
+        ['.a.0.n', '.a.1.n'],
+      ],
+    ])(
+      'names an error from the $ref schema’s own branch where its target also holds %s',
+      (_, schema, formData, properties) => {
+        const { errors } = customizeValidator().validateFormData(formData, schema);
+        expect(errors.map((error) => [error.property, error.title])).toEqual(properties.map((p) => [p, 'Own']));
+      },
+    );
+
+    it('names a property of an array item by the $ref schema’s title where it and its target both hold one items schema', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          I: { type: 'object', properties: { n: { title: 'Target N', type: 'string' } } },
+          T: { type: 'array', items: { type: 'object', properties: { n: { title: 'Target N', type: 'string' } } } },
+          R: { type: 'array', items: { $ref: '#/$defs/I' } },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', items: { properties: { n: { title: 'Own N' } } } },
+          b: { $ref: '#/$defs/R', items: { properties: { n: { title: 'Own N' } } } },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: [{ n: 5 }], b: [{ n: 5 }] }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual([
+        { property: '.a.0.n', title: 'Own N' },
+        { property: '.b.0.n', title: 'Own N' },
+      ]);
+    });
+
+    it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
+      const schema: RJSFSchema = {
+        $id: 'https://example.com/root',
+        $defs: {
+          N: { type: 'string', title: 'Root N' },
+          R: {
+            $id: 'https://example.com/r',
+            $defs: { N: { type: 'number', title: 'Res N' } },
+            type: 'object',
+            properties: { n: { $ref: '#/$defs/N' } },
+          },
+        },
+        type: 'object',
+        properties: { a: { $ref: 'https://example.com/r', properties: { n: { description: 'd' } } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { n: 'x' } }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual([
+        { property: '.a.n', title: 'Res N' },
+      ]);
+    });
+
+    it('names a tuple position by the $ref schema’s title where it and its target both hold prefixItems', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'array', prefixItems: [{ type: 'string', title: 'T0' }] } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', prefixItems: [{ title: 'Own 0' }] } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: [5] }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual([
+        { property: '.a.0', title: 'Own 0' },
+      ]);
+    });
+
+    it('keeps the $ref schema’s own title where merging it with its target fails', () => {
+      const schema: RJSFSchema = {
+        $defs: { N: { type: 'number', title: 'N' }, J: { $ref: '#/$defs/N' } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/J', type: 'string', title: 'Wrapper' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: true }, schema);
+      expect(errors.map(({ title }) => title)).toEqual(['Wrapper', 'Wrapper']);
+    });
+
+    it('names an error from the target’s allOf branch, or of a keyword only the target holds, where merging fails', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: { type: 'number', title: 'T', allOf: [{ title: 'T0', minimum: 5 }] },
+          O: { type: 'object', title: 'O', additionalProperties: false },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', type: 'string', title: 'W' },
+          b: { $ref: '#/$defs/O', type: 'array', title: 'W' },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 3, b: { z: 1 } }, schema);
+      expect(errors.map(({ name, title }) => [name, title])).toEqual(
+        expect.arrayContaining([
+          ['minimum', 'T0'],
+          ['additionalProperties', 'W'],
+        ]),
+      );
+    });
+
+    it('names errors by the target’s titles where merging drops a key the $ref schema holds', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: {
+            type: 'object',
+            title: 'T',
+            properties: { n: { type: 'string', title: 'N title' } },
+            required: ['n'],
+            minProperties: 2,
+          },
+          P: { type: 'array', title: 'Pair', prefixItems: [{ type: 'string' }], minItems: 2 },
+        },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', patternProperties: {} },
+          b: { $ref: '#/$defs/P', additionalItems: false },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {}, b: ['x'] }, schema);
+      expect(errors.map(({ property, title }) => ({ property, title }))).toEqual(
+        expect.arrayContaining([
+          { property: '.a.n', title: 'N title' },
+          { property: '.a', title: 'T' },
+          { property: '.b', title: 'Pair' },
+        ]),
+      );
+    });
+
+    it('names an error from an allOf branch further along a $ref chain whose merge fails there', () => {
+      const schema: RJSFSchema = {
+        $defs: {
+          T: { $ref: '#/$defs/U', type: 'string', title: 'T' },
+          U: { type: 'number', title: 'U', allOf: [{ title: 'U0', minimum: 5 }] },
+        },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', title: 'W' } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: 3 }, schema);
+      expect(errors.find(({ name }) => name === 'minimum')?.title).toBe('U0');
+    });
+
+    it('names a missing property from the $ref schema’s own allOf branch where its target also holds one', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] } },
+        type: 'object',
+        properties: {
+          a: { $ref: '#/$defs/T', allOf: [{ properties: { n: { type: 'string', title: 'Own' } }, required: ['n'] }] },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: 'Own' })]);
+    });
+
+    it('names an error from the $ref schema’s own allOf branch whose keyword differs from the one its path ends at', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', allOf: [{ properties: { z: {} } }] }, U: { allOf: [{}] } },
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/$defs/T',
+            allOf: [{ properties: { p: {}, q: { title: 'Q' } }, dependentRequired: { p: ['q'] } }],
+          },
+          b: { $ref: '#/$defs/U', allOf: [{ title: 'Own0', enum: [1], if: { const: 3 }, then: false }] },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { p: 1 }, b: 3 }, schema);
+      expect(errors.find(({ schemaPath }) => schemaPath?.endsWith('/dependentRequired'))).toEqual(
+        expect.objectContaining({ property: '.a.q', title: 'Q' }),
+      );
+      expect(errors.find(({ schemaPath }) => schemaPath?.endsWith('/then'))?.title).toBe('Own0');
+    });
+
+    describe('where the $ref schema cannot be merged with its target', () => {
+      // Merging warns that the two `n` schemas conflict, then falls back to an `allOf` of both
+      setupConsoleWarnSuppression();
+
+      it('names a missing property from the $ref schema’s own allOf branch', () => {
+        const schema: RJSFSchema = {
+          $defs: { T: { type: 'object', minProperties: 1, properties: { n: { type: 'number' } } } },
+          type: 'object',
+          properties: {
+            a: {
+              $ref: '#/$defs/T',
+              properties: { n: { type: 'string', title: 'WrapperN' } },
+              allOf: [{ properties: { n: { title: 'BranchN' } }, required: ['n'] }],
+            },
+          },
+        };
+        const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+        expect(errors.find((error) => error.property === '.a.n')).toEqual(
+          expect.objectContaining({ title: 'BranchN' }),
+        );
+      });
+    });
+  });
+
+  it('gives no title to an error under a false property beside a property named title', () => {
+    const schema: RJSFSchema = { title: 'Root', type: 'object', properties: { x: false, title: { type: 'string' } } };
+    const { errors } = customizeValidator().validateFormData({ x: 1 }, schema);
+    expect(errors).toEqual([
+      expect.objectContaining({ property: '.x', title: '', stack: expect.stringMatching(/^\.x /) }),
+    ]);
   });
 });
 

@@ -1502,6 +1502,26 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
 
+### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
+The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
+Either way a next key such as `properties` or `items`, which merging joins with its target's, is read from the two merged, unless the merge fails, or, after a `$ref` key or, without `skipsRefs`, at a key the `$ref` schema holds itself, unless the path goes on through a key merging doesn't join, such as an `allOf`, other than a further `$ref`; a merged read after a chain of `$ref` keys starts from the first, for the titles of every schema along it.
+Where the merge fails, there or further along the chain of `$ref`s, and leaves the `allOf` of the two, a next key the `$ref` schema doesn't hold itself is read from its target.
+A `$ref` on the schema it ends at is resolved too, its own keywords kept over its target's, unless the merge fails, there or further along the chain, which leaves the schema as written.
+With `skipsRefs` set, below a `$ref` read merged, a list keyword both schemas hold, such as an `allOf` inside a property both declare, indexes the merged list, so the entry it reads can be the other schema's.
+
+#### Parameters
+
+- rootSchema: S - The form's root schema
+- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/required`
+- [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+- [skipsRefs=false]: boolean - The engine leaves every `$ref` out of the path, as `@rjsf/validator-ata` does, so a key after a `$ref` schema can index either that schema or its target
+
+#### Returns
+
+- S | null | undefined: The schema holding the keyword; `null` when `skipsRefs` is set and the path skips a chain of `$ref`s two of whose schemas hold its next key, since the path can index either one's, unless merging combines the two: the key is `properties`, `patternProperties`, `additionalProperties` or `propertyNames`, or an `items`, `prefixItems` or `additionalItems`, which merging joins as a whole schema or position by position, with no key merging doesn't join, such as an `allOf`, further along the path (a key further down is read from the merge); or `undefined` when the path isn't a URI fragment, such as one Ajv starts with another resource's `$id`, or leads to no schema object, such as the `properties` map holding the property a `false` schema's path ends at, or through a `$ref` that can't be resolved, such as one naming an `$anchor`
+
 ### getLabelId&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getlabelid}
 
 Gets the id of a field's label, for a widget or template that draws it or names a control by it: the id the field's plan gives the label, whoever draws it, which is `${id}__optionLabel`, numbered `__optionLabel2` and so on further down, beneath a label a field above draws under `fieldLabelId(id)`, or [fieldLabelId()](#fieldlabelid) for one rendered without a plan.
