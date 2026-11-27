@@ -849,18 +849,14 @@ function builtByMerge<S extends StrictRJSFSchema>(option: OptionNode<S>): boolea
 }
 
 /** Ranks a tied option first by whether `formData` holds each key the scope of `option` requires whatever the data, see
- * `scopeOf()`, then by how many of the data's keys it takes, there or in `schema`, the option as given, such as a
- * view `retrieveSchema()` handed out with the branches the data applies: what matching and scoring pass over, read
- * without the validator, whose check of a whole option grows with each recursive choice in it. A key `properties`
- * doesn't name is taken where `scoredOption()` would stub it with a schema allowing a value, reading an absent
- * extra-key keyword only where `readsAbsent`
+ * `scopeOf()`, then by how many of the data's keys it takes, there or in `schema`, the option as `scoredOption()`
+ * reads it, whose `properties` stub each extra key it takes: what matching and scoring pass over, read without the
+ * validator, whose check of a whole option grows with each recursive choice in it
  */
-function tieRank<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+function tieRank<S extends StrictRJSFSchema>(
   formData: GenericObjectType,
   option: OptionNode<S>,
   schema: unknown,
-  readsAbsent: boolean,
 ): number {
   const held = Object.keys(formData).filter((key) => formData[key] !== undefined);
   // Holding every required key outranks any count of taken keys, which is at most `held.length`
@@ -876,15 +872,16 @@ function tieRank<S extends StrictRJSFSchema, F extends FormContextType>(
     return !Array.isArray(required) || required.every((key) => held.includes(key));
   });
   const takers = [schema, ...scope.map(({ raw }) => raw)].filter((each) => isSchemaObject<S>(each));
-  const stubContext: SchemaContext<S, F> = readsAbsent
-    ? context
-    : { ...context, additionalPropertiesWhenAbsent: 'forbid' };
+  // A stub for a key the option forbids holds no value, so it takes nothing
   const taken = held.filter((key) =>
-    takers.some(
-      (taker) =>
-        Object.hasOwn(taker.properties ?? {}, key) ||
-        (allowsAdditionalProperties<S, F>(stubContext, taker) && getAdditionalPropertySchema<S>(taker, key) !== false),
-    ),
+    takers.some((taker) => {
+      const properties = taker.properties ?? {};
+      return (
+        Object.hasOwn(properties, key) &&
+        (!hasSchemaMarker(properties[key], ADDITIONAL_PROPERTY_FLAG) ||
+          getAdditionalPropertySchema<S>(taker, key) !== false)
+      );
+    }),
   ).length;
   return (holdsRequired ? whole : 0) + taken;
 }
@@ -902,18 +899,22 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
   declaredAt: (index: number, option: S) => Where<S> | undefined,
   readsAbsent: readonly boolean[],
 ): BestOption {
+  // Kept so a tie ranks each option by the keys the copy it scored takes
+  const scored: (Scored<S> | undefined)[] = [];
   const optionScore = (index: number) => {
     const option = options[index];
     if (!isSchemaObject<S>(option)) {
       return 0;
     }
-    return scopeScore<T, S, F>(
+    scored[index] = scoredOption<S, F>(
       context,
+      option,
       rootSchema,
-      scoredOption<S, F>(context, option, rootSchema, formData, declaredAt(index, option), readsAbsent[index]),
       formData,
-      new Set(),
+      declaredAt(index, option),
+      readsAbsent[index],
     );
+    return scopeScore<T, S, F>(context, rootSchema, scored[index], formData, new Set());
   };
   // The score a list of options nested under a property contributes: what the picked option scores, plus one where the
   // data matches it, as the option picked here without scoring does
@@ -966,7 +967,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     (tied[0] !== selectedOption || builtByMerge(optionNodes[selectedOption]))
   ) {
     const ranks = tied.map((index) =>
-      tieRank<S, F>(context, formData, optionNodes[index], options[index], readsAbsent[index]),
+      tieRank<S>(formData, optionNodes[index], scored[index]?.schema ?? options[index]),
     );
     best = { index: tied[ranks.indexOf(Math.max(...ranks))], score: best.score };
   }

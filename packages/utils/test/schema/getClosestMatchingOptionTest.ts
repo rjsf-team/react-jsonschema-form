@@ -458,6 +458,20 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         it('reads the extra-key keywords of an allOf entry the option holds', () => {
           expect(closest([named, { ...named, allOf: [{ patternProperties: { '^x': withDefault('x') } }] }])).toEqual(1);
         });
+        it('reads the extra-key keywords of a then applying to the data', () => {
+          const conditional: RJSFSchema = {
+            ...named,
+            if: { properties: { y: { const: 'typed y' } } },
+            then: { patternProperties: { '^x': withDefault('x') } },
+          };
+          testValidator.setReturnValues({ isValid: [] });
+          expect(
+            getClosestMatchingOption({ validator: testValidator }, { anyOf: [named, conditional] }, data, [
+              named,
+              conditional,
+            ]),
+          ).toEqual(1);
+        });
         it('counts no key an option forbids', () => {
           const forbidding: RJSFSchema = { ...named, patternProperties: { '^x': false }, additionalProperties: true };
           expect(closest([forbidding, extra])).toEqual(1);
