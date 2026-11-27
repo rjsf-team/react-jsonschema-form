@@ -1,4 +1,4 @@
-import { PROPERTIES_KEY, REF_KEY } from './constants.ts';
+import { ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import getFieldSchemaPath from './getFieldSchemaPath.ts';
 import getKeywordParentSchema, { keywordParentSchemaAt } from './getKeywordParentSchema.ts';
@@ -38,12 +38,13 @@ export interface ValidatorErrorTitleSource<
 }
 
 /** Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
- * A name's title is its `ui:title` at the error's `property`, then at the `schemaPath`, then at it with the branches the
- * keyword sits in removed (see `getFieldSchemaPath()`), then the `title` the uiSchema holds at the `property`, then the
- * `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in,
- * then in the root `schema`. A schema that is a `$ref` is read resolved, its own `title` kept over its target's. Each
- * name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in
- * single quotes. The title is written as it is, `$` patterns included.
+ * A name's title is its `ui:title` at the error's `property`, then at it with each array index read as `items`, then at
+ * the `schemaPath`, then at it with the branches the keyword sits in removed (see `getFieldSchemaPath()`), then the
+ * `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema
+ * of the field holding the branch the keyword sits in, then in the root `schema`. A schema that is a `$ref` is read
+ * resolved, its own `title` kept over its target's and read where its `$ref` can't be merged. Each name with a title is
+ * replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes. The
+ * title is written as it is, `$` patterns included.
  *
  * @param source - The error's message and what its names' titles are looked up in
  * @returns - The `message` with each name that has a title replaced by it, and the title of each such name
@@ -65,6 +66,8 @@ export default function applyValidatorErrorTitles<
   schema,
 }: ValidatorErrorTitleSource<T, S, F>): { message: string; titles: Map<string, string> } {
   const propParts = property.replace(/^\./, '').split('.').filter(Boolean);
+  // An array item's uiSchema is its array's `items`, whichever way the engine writes a `$ref` into the path
+  const itemParts = propParts.map((part) => (/^\d+$/.test(part) ? ITEMS_KEY : part));
   // `#/properties/A/properties/B/required` points into the uiSchema at `['A', 'B']`
   const uiSchemaPathParts = (path: string) =>
     path
@@ -99,7 +102,7 @@ export default function applyValidatorErrorTitles<
         // A `$ref` to an `$anchor` or to nothing leaves the `$ref` schema's own `title`
       }
     }
-    return getByPath<string | undefined>(resolved, 'title');
+    return getByPath<string | undefined>(resolved, 'title') ?? getByPath<string | undefined>(propertySchema, 'title');
   };
   // Read along the path, a property a merged schema holds resolves its `$ref` in the resource that writes it. The
   // engine's schema is read as it is where the path doesn't lead to it
@@ -121,6 +124,7 @@ export default function applyValidatorErrorTitles<
     const rawUiTitle = getByPath(uiSchema, [...propParts, name, 'title']);
     const title =
       (getUiOptions<T, S, F>(getByPath(uiSchema, [...propParts, name])).title ??
+        getUiOptions<T, S, F>(getByPath(uiSchema, [...itemParts, name])).title ??
         getUiOptions<T, S, F>(getByPath(uiSchema, [...schemaPathParts, name])).title ??
         getUiOptions<T, S, F>(getByPath(uiSchema, [...fieldSchemaPathParts, name])).title ??
         (typeof rawUiTitle === 'string' ? rawUiTitle : undefined)) ||

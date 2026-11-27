@@ -1,4 +1,4 @@
-import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
+import type { RJSFSchema, UiSchema, ValidatorType } from '../../src/index.ts';
 
 const N: RJSFSchema = { type: 'string', title: 'Full name' };
 const item = (keywords: RJSFSchema, name: RJSFSchema = N): RJSFSchema => ({
@@ -15,6 +15,12 @@ const inArrayItem = (schema: RJSFSchema): RJSFSchema => ({
   type: 'object',
   properties: { arr: { type: 'array', items: schema } },
 });
+const inRefArrayItem = (schema: RJSFSchema): RJSFSchema => ({
+  $defs: { Item: schema },
+  type: 'object',
+  properties: { arr: { type: 'array', items: { $ref: '#/$defs/Item' } } },
+});
+const itemUiSchema: UiSchema = { arr: { items: { name: { 'ui:title': 'UI name' } } } };
 
 /** Runs the cases where a missing required property is named by a `title` its error's schema doesn't hold itself: one
  * behind the property's own `$ref`, or in the field holding the branch that requires it. Each validator package runs
@@ -24,7 +30,7 @@ const inArrayItem = (schema: RJSFSchema): RJSFSchema => ({
  */
 export default function requiredTitleTests(buildValidator: () => ValidatorType) {
   describe('naming a missing required property by its title', () => {
-    it.each<[string, RJSFSchema, unknown, string]>([
+    it.each<[string, RJSFSchema, unknown, string, UiSchema?]>([
       [
         'whose schema is a $ref',
         { $defs: { N }, type: 'object', required: ['name'], properties: { name: { $ref: '#/$defs/N' } } },
@@ -34,6 +40,17 @@ export default function requiredTitleTests(buildValidator: () => ValidatorType) 
       [
         'whose schema is a $ref beside a title of its own',
         { $defs: { N }, type: 'object', required: ['name'], properties: { name: { title: 'Own', $ref: '#/$defs/N' } } },
+        {},
+        'Own',
+      ],
+      [
+        'whose schema is a $ref beside a title of its own and a type its target’s can’t be merged with',
+        {
+          $defs: { N: { type: 'number' } },
+          type: 'object',
+          required: ['name'],
+          properties: { name: { title: 'Own', type: 'string', $ref: '#/$defs/N' } },
+        },
         {},
         'Own',
       ],
@@ -67,9 +84,23 @@ export default function requiredTitleTests(buildValidator: () => ValidatorType) 
         { arr: [{ flag: true }] },
         'Full name',
       ],
-    ])('%s', (_, schema, formData, title) => {
+      [
+        'by its ui:title, inside an array item that is a $ref',
+        inRefArrayItem(item({ required: ['name'] })),
+        { arr: [{}] },
+        'UI name',
+        itemUiSchema,
+      ],
+      [
+        'by its ui:title, required by a then branch inside an array item that is a $ref',
+        inRefArrayItem(item(requiredThen)),
+        { arr: [{ flag: true }] },
+        'UI name',
+        itemUiSchema,
+      ],
+    ])('%s', (_, schema, formData, title, uiSchema) => {
       const required = buildValidator()
-        .validateFormData(formData, schema)
+        .validateFormData(formData, schema, undefined, undefined, uiSchema)
         .errors.filter((error) => error.name === 'required');
       expect(required).toEqual([expect.objectContaining({ title, message: expect.stringContaining(`'${title}'`) })]);
     });

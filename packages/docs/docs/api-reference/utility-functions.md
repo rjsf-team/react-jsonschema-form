@@ -172,8 +172,8 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 ### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
 
 Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
-A name's title is its `ui:title` at the error's `property`, then at the `schemaPath`, then at it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
-A schema that is a `$ref` is read resolved, its own `title` kept over its target's.
+A name's title is its `ui:title` at the error's `property`, then at it with each array index read as `items`, then at the `schemaPath`, then at it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
+A schema that is a `$ref` is read resolved, its own `title` kept over its target's and read where its `$ref` can't be merged.
 Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
 
 #### Parameters
