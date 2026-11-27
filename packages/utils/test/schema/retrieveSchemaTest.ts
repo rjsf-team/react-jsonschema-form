@@ -575,7 +575,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { ...base, $defs: { closed }, allOf: [list, { properties: { p: { $ref: '#/$defs/closed' } } }] },
         ],
       ])('in %s', (_, schema) => {
-        const option = retrieveSchema({ validator: testValidator }, schema, schema).oneOf?.[0];
+        const option = retrieveSchema({ validator: testValidator }, schema, schema, { p: { a: 'x', extra: 'y' } })
+          .oneOf?.[0];
         const property = typeof option === 'object' ? option.properties?.p : undefined;
         expect(typeof property === 'object' ? property.additionalProperties : property).toBeUndefined();
       });
