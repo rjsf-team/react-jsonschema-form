@@ -10,22 +10,19 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
-  ALL_OF_KEY,
   ANY_OF_KEY,
   applyValidatorErrorTitles,
   createErrorHandler,
-  ELSE_KEY,
   getByPath,
   getDefaultFormState,
+  getFieldSchemaPath,
   getKeywordParentSchema,
-  getUiOptions,
+  getValidatorErrorUiTitle,
   ONE_OF_KEY,
-  PATTERN_PROPERTIES_KEY,
+  pathToProperty,
   PROPERTIES_KEY,
-  REF_KEY,
-  THEN_KEY,
+  propertyToPath,
   toErrorSchema,
-  toPath,
   unwrapErrorHandler,
   validationDataMerge,
 } from '@rjsf/utils';
@@ -42,36 +39,7 @@ function decodePointerToken(token: string): string {
   return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
-const BRANCH_LIST_KEYS = new Set([ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY]);
-const BRANCH_MAP_KEYS = new Set(['dependentSchemas', 'dependencies']);
-const NAME_MAP_KEYS = new Set([PROPERTIES_KEY, PATTERN_PROPERTIES_KEY]);
-
-/** Returns a keyword location with the branches it ends in removed, so that it names the keyword on the schema holding
- * them: a branch's own title names that branch, not the field it applies to. A branch is an `allOf`/`anyOf`/`oneOf`
- * entry, a `then`/`else` or a `dependentSchemas`/`dependencies` schema, each with the `$ref`s after it. The path is
- * walked from the root so that a property or dependency named like a keyword is read as the name it is
- *
- * @param keywordLocation - The keyword location emitted by `@cfworker/json-schema`
- * @returns - The location of the keyword on the schema holding the branches, or `keywordLocation` when it ends in none
- */
-function branchHolderLocation(keywordLocation: string): string {
-  const segments = keywordLocation.split('/');
-  const last = segments.length - 1;
-  let branchStart: number | undefined;
-  for (let index = 1; index < last; index++) {
-    const segment = segments[index];
-    const isBranch =
-      BRANCH_LIST_KEYS.has(segment) || BRANCH_MAP_KEYS.has(segment) || segment === THEN_KEY || segment === ELSE_KEY;
-    branchStart = isBranch || (segment === REF_KEY && branchStart !== undefined) ? (branchStart ?? index) : undefined;
-    // The next segment is an index or a name, never a keyword
-    if (BRANCH_LIST_KEYS.has(segment) || BRANCH_MAP_KEYS.has(segment) || NAME_MAP_KEYS.has(segment)) {
-      index += 1;
-    }
-  }
-  return branchStart === undefined ? keywordLocation : [...segments.slice(0, branchStart), segments[last]].join('/');
-}
-
-/** Converts a cfworker instance location into RJSF's dot-separated property path.
+/** Converts a cfworker instance location into RJSF's property path, as `pathToProperty()` writes it.
  *
  * @param instanceLocation - The instance location emitted by `@cfworker/json-schema`
  * @returns - The corresponding RJSF property path
@@ -80,7 +48,7 @@ function instanceLocationToProperty(instanceLocation: string): string {
   if (!instanceLocation || instanceLocation === '#') {
     return '';
   }
-  return instanceLocation.replace(/^#?/, '').split('/').map(decodePointerToken).join('.');
+  return pathToProperty(instanceLocation.replace(/^#?\//, '').split('/').map(decodePointerToken));
 }
 
 /** Extracts the property names a cfworker `required`, `dependentRequired` or `dependencies` error names.
@@ -179,31 +147,47 @@ export function transformRJSFValidationErrors<
       });
       message = applied.message;
       uiTitle = applied.titles.get(missingProperty) ?? '';
-      property = property ? `${property}.${missingProperty}` : missingProperty;
+      const missing = pathToProperty([missingProperty]);
+      // A missing property of the root is filed under its bare name, which code matching `property === 'name'`
+      // relies on; one that is empty or holds a `.`, `[` or `]` keeps its brackets
+      property = property ? `${property}${missing}` : missing.replace(/^\./, '');
       stack = message;
     } else {
-      const propertyPath = property.replace(/^\./, '');
-      const uiSchemaTitle = getUiOptions<T, S, F>(
-        getByPath<UiSchema<T, S, F> | undefined>(uiSchema, toPath(propertyPath)),
-      ).title;
+      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
+        property,
+        schemaPath: keywordLocation,
+        decodeSchemaPathKey: decodePointerToken,
+        uiSchema,
+        schema,
+      });
       const schemaTitle = schema
-        ? getByPath<string | undefined>(
-            schema,
-            propertyPath
-              .split('.')
-              .filter(Boolean)
-              .flatMap((part) => [PROPERTIES_KEY, part])
-              .concat(['title']),
-          )
+        ? getByPath<string | undefined>(schema, [
+            ...propertyToPath(property).flatMap((part) => [PROPERTIES_KEY, part]),
+            'title',
+          ])
         : undefined;
       // A `false` schema's location is its instance's, whose keys name no branch
-      const fieldLocation = keyword === 'false' ? keywordLocation : branchHolderLocation(keywordLocation);
+      const fieldLocation = keyword === 'false' ? keywordLocation : getFieldSchemaPath(keywordLocation);
       const parentTitle = (
         schema && fieldLocation !== keywordLocation
           ? getKeywordParentSchema<S>(schema, fieldLocation, decodePointerToken)
           : parentSchema
       )?.title;
-      const title = uiSchemaTitle ?? ((typeof parentTitle === 'string' ? parentTitle : undefined) || schemaTitle);
+      // A branch redeclaring a property, such as a `then`, leaves its title to the declaration beside the branch
+      const segments = fieldLocation.split('/');
+      const declarations = segments.slice(0, -2).join('/');
+      const declaration =
+        keyword !== 'false' && segments.at(-3) === PROPERTIES_KEY ? getFieldSchemaPath(declarations) : undefined;
+      const declaredTitle =
+        !schema || declaration === undefined || declaration === declarations
+          ? undefined
+          : getKeywordParentSchema<S>(schema, `${declaration}/${segments.slice(-2).join('/')}`, decodePointerToken)
+              ?.title;
+      const title =
+        uiSchemaTitle ??
+        ((typeof parentTitle === 'string' ? parentTitle : undefined) ||
+          (typeof declaredTitle === 'string' ? declaredTitle : undefined) ||
+          schemaTitle);
       if (title) {
         stack = `'${title}' ${message}`.trim();
         uiTitle = title;

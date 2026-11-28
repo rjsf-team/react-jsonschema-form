@@ -124,12 +124,12 @@ describe('transformRJSFValidationErrors()', () => {
   it('falls back to schemaPath-derived uiSchema title', () => {
     const errors: ValidationError[] = [
       ataError({
-        instancePath: '',
-        schemaPath: '#/properties/user/required',
+        instancePath: '/user',
+        schemaPath: '#/properties/user/anyOf/0/required',
         params: { missingProperty: 'name' },
       }),
     ];
-    const uiSchema: UiSchema = { user: { name: { 'ui:title': 'User Name' } } };
+    const uiSchema: UiSchema = { user: { anyOf: [{ name: { 'ui:title': 'User Name' } }] } };
     const out = transformRJSFValidationErrors(errors, uiSchema);
     expect(out[0].title).toBe('User Name');
   });
@@ -422,6 +422,28 @@ describe('transformRJSFValidationErrors()', () => {
       ]);
     });
 
+    it('names a missing property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
+      const schema: RJSFSchema = {
+        $id: 'https://example.com/root',
+        $defs: {
+          N: { type: 'string', title: 'Root N' },
+          R: {
+            $id: 'https://example.com/r',
+            $defs: { N: { type: 'number', title: 'Res N' } },
+            type: 'object',
+            properties: { n: { $ref: '#/$defs/N' } },
+            required: ['n'],
+          },
+        },
+        type: 'object',
+        properties: { a: { $ref: 'https://example.com/r', properties: { n: { description: 'd' } } } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(
+        errors.filter((error) => error.name === 'required').map(({ property, title }) => ({ property, title })),
+      ).toEqual([{ property: '.a.n', title: 'Res N' }]);
+    });
+
     it('names a property by the definition its $ref names in the resource that writes it, under a $ref schema redeclaring it', () => {
       const schema: RJSFSchema = {
         $id: 'https://example.com/root',
@@ -579,6 +601,39 @@ describe('transformRJSFValidationErrors()', () => {
           expect.objectContaining({ title: 'BranchN' }),
         );
       });
+    });
+
+    it('gives no title to a missing property a branch under a $ref whose schema and target both hold an allOf requires', () => {
+      const target: RJSFSchema = {
+        type: 'object',
+        allOf: [{ properties: { b: { allOf: [{ required: ['n'] }], properties: { n: { title: 'Target' } } } } }],
+      };
+      const schema: RJSFSchema = {
+        $defs: { T: target },
+        type: 'object',
+        properties: {
+          a: {
+            $ref: '#/$defs/T',
+            allOf: [{ properties: { b: { allOf: [{}], properties: { n: { title: 'Own' } } } } }],
+          },
+        },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: { b: {} } }, schema);
+      expect(errors).toEqual([
+        expect.objectContaining({ property: '.a.b.n', title: '', stack: "must have required property 'n'" }),
+      ]);
+    });
+
+    it('names a missing property by its field’s title where either allOf along a $ref can require it', () => {
+      const schema: RJSFSchema = {
+        $defs: { T: { type: 'object', properties: { n: { title: 'N' } }, allOf: [{}] } },
+        type: 'object',
+        properties: { a: { $ref: '#/$defs/T', allOf: [{ required: ['n'] }] } },
+      };
+      const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
+      expect(errors).toEqual([
+        expect.objectContaining({ property: '.a.n', title: 'N', stack: "must have required property 'N'" }),
+      ]);
     });
   });
 

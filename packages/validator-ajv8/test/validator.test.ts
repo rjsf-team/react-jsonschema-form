@@ -30,6 +30,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import errorPropertyTests from '../../utils/test/testUtils/errorPropertyTests.ts';
 import nestedResourceTests, {
   handedResourceTests,
   mergedResourceViewTests,
@@ -40,6 +41,7 @@ import pointerValidationTests, {
   sharedSubschemaValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
+import requiredTitleTests from '../../utils/test/testUtils/requiredTitleTests.ts';
 import sharedCopyScoringTests, {
   chainedDefinitions,
   draft04SharedCopyScoringTests,
@@ -4044,7 +4046,168 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
   });
 });
 
+describe('AJV8Validator naming a property a branch requires in a $ref target Ajv compiles on its own', () => {
+  it('takes no title from a root property of the same name', () => {
+    // `F` holds a `$ref` of its own, so Ajv doesn't inline it and starts its schema paths at `F`
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: {
+          type: 'object',
+          properties: { flag: {}, name: { $ref: '#/$defs/N' } },
+          if: { required: ['flag'] },
+          then: { required: ['name'] },
+        },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+    };
+    const { errors } = customizeValidator().validateFormData({ name: 'x', a: { flag: 1 } }, schema);
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({
+        schemaPath: '#/then/required',
+        title: '',
+        message: "must have required property 'name'",
+      }),
+    );
+  });
+
+  it('takes no title from a root property of the same name where the root holds the same branch', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: {
+          type: 'object',
+          properties: { flag: {}, name: { $ref: '#/$defs/N' } },
+          if: { required: ['flag'] },
+          then: { required: ['name'] },
+        },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+      if: { required: ['other'] },
+      then: { properties: {} },
+    };
+    const { errors } = customizeValidator().validateFormData({ name: 'x', a: { flag: 1 } }, schema);
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ schemaPath: '#/then/required', title: '' }),
+    );
+  });
+
+  it.each<[string, RJSFSchema, unknown]>([
+    ['an allOf branch', { allOf: [{ required: ['name'] }] }, {}],
+    ['a then branch', { if: { required: ['flag'] }, then: { required: ['name'] } }, { flag: 1 }],
+  ])(
+    'takes no title or ui:title from a root property of the same name where the root holds %s equal to the target’s',
+    (_, branch, a) => {
+      const schema: RJSFSchema = {
+        $defs: {
+          N: { type: 'string' },
+          F: { type: 'object', properties: { name: { $ref: '#/$defs/N', title: 'F name' } }, ...branch },
+        },
+        type: 'object',
+        properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+        ...branch,
+      };
+      const uiSchema: UiSchema = { name: { 'ui:title': 'Root UI name' } };
+      const { errors } = customizeValidator().validateFormData(
+        { name: 'x', flag: 1, a },
+        schema,
+        undefined,
+        undefined,
+        uiSchema,
+      );
+      expect(errors.find((error) => error.name === 'required')).toEqual(
+        expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+      );
+    },
+  );
+
+  // The root a recursive `$ref: '#'` names is reached again only at its kids, so `.a` still doesn't lead to it
+  it('takes no ui:title from a root property of the same name where the root also names itself in a recursive $ref', () => {
+    const branch: RJSFSchema = { allOf: [{ required: ['name'] }] };
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: { type: 'object', properties: { name: { $ref: '#/$defs/N', title: 'F name' } }, ...branch },
+      },
+      type: 'object',
+      properties: {
+        name: { type: 'string', title: 'Root name' },
+        kids: { type: 'array', items: { $ref: '#' } },
+        a: { $ref: '#/$defs/F' },
+      },
+      ...branch,
+    };
+    const uiSchema: UiSchema = { name: { 'ui:title': 'Root UI name' } };
+    const { errors } = customizeValidator().validateFormData(
+      { name: 'x', a: {} },
+      schema,
+      undefined,
+      undefined,
+      uiSchema,
+    );
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+    );
+  });
+
+  it('names a property the target requires itself by the target’s title, not a root property of the same name', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: { type: 'object', properties: { name: { $ref: '#/$defs/N', title: 'F name' } }, required: ['name'] },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+    };
+    const { errors } = customizeValidator().validateFormData({ name: 'x', a: {} }, schema);
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ schemaPath: '#/required', title: 'F name' }),
+    );
+  });
+
+  it('names a property the target requires itself by the target’s title, not a root property’s ui:title', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: { type: 'object', properties: { name: { $ref: '#/$defs/N', title: 'F name' } }, required: ['name'] },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+    };
+    const uiSchema: UiSchema = { name: { 'ui:title': 'Root UI name' } };
+    const { errors } = customizeValidator().validateFormData(
+      { name: 'x', a: {} },
+      schema,
+      undefined,
+      undefined,
+      uiSchema,
+    );
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ property: '.a.name', schemaPath: '#/required', title: 'F name' }),
+    );
+  });
+
+  it('names a property an array item’s branch holding a $ref requires by the item’s title and ui:title', () => {
+    const schema: RJSFSchema = {
+      $defs: { O: { type: 'object' } },
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { n: { type: 'string', title: 'N' }, m: { type: 'string' } },
+        allOf: [{ $ref: '#/$defs/O', required: ['n', 'm'] }],
+      },
+    };
+    const uiSchema: UiSchema = { items: { m: { 'ui:title': 'UI M' } } };
+    const { errors } = customizeValidator().validateFormData([{}], schema, undefined, undefined, uiSchema);
+    expect(errors.filter((error) => error.name === 'required').map(({ title }) => title)).toEqual(['N', 'UI M']);
+  });
+});
+
 pointerValidationTests(() => customizeValidator());
+requiredTitleTests(() => customizeValidator());
+errorPropertyTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedSubschemaValidationTests(() => customizeValidator());

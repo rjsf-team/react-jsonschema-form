@@ -1,14 +1,42 @@
-import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from '../src/index.ts';
+import { getByPath, hasByPath, pathToProperty, propertyToPath, setByPath, toPath, unsetByPath } from '../src/index.ts';
 
 describe('propertyToPath()', () => {
   it('splits an error property like toPath()', () => {
     expect(propertyToPath('.level1.level2[2].level3')).toEqual(['level1', 'level2', '2', 'level3']);
+  });
+  it('reads a key in brackets and single quotes whole, with its backslash escapes removed', () => {
+    expect(propertyToPath("['a.b'].name")).toEqual(['a.b', 'name']);
+    expect(propertyToPath(".arr['x[1]'][0]")).toEqual(['arr', 'x[1]', '0']);
+    expect(propertyToPath("['it\\'s']['']")).toEqual(["it's", '']);
+  });
+  it("reads a quote outside brackets as part of the key, as in `.it's`", () => {
+    expect(propertyToPath(".it's.name")).toEqual(["it's", 'name']);
   });
   it('returns an empty path for a missing property, an empty one or the root', () => {
     expect(propertyToPath()).toEqual([]);
     expect(propertyToPath('')).toEqual([]);
     expect(propertyToPath('.')).toEqual([]);
   });
+});
+
+describe('pathToProperty()', () => {
+  it('writes each key after a dot', () => {
+    expect(pathToProperty(['level1', 'level2', '2', 'level3'])).toEqual('.level1.level2.2.level3');
+  });
+  it('writes an empty path as an empty property', () => {
+    expect(pathToProperty([])).toEqual('');
+  });
+  it("brackets and quotes an empty key or one holding a `.`, `[` or `]`, escaping its `\\` and `'`", () => {
+    expect(pathToProperty(['a.b', 'name'])).toEqual("['a.b'].name");
+    expect(pathToProperty(['x[1]', ''])).toEqual("['x[1]']['']");
+    expect(pathToProperty(["it's.a\\b"])).toEqual("['it\\'s.a\\\\b']");
+  });
+  it.each([[['a.b', 'name']], [['x[1]', '0', 'y]']], [["it's", "it's.x", 'a\\.b', '']], [["['a']", '\\']]])(
+    'is read back by propertyToPath(): %j',
+    (path) => {
+      expect(propertyToPath(pathToProperty(path))).toEqual(path);
+    },
+  );
 });
 
 describe('toPath()', () => {
