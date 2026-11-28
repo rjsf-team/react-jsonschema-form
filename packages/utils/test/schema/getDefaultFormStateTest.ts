@@ -8825,6 +8825,43 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           },
         );
+        describe.each(PLACEMENTS)(
+          'decides the if of a field holding no value by the constant its $ref chain reaches, as the inline one, %s',
+          (_placement, inAllOf) => {
+            const definitions: RJSFSchema['definitions'] = {
+              always: true,
+              any: {},
+              never: false,
+              aliasOfAlways: { $ref: '#/definitions/always' },
+              aliasOfNever: { $ref: '#/definitions/never' },
+              num: { type: 'number' },
+            };
+            const THEN: [number, string] = [1, 'Then'];
+            const ELSE: [number, string] = [2, 'Else'];
+            it.each<[string, boolean, [number, string] | undefined]>([
+              ['always', true, THEN],
+              ['any', true, THEN],
+              ['never', false, ELSE],
+              ['aliasOfAlways', true, THEN],
+              ['aliasOfNever', false, ELSE],
+              ['num', true, undefined],
+            ])('if: { $ref: #/definitions/%s }', (name, metByThree, empty) => {
+              const context = { validator: testValidator };
+              const condition = { $ref: `#/definitions/${name}` };
+              const filled = placed('number', { if: condition, then: { const: 1 }, else: { const: 2 } }, inAllOf);
+              expect(getDefaultFormState(context, { schema: { ...rootOf(filled), definitions } })).toStrictEqual(
+                empty === undefined ? {} : { x: empty[0] },
+              );
+              expect(getDefaultFormState(context, { schema: { ...filled, definitions } })).toBe(empty?.[0]);
+              const titled: RJSFSchema = {
+                ...placed('number', { if: condition, then: { title: 'Then' }, else: { title: 'Else' } }, inAllOf),
+                definitions,
+              };
+              expect(retrieveSchema(context, titled, titled).title).toBe(empty?.[1]);
+              expect(retrieveSchema(context, titled, titled, 3).title).toBe(metByThree ? 'Then' : 'Else');
+            });
+          },
+        );
         it('takes neither branch of the if of an empty field whose type comes through a $ref or an allOf', () => {
           const context = { validator: testValidator };
           const $defs = { Num: { type: 'number' as const } };

@@ -32,7 +32,7 @@ import setOwn from '../../setOwn.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
-import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
+import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
 import { declaredProperties, declaresNoKey, dependencyCondition, targetOf } from './validationTargets.ts';
 
@@ -338,6 +338,25 @@ function mayHoldDataRef(properties: object): boolean {
   } catch {
     return true;
   }
+}
+
+/** Returns the answer `condition` gives every value, where it gives all the same one: `{}`, or a `$ref` whose
+ * chain of aliases reaches `true`, `false` or `{}`. Such an `if` decides an empty field's branch too, and needs no
+ * validator to say, nor a precompiled one to have a function for the schema it reads as.
+ */
+function constantAnswer<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  condition: ObjectNode<S>,
+): boolean | undefined {
+  let target: SchemaNode<S> = condition;
+  // A chain of aliases that loops resolves to an `InvalidNode`, which ends the walk
+  while (target.kind === 'schema' && target.pureRef && target.ref !== undefined) {
+    target = graph.node(target.ref);
+  }
+  if (target.kind === 'boolean') {
+    return target.value;
+  }
+  return target.kind === 'schema' && Object.keys(target.raw).length === 0 ? true : undefined;
 }
 
 /** Returns the keys of an object whose values alone decide whether it satisfies `condition`: those its `properties`
@@ -1578,19 +1597,17 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       const provider = keywords.get(key);
       return provider && this.graph.child(provider.node.id, key);
     });
-    // A boolean `if`, or `{}`, gives every value the same answer, so it decides an empty field's branch too, and needs
-    // no validator to say, nor a precompiled one to have a function for the schema it reads as
     const satisfied =
       conditionNode.kind !== 'schema'
         ? conditionNode.kind !== 'boolean' || conditionNode.value
-        : Object.keys(conditionNode.raw).length === 0 ||
+        : (constantAnswer(this.graph, conditionNode) ??
           this.holds(
             `if:${condition}`,
             targetOf(this.graph, condition),
             `if:${conditionProvider.node.id}`,
             [thenNode, elseNode],
             conditionReads(conditionNode.raw),
-          );
+          ));
     if (satisfied === undefined) {
       return without;
     }
