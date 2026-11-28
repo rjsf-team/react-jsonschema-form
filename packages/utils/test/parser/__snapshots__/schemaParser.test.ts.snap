@@ -2,6 +2,10 @@
 
 exports[`getValidationSchemas() > parse schema with allof not able to merge 1`] = `
 {
+  "-2ce15313": {
+    "$id": "-2ce15313",
+    "$ref": "#/allOf/1/then",
+  },
   "-44c06f09": {
     "$id": "-44c06f09",
     "allOf": [
@@ -84,6 +88,10 @@ exports[`getValidationSchemas() > parse schema with allof not able to merge 1`] 
     "$id": "4ceb852d",
     "$ref": "#/allOf/1/if",
   },
+  "6b3d800e": {
+    "$id": "6b3d800e",
+    "$ref": "#/allOf/0/then",
+  },
 }
 `;
 
@@ -92,6 +100,14 @@ exports[`getValidationSchemas() > parse schema with array condition 1`] = `
   "1eb2259c": {
     "$id": "1eb2259c",
     "$ref": "#/properties/list/items/if",
+  },
+  "3464d5b8": {
+    "$id": "3464d5b8",
+    "$ref": "#/properties/list/items/else",
+  },
+  "4dbeed9c": {
+    "$id": "4dbeed9c",
+    "$ref": "#/properties/list/items/then",
   },
   "f254d0a": {
     "$id": "f254d0a",
@@ -379,6 +395,14 @@ exports[`getValidationSchemas() > parses schema with a single condition 1`] = `
     "$id": "-49e91088",
     "$ref": "#/if",
   },
+  "-60e74f88": {
+    "$id": "-60e74f88",
+    "$ref": "#/then",
+  },
+  "-7a41676c": {
+    "$id": "-7a41676c",
+    "$ref": "#/else",
+  },
   "7a88ed97": {
     "$id": "7a88ed97",
     "else": {
@@ -425,6 +449,10 @@ exports[`getValidationSchemas() > parses schema with multiple conditions 1`] = `
   "-26561db8": {
     "$id": "-26561db8",
     "$ref": "#/allOf/1/then/properties/Breed/allOf/0/if",
+  },
+  "-2ce15313": {
+    "$id": "-2ce15313",
+    "$ref": "#/allOf/1/then",
   },
   "-61d82723": {
     "$id": "-61d82723",
@@ -566,6 +594,14 @@ exports[`getValidationSchemas() > parses schema with multiple conditions 1`] = `
     ],
     "type": "object",
   },
+  "-6e64a3d9": {
+    "$id": "-6e64a3d9",
+    "$ref": "#/allOf/1/then/properties/Breed/allOf/1/then",
+  },
+  "29ba2f48": {
+    "$id": "29ba2f48",
+    "$ref": "#/allOf/1/then/properties/Breed/allOf/0/then",
+  },
   "4b36ac8e": {
     "$id": "4b36ac8e",
     "$ref": "#/allOf/0/if",
@@ -574,18 +610,38 @@ exports[`getValidationSchemas() > parses schema with multiple conditions 1`] = `
     "$id": "4ceb852d",
     "$ref": "#/allOf/1/if",
   },
+  "6b3d800e": {
+    "$id": "6b3d800e",
+    "$ref": "#/allOf/0/then",
+  },
 }
 `;
 
 exports[`getValidationSchemas() > parses schema with nested conditions 1`] = `
 {
+  "-2826a956": {
+    "$id": "-2826a956",
+    "$ref": "#/then/then",
+  },
+  "-4180c13a": {
+    "$id": "-4180c13a",
+    "$ref": "#/then/else",
+  },
   "-49e91088": {
     "$id": "-49e91088",
     "$ref": "#/if",
   },
+  "-60e74f88": {
+    "$id": "-60e74f88",
+    "$ref": "#/then",
+  },
   "3acf7a2a": {
     "$id": "3acf7a2a",
     "$ref": "#/then/if",
+  },
+  "3d75891c": {
+    "$id": "3d75891c",
+    "$ref": "#/then/else/then",
   },
   "5a59a11c": {
     "$id": "5a59a11c",

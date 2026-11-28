@@ -44,7 +44,8 @@ describe('renderedOptionsUiSchema()', () => {
   ])(
     "gives the option a then's list rebuilds from the field's option sharing its type, %s, that option's entry",
     (_, oneOf, option) => {
-      expect(entriesOf({ oneOf, if: true, then: { oneOf: [option] } })).toEqual([uiB]);
+      const field: RJSFSchema = { oneOf, if: true, then: { oneOf: [option] } };
+      expect(entriesOf(field)).toEqual([uiB]);
     },
   );
 

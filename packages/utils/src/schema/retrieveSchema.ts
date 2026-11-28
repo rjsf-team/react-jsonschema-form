@@ -305,15 +305,15 @@ export function retrieveFieldFor<S extends StrictRJSFSchema, F extends FormConte
   depData: unknown,
 ): { schema: S; plan: MergePlan<S> } {
   const { graph, seeds } = field;
-  const plan = buildPlan<S, F>({ context, graph, seeds, data, depData, policy: renderPolicy<S, F>(context, root) });
+  const plan = buildPlan<S, F>({ context, graph, seeds, data, depData, policy: ownPolicy<S, F>(context, root, field) });
   return { schema: buildView<S, F>(context, root, field, data, false, plan), plan };
 }
 
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
  * A copy of a handed-out schema, such as an option merged with what it inherits or a custom field's spread with a
- * keyword of its own, is planned from its own keywords, with the ref path and chain of the field it copies: restarting
- * the ref path would let a field that copies its schema at every level recurse without end. Only `expandRefCycle()`
- * restarts them.
+ * keyword of its own, is planned from its own keywords, with the ref path and chain of the field it copies, and for an
+ * option with what the field offering it declares of its `type`, see `Provenance.declared`. Restarting the ref path
+ * would let a field that copies its schema at every level recurse without end. Only `expandRefCycle()` restarts them.
  *
  * @param graph - The graph of the current root
  * @param schema - The schema whose field is wanted
@@ -329,9 +329,10 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
     return stamped;
   }
   const adopted = stamped.graph.adoptCopy(schema, stamped, stamped.seeds[0].node);
+  const { chain, declared } = stamped;
   return childProvenance(
     stamped,
-    { seeds: [{ node: adopted.node, refPath: stamped.seeds[0].refPath }], chain: stamped.chain },
+    { seeds: [{ node: adopted.node, refPath: stamped.seeds[0].refPath }], chain, declared },
     adopted.graph,
   );
 }
@@ -406,6 +407,18 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
       dependencyOptionsOnly: true,
     };
   });
+}
+
+/** The policy `field` itself is planned with: `renderPolicy()`, with what the field offering an option declares of its
+ * `type`, see `Provenance.declared`
+ */
+function ownPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  graph: SchemaGraph<S>,
+  { declared }: Provenance<S>,
+): PlanPolicy<S> {
+  const policy = renderPolicy(context, graph);
+  return declared === undefined ? policy : { ...policy, declared };
 }
 
 /** The keys `renderPolicy()` caches its policy under, by `optionMatchKey()` */
@@ -777,10 +790,12 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   selectedOption?: number,
 ): S {
   const { graph, seeds } = field;
+  // An option is retrieved as part of the field offering it, so an empty field's option takes neither branch of its
+  // `if`s, as the field does. Its properties are fields of their own, planned with their own types
   const policy = renderPolicy(context, root);
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
-  const plan = planned ?? planOf(seeds, data);
+  const plan = planned ?? buildPlan({ context, graph, seeds, data, policy: ownPolicy(context, root, field) });
   // Keyed on what an absent `additionalProperties` means too, which decides whether the view stubs its extra keys
   const viewKey = [
     field,
@@ -920,6 +935,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
               seeds: [{ node: adopted.node, refPath: [] }],
               chain: optionChain,
               optionOf: { setKey: plan.setKey, set: plan.set },
+              declared: plan.choices.find((choice) => choice.keyword === keyword)?.declared,
               stubsOwnExtraKeys: stubsOwnExtraKeys(option),
             },
             adopted.graph,

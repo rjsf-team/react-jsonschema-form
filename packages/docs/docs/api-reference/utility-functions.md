@@ -1910,7 +1910,7 @@ A schema allowing a single type, with or without `null`, is one that [getSchemaT
 ### getValidationSchemas&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns every schema a form hands its validator for `rootSchema`, keyed by its [`schemaKey()`](#schemakeys-extends-strictrjsfschema--rjsfschema) and carrying that key as its `$id`.
-They are the root itself and, read off the schema graph, a `{ $ref: '#/<pointer>' }` naming each place each `if`, each `anyOf`/`oneOf` option and each property an option names as its discriminator sits in the root; the copy of an option that option scoring derives where the option's scope declares `properties` and something in it states a `required` or lists names under `dependencies`, or where, relaxed, something in it sets `additionalProperties: false`; for each `oneOf` option of a `dependencies` schema, the `{ type: 'object', properties: { <key>: { $ref } } }` it is matched on; and, where an option is a boolean, `{}`, the schema `SchemaField` retrieves such an option as, with `{ not: {} }`, the schema a `false` option reads as.
+They are the root itself and, read off the schema graph, a `{ $ref: '#/<pointer>' }` naming each place each `if`, each schema `then` and `else` beside an `if`, each `anyOf`/`oneOf` option and each property an option names as its discriminator sits in the root; the copy of an option that option scoring derives where the option's scope declares `properties` and something in it states a `required` or lists names under `dependencies`, or where, relaxed, something in it sets `additionalProperties: false`; for each `oneOf` option of a `dependencies` schema, the `{ type: 'object', properties: { <key>: { $ref } } }` it is matched on; and, where an option is a boolean, `{}`, the schema `SchemaField` retrieves such an option as, with `{ not: {} }`, the schema a `false` option reads as.
 The list depends on the content of the root alone, never on form data, on how `allOf` is merged or on which objects the root shares, and grows with the size of the root.
 A subschema the root holds in several places, as a schema module that reuses one object holds it, is listed at each, as two equal copies of it would be, and the copies and pointers made for it name what sits below it at that place, so the list for such a module serves an equal copy of it, such as its JSON, and the other way round.
 A schema a merge makes, such as an option a `customMergeAllOf` rewrites, has no place in the root and is not listed.
@@ -1931,8 +1931,8 @@ This is what a validator package's `compileSchemaValidatorsCode()` compiles, and
 ### getValidationTarget&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the schema a validator checks `schema` with as the subschema it stands for: a `{ $ref }` naming where it sits in `rootSchema`, which the validator resolves against the root it is handed, or, for a schema with no place there, the schema itself, an `$id` it carries replaced by `<that $id>?rjsf=<its own hash>`.
-Where the root holds one object in several places, the `$ref` names the first place the root holds it as an `anyOf`/`oneOf` option, or else as an `if`, which are the places [`getValidationSchemas()`](#getvalidationschemass-extends-strictrjsfschema--rjsfschema) lists a `$ref` to, or else the first place the root holds it at.
-That last `$ref`, to a subschema the form checks neither as an option nor as an `if`, such as a property, is not listed, so a precompiled validator has no function for it.
+Where the root holds one object in several places, the `$ref` names the first place the root holds it as an `anyOf`/`oneOf` option, or else as an `if`, or else as a `then` or `else` beside an `if`, which are the places [`getValidationSchemas()`](#getvalidationschemass-extends-strictrjsfschema--rjsfschema) lists a `$ref` to, or else the first place the root holds it at.
+That last `$ref`, to a subschema the form checks neither as an option nor as an `if` or its `then` or `else`, such as a property, is not listed, so a precompiled validator has no function for it.
 A validator caches the function it compiles for a schema under its `$id`, so a schema you derived from one carrying an `$id` would otherwise be answered with the original's function.
 The derived `$id` keeps the original's base for a `$ref` with a path, such as `other.json`, but a `$ref` that is only a fragment, such as `#/definitions/s`, is read against the root, as a validator reads every such `$ref` it is handed, so a copy of an option carrying an `$id` that refers into its own definitions is checked against the root's.
 A schema [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--formcontexttype) handed out stands for the subschema it was resolved from, so it is checked as JSON Schema reads that subschema, not as the form merged it, where one subschema gives it its keywords; a view merged from several, such as a property declared in two `allOf` entries, is checked as the form merged it.
@@ -4038,6 +4038,7 @@ The `items` beside `prefixItems` describe only the items past the tuple, so a `p
 
 Checks to see if the `schema` combination represents a multi-select.
 A `prefixItems` tuple never does, since the `items` beside it describe only the items past the tuple.
+The `items` are retrieved with no form data, so where their `type` allows neither an object nor an array, an `enum` a `then` or `else` gives them counts only under an `if` of `true`, `false`, `{}` or a `$ref` to one, which every value gives the same answer; an `if` a value decides picks neither branch, so the array's widget does not change as its items do.
 
 #### Parameters
 
@@ -4053,6 +4054,7 @@ A `prefixItems` tuple never does, since the `items` beside it describe only the 
 
 Checks to see if the `schema` combination represents a select: an `enum`, empty or not, or a non-empty `anyOf`/`oneOf` whose options are all constants (see `isConstantOptionList()`).
 When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey()`), as it is in `optionsList()`.
+The schema is retrieved with no form data, so where its `type` allows neither an object nor an array, an `enum` or options a `then` or `else` gives it count only under an `if` of `true`, `false`, `{}` or a `$ref` to one.
 
 #### Parameters
 
@@ -4072,6 +4074,7 @@ Every subschema handed out carries where it came from, so retrieving it resolves
 A copy carrying `RJSF_REF_CYCLE_KEY: false` is retrieved like any other copy of the field it was made from.
 A `schema` the root does not hold is parsed once per content and kept for as long as the root, so one built from form data keeps an entry for each distinct value until the root changes.
 Like the root, it must not be changed once handed in: calls handed the same content share its result.
+A field whose `type` allows neither an object nor an array takes neither branch of an `if` with no `rawFormData` or a `NaN`, unless the `if` is `true`, `false`, `{}` or a `$ref` to one, which every value gives the same answer; see [`allOf`](./form-props.md#allof) under `defaultFormStateBehavior`.
 
 With a `selectedOption`, the extra keys of the data are stubbed once, for the field and the option selected among the options of the keyword `getXxxOfKey()` reads together.
 A key the option declares is left to the option, which renders it.

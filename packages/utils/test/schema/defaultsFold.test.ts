@@ -15,18 +15,24 @@ import {
   getObjectDefaults,
   mergeReachesConst,
 } from '../../src/schema/getDefaultFormState.ts';
+import type { PlanInput } from '../../src/schema/graph/mergePlan.ts';
 import parseSchemaGraph from '../../src/schema/graph/parseSchemaGraph.ts';
 import type { Provenance } from '../../src/schema/graph/provenance.ts';
 import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import looseSchema from './graph/looseSchema.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
-// Recorded, so a test can count the schemas the fold copies
+// Recorded, so a test can count the schemas the fold copies and the plans it asks for
 const withoutKeysCalls = vi.hoisted((): [object, (string | symbol)[]][] => []);
+const buildPlanCalls = vi.hoisted(() => ({ count: 0 }));
 vi.mock(import('../../src/schema/graph/mergePlan.ts'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
+    default: <S extends StrictRJSFSchema, F extends FormContextType>(input: PlanInput<S, F>) => {
+      buildPlanCalls.count += 1;
+      return actual.default(input);
+    },
     withoutKeys: <S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]) => {
       withoutKeysCalls.push([schema, keys]);
       return actual.withoutKeys(schema, ...keys);
@@ -1650,32 +1656,77 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
     // Retrieving `x` would check its `if`
     expect(counting.calls).toBe(0);
-    // Where the unmerged `allOf` reaches one itself in a `then`, an empty field gives the `if` nothing to test, so
-    // nothing is retrieved
+    // Where the unmerged `allOf` reaches one itself in a `then`, the field is retrieved to test the `if` against the
+    // `{}` an empty object field holds, once, as a `then` of the field's own is (#5895)
     const branch: RJSFSchema = {
       type: 'object',
       properties: { x: { type: 'object', allOf: [{ if: { required: ['t'] }, then: { const: { a: 1 } } }] } },
     };
     expect(defaultsOf(branch, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({});
-    expect(counting.calls).toBe(0);
+    expect(counting.calls).toBe(1);
   });
 
-  it('plans no second pass for an option const a then offers, which an empty field never takes (#5895)', () => {
-    const counting = miniValidator();
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        x: {
-          type: 'object',
-          properties: { t: { type: 'string', default: 'a' } },
-          allOf: [{ if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } }],
-        },
-      },
-    };
-    expect(defaultsOf(schema, undefined, { allOf: 'skipDefaults' }, counting)).toEqual({ x: { t: 'a' } });
-    // A second pass, planned for the defaults `{ t: 'a' }`, would check the `if`
-    expect(counting.calls).toBe(0);
+  it("decides the then offering an option const in an allOf member as a then of the field's own, at the same cost, keeping the pass that validates (#5895)", () => {
+    const conditional = { if: { required: ['t'] }, then: { oneOf: [{ const: { a: 1 } }] } };
+    const fieldWith = (x: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { x } });
+    const t = { t: { type: 'string' as const, default: 'a' } };
+    const inAllOf = miniValidator();
+    const own = miniValidator();
+    const nested = fieldWith({ type: 'object', properties: t, allOf: [conditional] });
+    expect(defaultsOf(nested, undefined, { allOf: 'skipDefaults' }, inAllOf)).toEqual({ x: { a: 1 } });
+    expect(
+      defaultsOf(
+        fieldWith({ type: 'object', properties: t, ...conditional }),
+        undefined,
+        { allOf: 'skipDefaults' },
+        own,
+      ),
+    ).toEqual({ x: { a: 1 } });
+    expect(inAllOf.calls).toBe(own.calls);
+    expect(inAllOf.calls).toBe(6);
   });
+
+  it.each<[string, RJSFSchema, RJSFSchema, unknown, number]>([
+    [
+      'an empty primitive field, whose if of {} takes the then whatever the value, without the validator',
+      { type: 'number' },
+      { if: {}, then: { const: 10 } },
+      10,
+      0,
+    ],
+    [
+      'an empty primitive field, which takes neither branch with no value',
+      { type: 'number' },
+      { if: { minimum: 10 }, then: { const: 10 } },
+      undefined,
+      0,
+    ],
+    [
+      'an empty object field, against {} and then the const it took',
+      { type: 'object' },
+      { if: { type: 'object' }, then: { const: { a: 1 } } },
+      { a: 1 },
+      2,
+    ],
+  ])(
+    'checks the if of %s in an allOf member as often as one of its own (#5895)',
+    (_name, field, conditional, x, calls) => {
+      const rootOf = (schema: RJSFSchema): RJSFSchema => ({
+        type: 'object',
+        required: ['x'],
+        properties: { x: schema },
+      });
+      const inAllOf = miniValidator();
+      const own = miniValidator();
+      expect(
+        defaultsOf(rootOf({ ...field, allOf: [conditional] }), undefined, { allOf: 'skipDefaults' }, inAllOf),
+      ).toEqual({ x });
+      expect(defaultsOf(rootOf({ ...field, ...conditional }), undefined, { allOf: 'skipDefaults' }, own)).toEqual({
+        x,
+      });
+      expect([inAllOf.calls, own.calls]).toEqual([calls, calls]);
+    },
+  );
 
   it("reads an option const its allOf offers by the field's data, not by the defaults a pass hands its dependencies (#5895)", () => {
     const counting = miniValidator();
@@ -1698,6 +1749,34 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
     // the `dependencies` option once more
     expect(counting.calls).toBe(1);
   });
+
+  it.each<[string, RJSFSchema['type']]>([
+    ['of type object', 'object'],
+    ['naming no type', undefined],
+  ])(
+    'plans a chain of empty fields %s whose allOf then gives each an object const under skipEmptyDefaults at a cost linear in its depth (#5895)',
+    (_name, type) => {
+      // Each level's object const is left unresolved while it is empty. A level that planned its children again for
+      // each plan of its own would cost 2^depth plans
+      const plansAt = (depth: number) => {
+        let schema: RJSFSchema = { type: 'string' };
+        for (let level = 0; level < depth; level += 1) {
+          schema = {
+            type,
+            allOf: [{ if: { required: ['q'] }, then: { const: { q: 1 } } }],
+            properties: { a: schema, p: { type: 'string', default: 's' } },
+          };
+        }
+        buildPlanCalls.count = 0;
+        const defaults = defaultsOf(schema, undefined, { emptyObjectFields: 'skipEmptyDefaults' });
+        expect(JSON.stringify(defaults)).toBe(`${'{"a":'.repeat(depth - 1)}{"p":"s"}${',"p":"s"}'.repeat(depth - 1)}`);
+        return buildPlanCalls.count;
+      };
+      // Each level added costs the same number of plans, however deep the chain
+      const plans = [4, 8, 16].map(plansAt);
+      expect(plans[2] - plans[1]).toBe(2 * (plans[1] - plans[0]));
+    },
+  );
 
   it('retrieves no optional field the Optional Data Controls collapse unless it may reach an object const', () => {
     const counting = miniValidator();
@@ -1800,6 +1879,34 @@ describe('mergeReachesConst()', () => {
     // Each definition added costs the same number of reads, however many there are
     const reads = [12, 24, 48].map(subschemaReads);
     expect(reads[2] - reads[1]).toBe(2 * (reads[1] - reads[0]));
+  });
+
+  it('reads the types of a field each node of its nested options declares once, however many paths reach it (#5916)', () => {
+    // Each level offers the one below twice over, so a read that worked a node out again on every path to it would
+    // take 2^k steps
+    const subschemaReads = (k: number) => {
+      const definitions: Record<string, RJSFSchema> = {
+        L0: { type: 'string', if: { minLength: 1 }, then: { title: 'T' } },
+      };
+      for (let index = 1; index <= k; index += 1) {
+        const below = `#/definitions/L${index - 1}`;
+        definitions[`L${index}`] = { anyOf: [{ $ref: below }, { allOf: [{ $ref: below }] }] };
+      }
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions,
+        properties: { x: { $ref: `#/definitions/L${k}`, if: { minLength: 2 }, then: { title: 'U' } } },
+      };
+      const subschemas = vi.spyOn(parseSchemaGraph(schema), 'subschemas');
+      const context = { validator: miniValidator() };
+      for (const formData of [undefined, { x: 'ab' }]) {
+        getDefaultFormState(context, { schema, rootSchema: schema, formData });
+      }
+      return subschemas.mock.calls.length;
+    };
+    // Twice the levels cost about twice the reads, where a read along every path would cost 2^4 times as many
+    const [half, whole] = [4, 8].map(subschemaReads);
+    expect(whole).toBeLessThan(3 * half);
   });
 
   it('answers a node of a cycle the same whichever node of it is asked first', () => {

@@ -130,9 +130,12 @@ function targetAt<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId,
 /** The role of an `anyOf`/`oneOf` option in `Reached` */
 const OPTION_ROLE = 'option';
 
+/** The role of a `then` or an `else` in `Reached` */
+const BRANCH_ROLE = 'branch';
+
 /** A subschema a form validates data against, reached from the subschema holding it as the `role` says: `if` for its
- * `if`, `option` for one of its `anyOf`/`oneOf` options, or `dependencies/<key>` for a `oneOf` option of its
- * `dependencies` entry `key`
+ * `if`, `branch` for its `then` or `else`, `option` for one of its `anyOf`/`oneOf` options, or `dependencies/<key>` for
+ * a `oneOf` option of its `dependencies` entry `key`
  */
 interface Reached {
   readonly role: string;
@@ -149,6 +152,14 @@ function reachedFrom<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Node
   const condition = graph.child(id, IF_KEY);
   if (condition !== undefined) {
     reached.push({ role: IF_KEY, id: condition, place: childPointer(place, [IF_KEY]) });
+    // A `then` or `else` with no `if` beside it applies to no value. A boolean branch accepts every value or none,
+    // which needs no validator to say
+    for (const keyword of [THEN_KEY, ELSE_KEY]) {
+      const branch = graph.child(id, keyword);
+      if (branch !== undefined && graph.node(branch).kind === 'schema') {
+        reached.push({ role: BRANCH_ROLE, id: branch, place: childPointer(place, [keyword]) });
+      }
+    }
   }
   for (const keyword of [ANY_OF_KEY, ONE_OF_KEY]) {
     for (const [index, option] of graph.subschemas(id, keyword)) {
@@ -216,9 +227,9 @@ function optionPlace<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Node
 const pointers = new KeyedMemo<object | null>();
 
 /** Returns `{ $ref }` naming the node `id` at a place the root holds it, which a validator resolves against the root it
- * is given: where it is an option, or else an `if`, which is where `validationTargets()` lists a pointer, or else where
- * it was first found. Undefined for a node with no place there or a boolean one, which holds no `$ref` for a pointer to
- * keep in reach and which ata reads as `true` behind a `$ref`.
+ * is given: where it is an option, or else an `if`, `then` or `else`, which is where `validationTargets()` lists a
+ * pointer, or else where it was first found. Undefined for a node with no place there or a boolean one, which holds no
+ * `$ref` for a pointer to keep in reach and which ata reads as `true` behind a `$ref`.
  *
  * @param graph - The graph of the root
  * @param id - The node to name
@@ -226,7 +237,11 @@ const pointers = new KeyedMemo<object | null>();
  */
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
   const pointer = pointers.get([graph, id], () => {
-    const place = placeAs(graph, OPTION_ROLE, id) ?? placeAs(graph, IF_KEY, id) ?? firstPlace(graph, id);
+    const place =
+      placeAs(graph, OPTION_ROLE, id) ??
+      placeAs(graph, IF_KEY, id) ??
+      placeAs(graph, BRANCH_ROLE, id) ??
+      firstPlace(graph, id);
     return place === undefined || graph.node(id).kind !== 'schema' ? null : refAt(place);
   });
   return isSchemaObject<S>(pointer) ? pointer : undefined;
@@ -1250,7 +1265,7 @@ function readChildren<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: Nod
 }
 
 /** The keywords holding the subschemas `reachedFrom()` reaches */
-const REACHING_KEYWORDS = new Set([IF_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]);
+const REACHING_KEYWORDS = new Set([IF_KEY, THEN_KEY, ELSE_KEY, ANY_OF_KEY, ONE_OF_KEY, DEPENDENCIES_KEY]);
 
 /** The keywords holding subschemas a validator applies only where a `$ref` names one */
 const DEFINITIONS_KEYWORDS = new Set(CONTAINER_KEYWORDS);
@@ -1981,7 +1996,8 @@ function forEachPlace<S extends StrictRJSFSchema>(
   }
 }
 
-/** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`; each
+/** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`, `then` and
+ * `else`, a branch being checked where the defaults of a field cycle, see `getDefaultFormState()`; each
  * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed, which for a boolean option is the schema it
  * reads as, `{}` or `{ not: {} }`, and `{}` where an option is a boolean; the property each option declares under any
  * `discriminator.propertyName` in the root; and the condition each `oneOf` option of a `dependencies` schema is matched
@@ -2019,7 +2035,7 @@ function reachedTargets<S extends StrictRJSFSchema>(
   discriminators: ReadonlySet<string>,
 ): S[] {
   const { id, place, key } = reached;
-  if (reached.role === IF_KEY) {
+  if (reached.role === IF_KEY || reached.role === BRANCH_ROLE) {
     return [targetAt(graph, id, place)];
   }
   if (key !== undefined) {

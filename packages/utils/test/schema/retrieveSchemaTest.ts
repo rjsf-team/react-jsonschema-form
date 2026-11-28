@@ -3264,6 +3264,212 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('Conditional schemas (If, Then, Else)', () => {
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        [
+          'leaves out the then whose if: { type } names its type',
+          { type: 'number', if: { type: 'number' }, then: { const: 3 } },
+          { type: 'number' },
+        ],
+        [
+          'leaves out the then whose if rejects every value it holds',
+          { type: 'number', if: { type: 'object' }, then: { const: 3 } },
+          { type: 'number' },
+        ],
+        [
+          'merges neither branch of an if: { not: {} }',
+          { type: 'string', if: { not: {} }, else: { const: 'z' } },
+          { type: 'string' },
+        ],
+        [
+          'merges neither branch of an if not every value it may hold meets',
+          { type: 'string', if: { maxLength: 0 }, then: { title: 'empty' }, else: { const: 'z' } },
+          { type: 'string' },
+        ],
+        [
+          'merges no then of the allOf members whose ifs test the value their then pins, as no empty field meets them',
+          {
+            type: 'string',
+            enum: ['a', 'b'],
+            allOf: [
+              { if: { const: 'a' }, then: { const: 'a', title: 'A' } },
+              { if: { const: 'b' }, then: { const: 'b', title: 'B' } },
+            ],
+          },
+          { type: 'string', enum: ['a', 'b'] },
+        ],
+        [
+          'merges neither branch of an if testing the value its then pins',
+          { type: 'string', enum: ['a', 'b'], if: { const: 'a' }, then: { const: 'a' }, else: { title: 'other' } },
+          { type: 'string', enum: ['a', 'b'] },
+        ],
+      ])('for a primitive field with no data, %s (#5895)', (_name, schema, expected) => {
+        // The mock validator cannot evaluate an `if`, so it answers each check as the real ones do
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
+      });
+      it.each<[string, RJSFSchema]>([
+        ['a $ref', { $ref: '#/$defs/Three' }],
+        ['an allOf', { allOf: [{ const: 3 }] }],
+      ])(
+        'for a primitive field with no data, merges neither branch of an if a value decides, so not the const one reaches through %s',
+        (_name, branch) => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const context = { validator: testValidator };
+          const $defs = { Three: { const: 3 } };
+          const takes: RJSFSchema = { type: 'number', if: { type: 'number' }, then: branch, $defs };
+          const rejects: RJSFSchema = { type: 'number', if: { type: 'object' }, then: branch, $defs };
+          const constant: RJSFSchema = { type: 'number', if: {}, then: branch, $defs };
+          expect(retrieveSchema(context, takes, takes).const).toBeUndefined();
+          expect(retrieveSchema(context, rejects, rejects).const).toBeUndefined();
+          expect(retrieveSchema(context, constant, constant).const).toBe(3);
+        },
+      );
+      it.each<[string, RJSFSchema, RJSFSchema]>([
+        [
+          'merges neither branch of an if: { const } for a field with no data',
+          {
+            type: 'string',
+            enum: ['a', 'other'],
+            if: { const: 'other' },
+            then: { title: 'Other' },
+            else: { title: 'Pick' },
+          },
+          { type: 'string', enum: ['a', 'other'] },
+        ],
+        [
+          'merges neither branch of a not of an if: { const } for a field with no data, as of every if',
+          {
+            type: 'string',
+            enum: ['a', 'other'],
+            if: { not: { const: 'other' } },
+            then: { title: 'Pick' },
+            else: { title: 'Other' },
+          },
+          { type: 'string', enum: ['a', 'other'] },
+        ],
+      ])('%s (#5895)', (_name, schema, expected) => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual(expected);
+      });
+      it('merges neither branch for a number field holding NaN, as for one holding no value (#5916)', () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const schema: RJSFSchema = {
+          type: 'number',
+          if: { not: { minimum: 10 } },
+          then: { title: 'Small', default: 1 },
+          else: { title: 'Big', default: 99 },
+        };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, Number.NaN)).toEqual({ type: 'number' });
+        expect(retrieveSchema({ validator: testValidator }, schema, schema, 3).title).toBe('Small');
+      });
+      it('merges neither branch for a field with no data, and checks null data as null, in either order (#5916)', () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const context = { validator: testValidator };
+        const branches: Record<string, RJSFSchema> = {
+          undefined: { type: ['string', 'null'] },
+          null: { type: ['string', 'null'], const: null },
+        };
+        for (const order of [
+          [undefined, null],
+          [null, undefined],
+        ]) {
+          const schema: RJSFSchema = {
+            type: ['string', 'null'],
+            if: { type: 'null' },
+            then: { const: null },
+            else: { const: 'a' },
+          };
+          for (const data of order) {
+            expect(retrieveSchema(context, schema, schema, data)).toEqual(branches[String(data)]);
+          }
+        }
+      });
+      describe('checks null data as null for the if (#5916)', () => {
+        const nullOrThree = {
+          if: { type: 'null' },
+          then: { const: null, title: 'Then' },
+          else: { const: 3, title: 'Else' },
+        } satisfies RJSFSchema;
+        const nullable = { type: ['number', 'null'], default: null } satisfies RJSFSchema;
+        it.each<[string, RJSFSchema]>([
+          ['its own if', { ...nullable, ...nullOrThree }],
+          ['the if of an allOf member', { ...nullable, allOf: [nullOrThree] }],
+          [
+            'the if of a $ref target',
+            { ...nullable, $ref: '#/$defs/NullOrThree', $defs: { NullOrThree: nullOrThree } },
+          ],
+        ])('%s, at the root and as a property', (_name, x) => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const context = { validator: testValidator };
+          const asProperty: RJSFSchema = { type: 'object', properties: { x }, $defs: x.$defs };
+          expect(retrieveSchema(context, x, x, null)).toMatchObject({ const: null, title: 'Then' });
+          expect(retrieveSchema(context, x, asProperty, null)).toMatchObject({ const: null, title: 'Then' });
+          expect(retrieveSchema(context, x, x, 5)).toMatchObject({ const: 3, title: 'Else' });
+        });
+        it('a nullable string whose if takes null', () => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const schema: RJSFSchema = {
+            type: ['string', 'null'],
+            default: null,
+            if: { const: null },
+            then: { title: 'Null' },
+            else: { title: 'Text' },
+          };
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, null).title).toBe('Null');
+          expect(retrieveSchema({ validator: testValidator }, schema, schema, 'a').title).toBe('Text');
+        });
+        it('an object field, whose missing data is still checked as {} (#3706)', () => {
+          testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+          const context = { validator: testValidator };
+          const requiresA = (type: RJSFSchema['type']): RJSFSchema => ({
+            type,
+            properties: { a: { type: 'string' } },
+            if: { required: ['a'] },
+            then: { title: 'Has a' },
+            else: { title: 'No a' },
+          });
+          for (const type of ['object', ['object', 'null']] satisfies RJSFSchema['type'][]) {
+            const schema = requiresA(type);
+            expect(retrieveSchema(context, schema, schema).title).toBe('No a');
+            expect(retrieveSchema(context, schema, schema, {}).title).toBe('No a');
+            expect(retrieveSchema(context, schema, schema, { a: 'x' }).title).toBe('Has a');
+            // `required` constrains only objects, so `null` meets the `if`, as the validator checks it
+            expect(retrieveSchema(context, schema, schema, null).title).toBe('Has a');
+          }
+        });
+      });
+      it("retrieves a handed-out option as part of its field, so an empty field's option takes neither branch (#5916)", () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const context = { validator: testValidator };
+        const conditional: RJSFSchema = { if: { maxLength: 2 }, then: { title: 'Short' }, else: { title: 'Long' } };
+        const schema: RJSFSchema = { type: 'string', oneOf: [conditional, { title: 'Other' }] };
+        const [option] = retrieveSchema(context, schema, schema).oneOf as RJSFSchema[];
+        expect(retrieveSchema(context, option, schema)).not.toHaveProperty('title');
+        expect(retrieveSchema(context, option, schema, 'ab').title).toBe('Short');
+        expect(retrieveSchema(context, option, schema, 'abcd').title).toBe('Long');
+        // Not handed out with its field, the option names no type, so it is checked against `{}`
+        expect(retrieveSchema(context, conditional, schema).title).toBe('Short');
+      });
+      it("plans a handed-out option's properties with their own types, not the type of the field offering it (#5916)", () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const context = { validator: testValidator };
+        const tag: RJSFSchema = {
+          enum: ['a', 'b'],
+          if: { const: 'a' },
+          then: { title: 'A' },
+          else: { title: 'Other' },
+        };
+        const list: RJSFSchema = { type: 'array', if: { minItems: 1 }, then: { title: 'L1' }, else: { title: 'L0' } };
+        // Matched by patterns, each property is planned with the object holding it rather than handed out as declared
+        const object: RJSFSchema = { properties: { tag, list }, patternProperties: { '^t': {}, '^l': {} } };
+        const titles = (view: RJSFSchema) =>
+          Object.values(view.properties ?? {}).map((property) => (isObject(property) ? property.title : undefined));
+        const plain = retrieveSchema(context, { type: 'object', ...object }, {});
+        const schema: RJSFSchema = { type: 'object', oneOf: [object] };
+        const [option] = retrieveSchema(context, schema, schema).oneOf as RJSFSchema[];
+        expect(titles(plain)).toEqual([undefined, 'L1']);
+        expect(titles(retrieveSchema(context, option, schema))).toEqual(titles(plain));
+      });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected
         testValidator.setReturnValues({
@@ -3619,18 +3825,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         expect(retrieveSchema({ validator: testValidator }, schema, {}, value)).toEqual({ type, title: 'matched' });
       });
-      it('evaluates an object condition against a null value as against an empty object', () => {
+      it('evaluates an object condition against a null value as the validator does, against null (#5916)', () => {
         const schema: RJSFSchema = {
           type: ['object', 'null'],
           if: { required: ['a'] },
           then: { title: 'matched' },
           else: { title: 'unmatched' },
         };
-        // The real validators ignore this and evaluate the condition, which is what pins the fallback to `{}`
-        testValidator.setReturnValues({ isValid: [false] });
+        // The real validators ignore this and evaluate the condition: `required` constrains only objects, so `null`
+        // meets it
+        testValidator.setReturnValues({ isValid: (_condition, data) => data === null });
         expect(retrieveSchema({ validator: testValidator }, schema, {}, null)).toEqual({
           type: ['object', 'null'],
-          title: 'unmatched',
+          title: 'matched',
         });
       });
       it('overrides the base schema with a conditional branch when merged', () => {

@@ -696,6 +696,22 @@ describe('getFilledDefault() reads what the fill writes', () => {
     expect(readAt(descendantWins, root, path)).toBeUndefined();
   });
 
+  it("reads nothing for a field an else's const fills, though the option it shows declares a default", () => {
+    for (const fill of [{}, { isRequired: true }]) {
+      for (const otherwise of [2, 3]) {
+        const schema: RJSFSchema = {
+          type: ['number', 'null'],
+          oneOf: [{ type: 'number', default: 2 }],
+          if: { type: 'null' },
+          then: { const: null },
+          else: { const: otherwise },
+        };
+        expect(getDefaultFormState(descendantWins, { schema, rootSchema: schema })).toBe(otherwise);
+        expect(getFilledDefault(descendantWins, schema, schema, fill)).toBeUndefined();
+      }
+    }
+  });
+
   it('hands the children of an object const beside options the const, not the option fold', () => {
     const root: RJSFSchema = {
       type: 'object',

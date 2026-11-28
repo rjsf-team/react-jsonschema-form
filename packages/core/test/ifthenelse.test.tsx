@@ -1,7 +1,8 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -314,5 +315,179 @@ describe('conditional items', () => {
     await user.clear(node.querySelector<HTMLInputElement>('#root_a')!);
 
     expect(node.querySelector('#root_b')).toBeNull();
+  });
+});
+
+describe("an empty field's then/else const (#5895)", () => {
+  it.each<[string, RJSFSchema, unknown]>([
+    [
+      "fills an object field from the then of its allOf member under allOf: 'skipDefaults', and submits it",
+      { type: 'object', allOf: [{ if: { type: 'object' }, then: { const: { a: 1, b: 2 } } }] },
+      { a: 1, b: 2 },
+    ],
+    [
+      'fills a number field from the then of its allOf member whose if is {}, which every value meets, and submits it',
+      { type: 'number', allOf: [{ if: {}, then: { const: 3 } }] },
+      3,
+    ],
+  ])('%s', async (_name, x, filled) => {
+    const { node, onSubmit, onError } = createFormComponent({
+      schema: { type: 'object', required: ['x'], properties: { x } },
+    });
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, { x: filled }, true);
+  });
+  it('leaves a required number field empty under the then of its allOf member whose if a value decides, so submitting reports it missing', async () => {
+    // The browser's own check of the required input would block the submit before the schema's is reported
+    const { node, onSubmit, onError } = createFormComponent({
+      noHtml5Validate: true,
+      schema: {
+        type: 'object',
+        required: ['x'],
+        properties: { x: { type: 'number', allOf: [{ if: { type: 'number' }, then: { const: 3 } }] } },
+      },
+    });
+    expect(node.querySelector<HTMLInputElement>('#root_x')?.value).toBe('');
+    await submitForm(node, user);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ name: 'required', property: 'x' })]);
+  });
+});
+
+describe('null data checked as null for an if (#5916)', () => {
+  const x: RJSFSchema = {
+    type: ['number', 'null'],
+    default: null,
+    if: { type: 'null' },
+    then: { const: null, title: 'Then' },
+    else: { const: 3, title: 'Else' },
+  };
+  const label = (node: Element) => node.querySelector('label')?.textContent;
+
+  it.each<[string, RJSFSchema, unknown, unknown]>([
+    ['as a property starting from its null default', { type: 'object', properties: { x } }, undefined, { x: null }],
+    ['as a property holding null form data', { type: 'object', properties: { x } }, { x: null }, { x: null }],
+    ['at the root starting from its null default', x, undefined, null],
+    ['at the root holding null form data', x, null, null],
+  ])('renders and submits the then %s', async (_name, schema, formData, submitted) => {
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData });
+    expect(label(node)).toMatch(/^Then/);
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, submitted, true);
+  });
+
+  it('renders the then once the user clears a field to null', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          x: { type: ['number', 'null'], if: { type: 'null' }, then: { title: 'Then' }, else: { title: 'Else' } },
+        },
+      },
+      uiSchema: { x: { 'ui:emptyValue': null } },
+      formData: { x: 5 },
+    });
+    expect(label(node)).toMatch(/^Else/);
+    await user.clear(screen.getByRole('textbox'));
+    expectToHaveBeenCalledWithFormData(onChange, { x: null }, 'root_x');
+    expect(label(node)).toMatch(/^Then/);
+  });
+
+  it('renders and submits the then an if of only object keywords picks for a root holding null form data', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      if: { required: ['a'] },
+      then: { properties: { a: { type: 'number', title: 'A', default: 1 } } },
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData: null });
+    expect(screen.getByRole('textbox', { name: 'A' })).toHaveValue('1');
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, { a: 1 }, true);
+  });
+
+  it('renders the else default on the first render once the fill puts {} over a root holding null form data', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      if: { required: ['a'] },
+      then: { properties: { a: { type: 'number', title: 'A' } } },
+      else: { properties: { c: { type: 'number', title: 'C', default: 2 } } },
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData: null });
+    expect(screen.getByRole('textbox', { name: 'C' })).toHaveValue('2');
+    await submitForm(node, user);
+    expect(onError).not.toHaveBeenCalled();
+    expectToHaveBeenCalledWithFormData(onSubmit, { c: 2 }, true);
+  });
+
+  it('titles a nullable string by the if its null default meets', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          s: {
+            type: ['string', 'null'],
+            default: null,
+            if: { const: null },
+            then: { title: 'Null' },
+            else: { title: 'Text' },
+          },
+        },
+      },
+    });
+    expect(label(node)).toMatch(/^Null/);
+  });
+});
+
+describe('an option retrieved as part of its field (#5916)', () => {
+  const field: RJSFSchema = {
+    type: 'string',
+    oneOf: [
+      { if: { minLength: 3 }, then: { title: 'long', const: 'abc' } },
+      { title: 'other', maxLength: 1 },
+    ],
+  };
+  const optionLabels = (node: Element) =>
+    [...node.querySelectorAll('#root_x__oneof_select option')].map((option) => option.textContent);
+
+  it("labels an empty field's option as it stands, taking neither branch of its if", () => {
+    const { node } = createFormComponent({ schema: { type: 'object', properties: { x: field } } });
+    expect(optionLabels(node)).toEqual(['Option 1', 'other']);
+  });
+  it('labels the option of a field holding a value by the branch its if takes for the value', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { x: field } },
+      formData: { x: 'abcd' },
+    });
+    expect(optionLabels(node)).toEqual(['long', 'other']);
+  });
+});
+
+describe("an option's defaults, filled as part of its field (#5916)", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      x: {
+        type: 'string',
+        oneOf: [{ if: { minLength: 3 }, then: { title: 'Long', default: 'abcd' } }, { title: 'Other' }],
+      },
+    },
+  };
+
+  it('starts the option empty, taking neither branch, and again after switching away and back', async () => {
+    const { node, onChange } = createFormComponent({ schema });
+    const input = () => node.querySelector<HTMLInputElement>('#root_x');
+    const select = screen.getByRole('combobox');
+    expect(input()).toHaveValue('');
+    expect(screen.queryByText('Long')).toBeNull();
+
+    await user.selectOptions(select, 'Other');
+    await user.selectOptions(select, 'Option 1');
+
+    expect(input()).toHaveValue('');
+    expect(screen.queryByText('Long')).toBeNull();
+    expectToHaveBeenCalledWithFormData(onChange, {}, 'root_x__oneof_select');
   });
 });
