@@ -446,7 +446,7 @@ Each element in the `errors` list passed to `transformErrors` is a `RJSFValidati
 - `name`: optional name of the error, for example, "required" or "minLength"
 - `message`: optional message, for example, "is a required property" or "should NOT be shorter than 3 characters"
 - `params`: optional object with the error params returned by ajv ([see doc](https://github.com/ajv-validator/ajv/tree/6a671057ea6aae690b5967ee26a0ddf8452c6297#error-parameters) for more info).
-- `property`: optional string in Javascript property accessor notation to the data path of the field with the error. For example, `.name` or `.first-name`.
+- `property`: optional string in Javascript property accessor notation to the data path of the field with the error. For example, `.name`, `.first-name` or, for a key that is empty or holds a `.`, `[` or `]`, `['a.b']`, as [`pathToProperty()`](../api-reference/utility-functions.md#pathtoproperty) writes it. Split it with [`propertyToPath()`](../api-reference/utility-functions.md#propertytopath).
 - `schemaPath`: optional JSON pointer to the schema of the keyword that failed validation. For example, `#/fields/firstName/required`. (Note: this may sometimes be wrong due to a [bug in ajv](https://github.com/ajv-validator/ajv/issues/512)).
 - `stack`: full error name, for example ".name is a required property".
 - `title`: optional string containing title property for the field with error.

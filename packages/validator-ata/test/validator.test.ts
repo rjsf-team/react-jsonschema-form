@@ -16,6 +16,7 @@ import {
 } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import errorPropertyTests from '../../utils/test/testUtils/errorPropertyTests.ts';
 import nestedResourceTests, {
   handedResourceTests,
   mergedResourceViewTests,
@@ -25,6 +26,7 @@ import pointerValidationTests, {
   sharedObjectValidationTests,
 } from '../../utils/test/testUtils/pointerValidationTests.ts';
 import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
+import requiredTitleTests from '../../utils/test/testUtils/requiredTitleTests.ts';
 import sharedCopyScoringTests from '../../utils/test/testUtils/sharedCopyScoringTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { CustomValidatorOptionsType } from '../src/index.ts';
@@ -864,6 +866,8 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
 });
 
 pointerValidationTests(() => customizeValidator());
+requiredTitleTests(() => customizeValidator());
+errorPropertyTests(() => customizeValidator());
 absoluteRefValidationTests(() => customizeValidator());
 sharedObjectValidationTests(() => customizeValidator());
 sharedCopyScoringTests(() => customizeValidator());
