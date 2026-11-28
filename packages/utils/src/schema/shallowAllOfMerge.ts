@@ -426,6 +426,34 @@ function unrejected<V>(
   return kept.length > 0 ? Object.fromEntries(kept) : undefined;
 }
 
+/** Returns `open` without the `properties`, `patternProperties` and `additionalProperties` one of `closers`, each an
+ * `unevaluatedProperties: false` that sees only its own subschemas, rejects (see `rejects()`)
+ */
+function withoutRejected(open: JSONSchema7Definition, closers: readonly JSONSchema7[]): JSONSchema7Definition {
+  if (typeof open !== 'object' || closers.length === 0) {
+    return open;
+  }
+  const { properties, patternProperties, additionalProperties, ...rest } = open;
+  const seen = {
+    properties: unrejected(
+      properties,
+      closers,
+      (subschema, key) =>
+        Object.hasOwn(subschema.properties ?? {}, key) ||
+        Object.keys(subschema.patternProperties ?? {}).some((pattern) => patternRegExp(pattern).test(key)),
+    ),
+    patternProperties: unrejected(patternProperties, closers, (subschema, pattern) =>
+      Object.hasOwn(subschema.patternProperties ?? {}, pattern),
+    ),
+    // A `false` closes what the entry does, and says so to a reader that knows no `unevaluatedProperties`
+    additionalProperties:
+      additionalProperties !== false && closers.some((entry) => rejects(entry, () => false))
+        ? undefined
+        : additionalProperties,
+  };
+  return { ...rest, ...Object.fromEntries(Object.entries(seen).filter(([, value]) => value !== undefined)) };
+}
+
 /** Shared `@x0k/json-schema-merge` shallow-allOf merge function used by `retrieveSchema` and
  * `omitExtraData`. Constructed once from a single comparator/merger/intersector/deduplicator
  * pipeline so both consumers share the same configuration without duplicating setup code.
@@ -459,33 +487,13 @@ export default function shallowAllOfMerge(schema: JSONSchema7Definition): JSONSc
   );
   let open = withoutClosedAdditionalProperties(merged, objects, objects);
   // An entry's `unevaluatedProperties: false` the merge kept as a keyword lands on the merged schema, where it would
-  // read as seeing the keys the other entries declare. shortcut: only the keywords of the merged schema are left out,
-  // not those of the options a merge of lists pairs with the entry's; upgrade if such an option declares one
+  // read as seeing the keys the other entries declare. An option a merge of lists builds is read the same way, see
+  // `mergeOptionLists()`
   const closers = objects
     .filter((entry) => rewriteUnevaluated(entry) === entry)
     .map((entry) => partial.get(entry) ?? entry)
     .filter((entry) => Reflect.get(entry, 'unevaluatedProperties') === false && entry.additionalProperties == null);
-  if (typeof open === 'object' && closers.length > 0) {
-    const { properties, patternProperties, additionalProperties, ...rest } = open;
-    const seen = {
-      properties: unrejected(
-        properties,
-        closers,
-        (subschema, key) =>
-          Object.hasOwn(subschema.properties ?? {}, key) ||
-          Object.keys(subschema.patternProperties ?? {}).some((pattern) => patternRegExp(pattern).test(key)),
-      ),
-      patternProperties: unrejected(patternProperties, closers, (subschema, pattern) =>
-        Object.hasOwn(subschema.patternProperties ?? {}, pattern),
-      ),
-      // A `false` closes what the entry does, and says so to a reader that knows no `unevaluatedProperties`
-      additionalProperties:
-        additionalProperties !== false && closers.some((entry) => rejects(entry, () => false))
-          ? undefined
-          : additionalProperties,
-    };
-    open = { ...rest, ...Object.fromEntries(Object.entries(seen).filter(([, value]) => value !== undefined)) };
-  }
+  open = withoutRejected(open, closers);
   return unevaluatedProperties === undefined || seesNothing || typeof open === 'boolean'
     ? open
     : { ...open, unevaluatedProperties };
@@ -531,7 +539,8 @@ export function mergedPair(
  * under one keyword: each option of the first merged with each of the next's, a list at a time and in their order, a
  * pair that can't merge left out and one equal to an option already kept dropped, as the merge combines them. Merged
  * here, each keeps the options it was built from, and each pair keeps an `additionalProperties: true` the merge would
- * drop.
+ * drop. A pair is left without the keys an `unevaluatedProperties: false` of `closers` rejects (see `withoutRejected()`),
+ * since it sees only the closer's own subschemas, the options of a list it holds included.
  *
  * @param first - The first list, in the order their schemas are merged
  * @param rest - The lists after it
@@ -541,6 +550,8 @@ export function mergedPair(
  * @param [dropEqual=true] - Whether a pair equal to an option already kept is dropped, as the shallow merge drops it
  * @param [resolve] - Returns the definition a `$ref` among the subschemas of `beside` names, so one describing the
  *        object, or a property a followed definition declares, can close a property of a pair
+ * @param [closers] - The schemas beside the lists whose `unevaluatedProperties` sees only their own subschemas: the
+ *        `allOf` entries and branches beside the object's own keywords, whose own `unevaluatedProperties` sees every option
  * @returns - The options, or undefined where no pair merges, which the merge rejects
  */
 export function mergeOptionLists(
@@ -556,8 +567,12 @@ export function mergeOptionLists(
   ) => JSONSchema7Definition | undefined = mergedPair,
   dropEqual = true,
   resolve?: (schema: JSONSchema7) => JSONSchema7 | undefined,
+  closers: readonly JSONSchema7[] = [],
 ): MergedOption[] | undefined {
   const outside = inPlaceResolved(beside, resolve);
+  const closing = closers
+    .map((closer) => partial.get(closer) ?? closer)
+    .filter((closer) => Reflect.get(closer, 'unevaluatedProperties') === false && closer.additionalProperties == null);
   // A `$ref` the pair can't follow, one declaring a property outside any followed definition, is read as closing it
   const unchecked = beside.flatMap(withInPlaceSubschemas);
   let merged: MergedOption[] = first.map((option) => ({ option, sources: [option] }));
@@ -565,7 +580,8 @@ export function mergeOptionLists(
     const next: MergedOption[] = [];
     for (const left of merged) {
       for (const right of list) {
-        const option = pair(left.option, right, outside, unchecked, resolve);
+        const paired = pair(left.option, right, outside, unchecked, resolve);
+        const option = paired === undefined ? undefined : withoutRejected(paired, closing);
         if (
           option !== undefined &&
           !(dropEqual && next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0))

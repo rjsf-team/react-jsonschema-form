@@ -1146,6 +1146,149 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         { ...b, additionalProperties: false },
       ]);
     });
+    describe("an option's additionalProperties: true beside a schema outside the pair whose unevaluatedProperties: false, which sees only its own keys (#5967)", () => {
+      const a: RJSFSchema = { properties: { a: { type: 'string' } } };
+      const open: RJSFSchema = { properties: { b: { type: 'string' } }, additionalProperties: true };
+      const merged = { properties: { a: { type: 'string' }, b: { type: 'string' } } };
+      it('is left out, with each key the closer rejects, where the allOf entry holding the other list closes the object', () => {
+        expect(
+          retrieved({ type: 'object', oneOf: [open], allOf: [{ oneOf: [a], unevaluatedProperties: false }] }),
+        ).toEqual([{ properties: { a: { type: 'string' } } }]);
+      });
+      it('is left out, with each key the closer rejects, where an allOf entry holding no list closes the object', () => {
+        expect(
+          retrieved({ type: 'object', oneOf: [open], allOf: [{ oneOf: [a] }, { unevaluatedProperties: false }] }),
+        ).toEqual([{}]);
+      });
+      it('is left out, with each key the closer rejects, where another entry of an enclosing allOf closes the object', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            allOf: [{ oneOf: [open], allOf: [{ oneOf: [a] }] }, { unevaluatedProperties: false }],
+          }),
+        ).toEqual([{}]);
+      });
+      it('is left out, with each key the closer rejects, where the definition a $ref entry of an enclosing allOf names closes the object', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Closed: { unevaluatedProperties: false } },
+            allOf: [{ oneOf: [open], allOf: [{ oneOf: [a] }] }, { $ref: '#/$defs/Closed' }],
+          }),
+        ).toEqual([{}]);
+      });
+      it('is kept where the definition a $ref entry of an enclosing allOf names leaves the object open', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Open: { properties: {} } },
+            allOf: [{ oneOf: [open], allOf: [{ oneOf: [a] }] }, { $ref: '#/$defs/Open' }],
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where the definition an entry closing the object names opens every key, which the entry sees', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Open: { additionalProperties: true } },
+            allOf: [
+              { oneOf: [open], allOf: [{ oneOf: [a] }] },
+              { $ref: '#/$defs/Open', unevaluatedProperties: false },
+            ],
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where a list of the entry closing the object opens every key, which the entry sees', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            allOf: [
+              { oneOf: [open], allOf: [{ oneOf: [a] }] },
+              { anyOf: [{ additionalProperties: true }], unevaluatedProperties: false },
+            ],
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where the allOf entry closing the object holds the option, whose keys its unevaluatedProperties sees', () => {
+        expect(
+          retrieved({ type: 'object', oneOf: [a], allOf: [{ oneOf: [open], unevaluatedProperties: false }] }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where an enclosing entry closing the object holds the option object in a list of its own, which it sees', () => {
+        const other: RJSFSchema = { properties: { d: { type: 'string' } }, additionalProperties: true };
+        const c: RJSFSchema = { properties: { c: { type: 'string' } } };
+        expect(
+          retrieved({
+            type: 'object',
+            allOf: [
+              { oneOf: [open, other], allOf: [{ oneOf: [c] }] },
+              { anyOf: [open], unevaluatedProperties: false },
+            ],
+          }),
+        ).toEqual([
+          { properties: { b: { type: 'string' }, c: { type: 'string' } }, additionalProperties: true },
+          { properties: { d: { type: 'string' }, c: { type: 'string' } }, additionalProperties: true },
+        ]);
+      });
+      it("is kept where the object's own unevaluatedProperties closes it, which sees every option's keys", () => {
+        expect(
+          retrieved({ type: 'object', unevaluatedProperties: false, oneOf: [a], allOf: [{ oneOf: [open] }] }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it("is left out, with each key the closer rejects, where the definition a $ref beside the lists names closes the object, which doesn't see the site's keys", () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Closed: { oneOf: [a], unevaluatedProperties: false } },
+            $ref: '#/$defs/Closed',
+            oneOf: [open],
+          }),
+        ).toEqual([{ properties: { a: { type: 'string' } } }]);
+      });
+      it("is kept where the keywords beside a $ref close the object, which see its definition's keys", () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Open: { oneOf: [open] } },
+            $ref: '#/$defs/Open',
+            oneOf: [a],
+            unevaluatedProperties: false,
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      describe('beside the list of a then the data meets', () => {
+        const branched = (then: RJSFSchema, own: RJSFSchema, beside: RJSFSchema = {}) => {
+          const schema: RJSFSchema = { type: 'object', oneOf: [own], if: { required: ['a'] }, then, ...beside };
+          return retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' }).oneOf;
+        };
+        it("is left out, with each key the closer rejects, where an entry of the object's own allOf closes the object", () => {
+          expect(branched({ oneOf: [a] }, open, { allOf: [{ unevaluatedProperties: false }] })).toEqual([{}]);
+        });
+        it("is left out, with each key the closer rejects, where the definition a $ref entry of the object's own allOf names closes the object", () => {
+          expect(
+            branched({ oneOf: [a] }, open, {
+              $defs: { Closed: { unevaluatedProperties: false } },
+              allOf: [{ $ref: '#/$defs/Closed' }],
+            }),
+          ).toEqual([{}]);
+        });
+        it("is kept where the object's own allOf leaves the object open", () => {
+          expect(branched({ oneOf: [a] }, open, { allOf: [{ properties: {} }] })).toEqual([
+            { ...merged, additionalProperties: true },
+          ]);
+        });
+        it('is left out, with each key the closer rejects, where the then closes the object', () => {
+          expect(branched({ oneOf: [a], unevaluatedProperties: false }, open)).toEqual([
+            { properties: { a: { type: 'string' } } },
+          ]);
+        });
+        it('is kept where the then closing the object holds the option, whose keys its unevaluatedProperties sees', () => {
+          expect(branched({ oneOf: [open], unevaluatedProperties: false }, a)).toEqual([
+            { ...merged, additionalProperties: true },
+          ]);
+        });
+      });
+    });
     it("leaves the field's own list as written where the rest of the allOf fails to merge", () => {
       const field: RJSFSchema = {
         type: 'object',

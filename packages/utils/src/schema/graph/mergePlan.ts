@@ -950,12 +950,15 @@ export function sourcesOfOption(option: object): readonly unknown[] | undefined 
  * @param schemas - The schemas a plan conjoins, in the order they are merged
  * @param graph - The graph of the root, which resolves a `$ref` beside the lists
  * @param [enclosing] - The schemas an enclosing `allOf` conjoins beside them, which can close a property of a pair too
+ * @param [closing] - Those of `enclosing` whose `unevaluatedProperties` can close a pair's own keys, see
+ *        `mergeOptionLists()`; `schemas` after the first can too
  * @returns - The keyword and its rebuilt options, for each such keyword
  */
 function rebuiltLists<S extends StrictRJSFSchema>(
   schemas: readonly object[],
   graph: SchemaGraph<S>,
   enclosing: readonly object[] = [],
+  closing: readonly object[] = [],
 ): [string, ReturnType<typeof mergeOptionLists> & object][] {
   return [ANY_OF_KEY, ONE_OF_KEY].flatMap((keyword): [string, ReturnType<typeof mergeOptionLists> & object][] => {
     const lists = schemas.flatMap((schema): JSONSchema7Definition[][] => {
@@ -966,7 +969,12 @@ function rebuiltLists<S extends StrictRJSFSchema>(
     const [beside, resolve] = besideLists(graph, keyword, schemas, enclosing);
     const options =
       first !== undefined && rest.length > 0
-        ? recorded(mergeOptionLists(first, rest, beside, mergedPair, true, resolve))
+        ? recorded(
+            mergeOptionLists(first, rest, beside, mergedPair, true, resolve, [
+              ...schemas.slice(1),
+              ...closing,
+            ] as JSONSchema7[]),
+          )
         : undefined;
     return options === undefined ? [] : [[keyword, options]];
   });
@@ -1268,6 +1276,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * applies beside the keywords holding a list, which the member's merges of lists read as closing a property too
    */
   private enclosing: readonly object[] = [];
+  /** The schemas among `enclosing` whose `unevaluatedProperties` sees none of the member's keys: each enclosing
+   * `allOf`'s other members, but the keywords beside a conjunction's `$ref`, which see its definition's, see
+   * `mergeOptionLists()`
+   */
+  private closing: readonly object[] = [];
 
   constructor(
     context: SchemaContext<S, F>,
@@ -1422,6 +1435,25 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return dependencyKey === undefined || unkeyedOneOf ? part : this.applyExactlyOne(part, dependencyKey, oneOf);
   }
 
+  /** Returns the raw members of the `allOf` at `provider`, but `except`, whose `unevaluatedProperties` can close the
+   * keys an option pair's own `additionalProperties` takes, see `closing`
+   */
+  private closersOf(provider: Provider<S> | undefined, except?: NodeId): object[] {
+    if (provider === undefined) {
+      return [];
+    }
+    return this.graph.subschemas(provider.node.id, ALL_OF_KEY).flatMap(([, other], index) => {
+      const node = this.graph.node(other);
+      if (other === except || node.kind !== 'schema' || (index === 0 && provider.node.conjunctionOf !== undefined)) {
+        return [];
+      }
+      // A `$ref`'s definition closes the object as the member itself does. shortcut: one `$ref` deep; follow a chain if
+      // a definition that is itself a `$ref` needs to close it
+      const target = node.ref === undefined ? undefined : this.graph.node(node.ref);
+      return target?.kind === 'schema' ? [node.raw, target.raw] : [node.raw];
+    });
+  }
+
   /** Merges the `allOf` entries in. Inside a dependency, each entry's own `oneOf` is applied as the dependency's is,
    * since the entries are part of the dependency's schema
    */
@@ -1434,6 +1466,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const members = this.graph.subschemas(provider.node.id, ALL_OF_KEY);
     const outer = this.enclosing;
+    const outerClosing = this.closing;
     const own = { ...part, schema: markedAs(withoutKeys(part.schema, ALL_OF_KEY), part.schema) };
     let entries: (Part<S> | undefined)[];
     try {
@@ -1446,11 +1479,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
             return other !== member && node.kind === 'schema' ? [node.raw] : [];
           }),
         ];
+        this.closing = [...outerClosing, ...this.closersOf(provider, member)];
         const expanded = this.expand(member, provider.refPath, 'allOf', dependencyKey);
         return expanded === undefined ? undefined : scopedPart(expanded, `a${member}`);
       });
     } finally {
       this.enclosing = outer;
+      this.closing = outerClosing;
     }
     const [beside, ...rest] = entries;
     // A `$ref` applies its definition in place, so the keywords beside it, its conjunction's first entry, are the
@@ -1479,7 +1514,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const schemas = [part.schema, ...members.map((member) => member.schema)];
     // An `allOf` a member still holds is one the policy left unmerged
     const nested = ownAllOf(schemas);
-    const rebuilt = this.context.customMergeAllOf ? [] : rebuiltLists(schemas, this.graph, this.enclosing);
+    const rebuilt = this.context.customMergeAllOf
+      ? []
+      : rebuiltLists(schemas, this.graph, this.enclosing, this.closing);
     const taken = rebuilt.map(([keyword]) => keyword);
     // A merge that fails keeps the part's own lists rather than options built with the members it drops
     const unmerged = withoutKeys(part.schema, ALL_OF_KEY);
@@ -1518,9 +1555,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * since the field would only ever show the first. A list the plan chose an option of stays as the merge leaves it,
    * since the fold tells the lists it chose from by the list. shortcut: under a `customMergeAllOf` the branch's list
    * replaces the part's, since that merge reads its first entry as winning where the branch's annotations win; upgrade
-   * if such a field needs both lists offered
+   * if such a field needs both lists offered. The members of `allOf`, the part's own, which is merged after a `then` or
+   * `else`, can close a pair's own keys too
    */
-  private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId): Part<S> {
+  private mergeBranchOver(part: Part<S>, branch: Part<S>, node: NodeId, allOf?: Provider<S>): Part<S> {
     const merged = mergeBranch(part, branch, 'b', node);
     if (this.context.customMergeAllOf) {
       return merged;
@@ -1533,7 +1571,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         Array.isArray(own) &&
         Array.isArray(other) &&
         !this.choices.some(({ list, selected }) => selected !== undefined && (list === own || list === other))
-          ? recorded(mergeOptionLists(own, [other], beside, branchPair, false, resolve))
+          ? recorded(
+              mergeOptionLists(own, [other], beside, branchPair, false, resolve, [
+                branch.schema,
+                ...this.closersOf(allOf),
+                ...this.closing,
+              ] as JSONSchema7[]),
+            )
           : undefined;
       if (
         options !== undefined &&
@@ -1617,7 +1661,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
     return branchPart === undefined || branchNode === undefined
       ? without
-      : this.mergeBranchOver(without, branchPart, branchNode);
+      : this.mergeBranchOver(without, branchPart, branchNode, keywords.get(ALL_OF_KEY));
   }
 
   private branch(
