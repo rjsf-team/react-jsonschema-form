@@ -30,7 +30,7 @@ import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import setOwn from '../../setOwn.ts';
 import type { CustomMergeAllOf, FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
-import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../shallowAllOfMerge.ts';
+import shallowAllOfMerge, { mergedPair, mergeOptionLists, markedAs, withoutInPlaceKeys } from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
 import { booleanSchema, schemaFrom } from './schemaFrom.ts';
@@ -589,7 +589,7 @@ function scopedPart<S extends StrictRJSFSchema>(part: Part<S>, step: string): Pa
  * `part` when it has one, so the merged schema is still named after the field's own `$ref`
  */
 function mergeOver<S extends StrictRJSFSchema>(part: Part<S>, branch: Part<S>): Part<S> {
-  const schema = schemaFrom(part.schema, mergeSchemas(part.schema, branch.schema));
+  const schema = markedAs(schemaFrom(part.schema, mergeSchemas(part.schema, branch.schema)), part.schema);
   const ownRef: unknown = Reflect.get(part.schema, RJSF_REF_KEY);
   if (ownRef !== undefined) {
     Reflect.set(schema, RJSF_REF_KEY, ownRef);
@@ -1193,7 +1193,7 @@ export function conjoinDefinition<S extends StrictRJSFSchema>(
         // A `$ref` applies its definition in place, so an `unevaluatedProperties` beside it sees the definition's keys
         schemaFrom(template, {
           ...withoutKeys(beside, ALL_OF_KEY),
-          [ALL_OF_KEY]: [withoutKeys(definition, ALL_OF_KEY)],
+          [ALL_OF_KEY]: [withoutInPlaceKeys(definition, ALL_OF_KEY)],
         }),
         customMergeAllOf,
       ),
@@ -1434,7 +1434,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const members = this.graph.subschemas(provider.node.id, ALL_OF_KEY);
     const outer = this.enclosing;
-    const own = { ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) };
+    const own = { ...part, schema: markedAs(withoutKeys(part.schema, ALL_OF_KEY), part.schema) };
     let entries: (Part<S> | undefined)[];
     try {
       entries = members.map(([, member]) => {
@@ -1462,7 +1462,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         )
       : this.conjoin(
           {
-            schema: schemaFrom(own.schema, { ...beside.schema, ...own.schema }),
+            schema: markedAs(schemaFrom(own.schema, { ...beside.schema, ...own.schema }), beside.schema),
             chains: [...own.chains, ...beside.chains],
           },
           rest.filter((entry) => entry !== undefined),
@@ -1486,7 +1486,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const merged = this.mergeAll(
       {
         ...withoutKeys(part.schema, ALL_OF_KEY, ...taken),
-        [ALL_OF_KEY]: schemas.slice(1).map((schema) => withoutKeys(schema, ALL_OF_KEY, ...taken)),
+        [ALL_OF_KEY]: schemas.slice(1).map((schema) => withoutInPlaceKeys(schema, ALL_OF_KEY, ...taken)),
       },
       unmerged,
     );
@@ -1504,7 +1504,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       Reflect.set(merged, symbol, value);
     }
     return {
-      schema: merged,
+      schema: markedAs(merged, part.schema, schemas.slice(1)),
       chains: [...part.chains, ...members.flatMap((member) => member.chains)],
     };
   }
@@ -1588,7 +1588,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const condition = this.graph.child(conditionProvider.node.id, IF_KEY);
-    const without = { ...part, schema: withoutKeys(part.schema, IF_KEY, THEN_KEY, ELSE_KEY) };
+    const without = { ...part, schema: withoutInPlaceKeys(part.schema, IF_KEY, THEN_KEY, ELSE_KEY) };
     if (condition === undefined) {
       return without;
     }
@@ -1656,7 +1656,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     this.readsData = true;
-    let next: Part<S> = { ...part, schema: withoutKeys(part.schema, DEPENDENCIES_KEY) };
+    let next: Part<S> = { ...part, schema: withoutInPlaceKeys(part.schema, DEPENDENCIES_KEY) };
     const ownProperties: unknown = propertiesProvider && Reflect.get(propertiesProvider.node.raw, PROPERTIES_KEY);
     const declared = isObject(ownProperties) ? new Set(Object.keys(ownProperties)) : undefined;
     const dependencies: unknown = provider.node.raw[DEPENDENCIES_KEY];
@@ -1674,7 +1674,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     for (let index = pending.findIndex(qualifies); index >= 0; index = pending.findIndex(qualifies)) {
       const [[key, dependency]] = pending.splice(index, 1);
       if (Array.isArray(dependency)) {
-        next = { ...next, schema: withRequired(next.schema, dependency) };
+        next = { ...next, schema: markedAs(withRequired(next.schema, dependency), next.schema) };
       } else {
         const dependent = this.expandBranch(dependency, provider.refPath, 'dependency', key);
         if (dependent !== undefined) {

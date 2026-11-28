@@ -19,6 +19,7 @@ import {
   ITEMS_KEY,
   ONE_OF_KEY,
   PROPERTIES_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
   REF_KEY,
   THEN_KEY,
   UI_DEFINITIONS_KEY,
@@ -2952,12 +2953,24 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const isComputed = (key: string) => isDeclared(key) || unmergedProperties.has(key) || declaredInAllOf(key);
   const ownProperties = [...propertyKeys, ...unmergedProperties.keys()].map((key) => {
     const skipsBranchDefaults = unmergedProperties.has(key);
-    const propertySchema = unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key);
+    // A property the merge of the field's `allOf` leaves out, as an `unevaluatedProperties` in it rejects the key, takes
+    // no value, as one whose schema is `false`, so it is read as that. The field is merged only where its scope holds
+    // that keyword
+    const leftOut =
+      !skipsBranchDefaults &&
+      allOfField?.seeds.some(({ node }) => constFillersOf<S>(allOfField.graph, node).closes) === true &&
+      getByPath(mergedSchemaOf<S, F>(context, view).properties, key) === undefined;
+    const propertySchema = leftOut
+      ? (false as unknown as S)
+      : (unmergedProperties.get(key) ?? getPropertySchema<S>(schema, key));
     // A key the fold left unmerged has no seed under the object's `properties`, so it is seeded where the field as
     // `SchemaField` retrieves it declares it, its `$ref`, recursion and `dependencies` with it, rather than from the
     // `additionalProperties` or `patternProperties` its seeds in the fold would be
     const seeding = skipsBranchDefaults ? retrievedView() : view;
-    const { seeds, edge } = childSeeds(seeding, key);
+    const declared = childSeeds(seeding, key);
+    // A property whose schema is `false` takes no value, so it is folded from no seeds rather than from a declaration
+    // of it holding a default, which the merge found no value to meet
+    const { seeds, edge } = Object.is(propertySchema, false) ? { ...declared, seeds: [] } : declared;
     // A property written as a `$ref` keeps its `const` and `type` in the definition it names, which is read where the
     // declaration holding that `$ref` sits, since a property declared twice is merged into one no graph holds
     const readProperty = isSchemaObject<S>(propertySchema)
@@ -4389,12 +4402,13 @@ function reachWalk(): (keys: readonly unknown[], reach: () => boolean) => boolea
  * holds `dependencies`, whose options can bring one in, and the keys of the properties it declares whose merge reaches
  * one, worked out once per graph and node
  */
-const constFillers = new KeyedMemo<{ dependencies: boolean; constKeys: readonly string[] }>();
+const constFillers = new KeyedMemo<{ dependencies: boolean; closes: boolean; constKeys: readonly string[] }>();
 function constFillersOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: NodeId) {
   return constFillers.get([graph, node], () => {
     const scope = scopeOf<S>(graph, node);
     return {
       dependencies: scope.some(({ raw }) => Object.hasOwn(raw, DEPENDENCIES_KEY)),
+      closes: scope.some(({ raw }) => Object.hasOwn(raw, UNEVALUATED_PROPERTIES_KEY)),
       constKeys: scope.flatMap(({ id }) =>
         graph
           .subschemas(id, PROPERTIES_KEY)
