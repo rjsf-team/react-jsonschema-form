@@ -172,7 +172,8 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 ### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
 
 Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
-A name's title is its `ui:title` at the error's `property`, then at the `schemaPath`, then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the root `schema`.
+A name's title is its `ui:title` at the error's `property`, then at it with each array index read as `items`, then, unless the root leads along the `schemaPath` to no schema at the `property`, at the `schemaPath`, then at it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
+A schema that is a `$ref` is read resolved, its own `title` kept over its target's and read where its `$ref` can't be merged.
 Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
 
 #### Parameters
@@ -184,6 +185,7 @@ Each name with a title is replaced, in one pass so a title that matches another 
   - property: string - The error's property path, dot-separated as RJSF writes it, `''` for the root
   - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/required`
   - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+  - [skipsRefs]: boolean - The engine leaves every `$ref` out of the `schemaPath`, as [`getKeywordParentSchema()`](#getkeywordparentschema)'s `skipsRefs` reads it
   - [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
   - [parentSchema]: unknown - The schema object that holds the keyword that failed, when the engine hands it over
   - [schema]: S - The form's root schema
@@ -1279,6 +1281,21 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 
 - string: The label, or `''` when the field has none
 
+### getFieldSchemaPath()
+
+Used by the validator packages to name a property by the field a failed keyword applies to.
+Returns the `schemaPath` with the branches the keyword sits in removed: each `allOf`, `anyOf` or `oneOf` option, `then`, `else`, and `dependentSchemas` or `dependencies` schema, along with any `$ref` written into the path after one.
+A branch's own `title` names that branch, not the field, and a branch that only lists `required` holds no `properties` to look one up in.
+The path is walked from the root, so a property, definition or dependency named like a keyword, such as `then` or `properties`, is read as the name it is.
+
+#### Parameters
+
+- schemaPath: string - The URI fragment of the JSON Pointer to the keyword that failed, such as `#/properties/a/then/type`
+
+#### Returns
+
+- string: The path the keyword would have if the field held it, such as `#/properties/a/type`, or the `schemaPath` as it is when the keyword sits in no branch
+
 ### getFieldTypeForUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtypeforuischema}
 
 Gets the type of the field `SchemaField` renders a schema by, as [getFieldTypeForWidget()](#getfieldtypeforwidget) does for the field's own `ui:widget` in its `uiSchema`.
@@ -1502,7 +1519,7 @@ If the function throws, the error is logged through [`logOnce()`](#logonce) and 
 
 - UiSchema&lt;T, S, F> | undefined: The uiSchema for the item at `index`, or undefined
 
-### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### getKeywordParentSchema&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getkeywordparentschema}
 
 Used by the validator packages to find the schema object holding the keyword a validation error reports, when the engine doesn't hand over one that is resolved, to pass to [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) as its `parentSchema`.
 The `schemaPath` is read from the `rootSchema` down, following each `$ref` it passes through: one written into the path as a `$ref` key, whose next key is read from the `$ref`'s target alone, or one it skips, its next key being one the `$ref` schema doesn't hold itself.
