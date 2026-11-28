@@ -1179,7 +1179,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-> NOTE: Because the third element in the `schema` does not have an associated element in the `uiSchema`, it will keep its original title.
+> NOTE: As in the [`anyOf`](#anyof) example, the third element keeps its original title.
 
 ## Theme Options
 

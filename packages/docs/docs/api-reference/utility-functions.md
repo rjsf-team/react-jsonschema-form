@@ -661,18 +661,6 @@ value `String()` throws for is spelled as its type
 
 - string: The text to label the option with
 
-### logUnsupportedDefaultForEnum&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Logs a warning when a single-select enum widget has a schema default that is not one of its enum options.
-Multi-select widgets are ignored because they do not use the same single-value default handling.
-
-#### Parameters
-
-- id: string - The field id used in the warning message
-- schema: S - The schema whose default value is checked
-- [enumOptions]: EnumOptionsType&lt;S>[] - The enum options available to the widget
-- [multiple=false]: boolean - Whether the widget allows multiple selections
-
 ### errorId()
 
 Return a consistent `id` for the field error element.
@@ -796,25 +784,6 @@ Folds a `FieldPathList` into the `FieldPath` addressing the same field, the inve
 #### Returns
 
 - FieldPath: The `FieldPath` for `fieldPathList`
-
-### idSegment()
-
-Writes one property name as it appears in an id, as [fieldPathToId()](#fieldpathtoid) writes each name of a path, for code naming a field by its id without building the whole path, such as a log message.
-
-#### Parameters
-
-- name: string - The property name
-
-#### Returns
-
-- string: The name as it appears in an id
-
-#### Example
-
-```typescript
-idSegment('first name'); // 'first-_20name'
-idSegment('snake_case'); // 'snake_case'
-```
 
 ### fieldPathToId()
 
@@ -2163,6 +2132,25 @@ Return a consistent `id` for the field help element.
 
 - string: The consistent id for the field help element from the given `id`
 
+### idSegment()
+
+Writes one property name as it appears in an id, as [fieldPathToId()](#fieldpathtoid) writes each name of a path, for code naming a field by its id without building the whole path, such as a log message.
+
+#### Parameters
+
+- name: string - The property name
+
+#### Returns
+
+- string: The name as it appears in an id
+
+#### Example
+
+```typescript
+idSegment('first name'); // 'first-_20name'
+idSegment('snake_case'); // 'snake_case'
+```
+
 ### isAdditionalKeyDisabled()
 
 Whether a `WrapIfAdditionalTemplate` disables the free-text key input of an `additionalProperties` entry, which it does for a disabled or read-only field, whose key must not be renamed on blur, and for one it is handed no `onKeyRenameBlur`, such as the root, which `ObjectField` doesn't render.
@@ -2505,6 +2493,18 @@ A warning given an `id` throws an `RJSFWarningError` instead when [`setWarningOp
   - [error]: unknown - The error, or any other value, to pass to the console method after the `message`
   - [id]: WarningId - The ID of the problem the warning flags, which ends the message as `[id]` and which [`setWarningOptions()`](#setwarningoptions) can make throw
   - [dedupe=true]: boolean - Whether to skip a message already logged. A caller that limits its own warning, as `Form` does to once per form, passes `false`, so a remounted form warns again; it still throws when `setWarningOptions()` selects its `id`
+
+### logUnsupportedDefaultForEnum&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Logs a warning when a single-select enum widget has a schema default that is not one of its enum options.
+Multi-select widgets are ignored because they do not use the same single-value default handling.
+
+#### Parameters
+
+- id: string - The field id used in the warning message
+- schema: S - The schema whose default value is checked
+- [enumOptions]: EnumOptionsType&lt;S>[] - The enum options available to the widget
+- [multiple=false]: boolean - Whether the widget allows multiple selections
 
 ### lookupFromFormContext&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType, R = unknown>()
 
