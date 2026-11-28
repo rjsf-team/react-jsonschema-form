@@ -28,7 +28,7 @@ import {
   resolveOwnRef,
   stubExistingAdditionalProperties,
 } from '../../src/schema/retrieveSchema.ts';
-import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
+import shallowAllOfMerge, { mergedPair, mergeOptionLists } from '../../src/schema/shallowAllOfMerge.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -216,7 +216,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toBe(true);
     });
-    // `withOpenAdditionalProperties()` leaves it to the merge, so this catches a merge that starts dropping it
+    // `shallowAllOfMerge()` sets it aside and puts it back, so this catches a merge that stops putting it back
     it('keeps an unevaluatedProperties: true, which the merge keeps as it stands', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -231,27 +231,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     // An entry's `unevaluatedProperties` sees only that entry's annotations, where the object's own sees its entries'
     it.each<[string, RJSFSchema, boolean | undefined]>([
       [
-        "leaves out an additionalProperties: true a sibling entry's unevaluatedProperties: false closes",
+        "closes an additionalProperties: true a sibling entry's unevaluatedProperties: false closes",
         {
           allOf: [
             { additionalProperties: true },
             { properties: { a: { type: 'string' } }, unevaluatedProperties: false },
           ],
         },
-        undefined,
+        false,
       ],
       [
-        "leaves out an additionalProperties: true a sibling entry's unevaluatedProperties: false closes beside no properties",
+        "closes an additionalProperties: true a sibling entry's unevaluatedProperties: false closes beside no properties",
         { allOf: [{ additionalProperties: true }, { unevaluatedProperties: false }] },
-        undefined,
+        false,
       ],
       [
-        "leaves out the object's own additionalProperties: true an entry's unevaluatedProperties: false closes",
+        "closes an additionalProperties: true a sibling entry's unevaluatedProperties: false closes beside dependencies naming keys",
+        {
+          allOf: [
+            { additionalProperties: true },
+            { properties: { a: { type: 'string' } }, dependencies: { a: ['b'] }, unevaluatedProperties: false },
+          ],
+        },
+        false,
+      ],
+      [
+        "closes the object's own additionalProperties: true an entry's unevaluatedProperties: false closes",
         {
           additionalProperties: true,
           allOf: [{ properties: { a: { type: 'string' } }, unevaluatedProperties: false }],
         },
-        undefined,
+        false,
       ],
       [
         "keeps an entry's additionalProperties: true the object's own unevaluatedProperties: false sees",
@@ -286,6 +296,356 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const schema: RJSFSchema = { type: 'object', ...keywords };
       expect(retrieveSchema({ validator: testValidator }, schema, schema).additionalProperties).toBe(expected);
     });
+    it("leaves out an additionalProperties: true a sibling entry's unevaluatedProperties: false closes beside a subschema it sees", () => {
+      const closer: RJSFSchema = {
+        properties: { a: { type: 'string' } },
+        dependencies: { a: { properties: { b: { type: 'string' } } } },
+        unevaluatedProperties: false,
+      };
+      expect(shallowAllOfMerge({ allOf: [{ additionalProperties: true }, closer] })).toEqual(closer);
+    });
+    it("keeps the properties of an entry's own allOf, which the entry's unevaluatedProperties: false sees", () => {
+      const string: RJSFSchema = { type: 'string' };
+      expect(
+        shallowAllOfMerge({
+          type: 'object',
+          allOf: [
+            { properties: { x: string }, unevaluatedProperties: false, allOf: [{ properties: { name: string } }] },
+            { properties: { sibling: string }, additionalProperties: true },
+          ],
+        }),
+      ).toEqual({ type: 'object', properties: { x: string, name: string }, additionalProperties: false });
+    });
+    it("rejects only the property a sibling entry's unevaluatedProperties schema can't be met by", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        allOf: [
+          { properties: { a: { type: 'string' } }, unevaluatedProperties: { type: 'string' } },
+          { properties: { b: { type: 'number' } } },
+        ],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual({
+        type: 'object',
+        properties: { a: { type: 'string' }, b: false },
+        additionalProperties: { type: 'string' },
+      });
+    });
+    it.each<[string, (closer: RJSFSchema, rest: RJSFSchema[]) => RJSFSchema[]]>([
+      ['before', (closer, rest) => [closer, ...rest]],
+      ['after', (closer, rest) => [...rest, closer]],
+    ])(
+      'rejects a merge whose conflict no unevaluatedProperties schema is part of, with an entry holding the keyword %s it',
+      (_, ordered) => {
+        const closer: RJSFSchema = { properties: { a: { minLength: 1 } }, unevaluatedProperties: false };
+        const allOf = ordered(closer, [
+          { properties: { a: { type: 'string' } } },
+          { properties: { a: { type: 'number' } } },
+        ]);
+        expect(() => shallowAllOfMerge({ allOf })).toThrow('incompatible types');
+      },
+    );
+    it('reads an additionalProperties: null beside an unevaluatedProperties as an absent one', () => {
+      const a: RJSFSchema = { type: 'string' };
+      const nulled = { properties: { a }, additionalProperties: null } as unknown as RJSFSchema;
+      expect(
+        shallowAllOfMerge({
+          allOf: [
+            { ...nulled, unevaluatedProperties: false },
+            { properties: { b: a }, additionalProperties: true },
+          ],
+        }),
+      ).toEqual({ properties: { a }, additionalProperties: false });
+      expect(shallowAllOfMerge({ unevaluatedProperties: false, allOf: [nulled] })).toEqual({
+        ...nulled,
+        unevaluatedProperties: false,
+      });
+    });
+    it('merges an additionalProperties: null with the schema another entry names, as an absent one', () => {
+      const named: RJSFSchema = { additionalProperties: { type: 'string' } };
+      const nulled = { additionalProperties: null } as unknown as RJSFSchema;
+      expect(shallowAllOfMerge({ allOf: [nulled, named] })).toEqual(named);
+    });
+    it("keeps an entry's unevaluatedProperties: false a keyword beside a $recursiveRef, whose subschema it sees", () => {
+      const own: RJSFSchema = { properties: { own: { type: 'string' } } };
+      const entry: RJSFSchema = { $recursiveRef: '#', unevaluatedProperties: false };
+      expect(shallowAllOfMerge({ ...own, allOf: [entry] })).toEqual({ ...own, ...entry });
+    });
+    it('keeps an unevaluatedProperties: false a keyword where it sees an allOf or list merged apart from its schema', () => {
+      const name: RJSFSchema = { type: 'string' };
+      const root: RJSFSchema = {
+        definitions: {
+          Base: { type: 'object', properties: { name } },
+          Ext: { allOf: [{ $ref: '#/definitions/Base' }], properties: { x: name }, unevaluatedProperties: false },
+        },
+      };
+      const site: RJSFSchema = { $ref: '#/definitions/Ext', required: ['name'] };
+      expect(resolveOwnRef(site, root)).toEqual({
+        required: ['name'],
+        properties: { x: name },
+        unevaluatedProperties: false,
+        allOf: [{ $ref: '#/definitions/Base' }],
+        [RJSF_REF_KEY]: '#/definitions/Ext',
+      });
+      const lists: RJSFSchema = {
+        type: 'object',
+        allOf: [
+          { unevaluatedProperties: false, oneOf: [{ properties: { a: name }, additionalProperties: true }] },
+          { oneOf: [{ title: 'X' }] },
+        ],
+      };
+      expect(retrieveSchema({ validator: testValidator }, lists, lists, { a: 'x', extra: 'y' })).toEqual({
+        type: 'object',
+        unevaluatedProperties: false,
+        oneOf: [{ properties: { a: name }, additionalProperties: true, title: 'X' }],
+      });
+    });
+    it("rejects a later entry's property that can't meet an unevaluatedProperties schema merged with an additionalProperties", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        allOf: [
+          { properties: { a: { type: 'string' } }, unevaluatedProperties: { type: 'string' } },
+          { additionalProperties: { minLength: 1 } },
+          { properties: { b: { type: 'number' } } },
+        ],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual({
+        type: 'object',
+        properties: { a: { type: 'string', minLength: 1 }, b: false },
+        additionalProperties: { type: 'string', minLength: 1 },
+      });
+    });
+    it.each<[string, RJSFSchema | boolean, RJSFSchema | boolean]>([
+      ['the false of either', false, false],
+      ['the merge of two schemas', { minLength: 1 }, { type: 'string', minLength: 1 }],
+    ])('merges two unevaluatedProperties kept as keywords to %s', (_, second, expected) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        allOf: [
+          { unevaluatedProperties: { type: 'string' }, anyOf: [{ required: ['a'] }] },
+          { unevaluatedProperties: second, anyOf: [{ required: ['b'] }] },
+        ],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema).unevaluatedProperties).toEqual(expected);
+    });
+    describe("an entry's unevaluatedProperties: false kept as a keyword beside its options", () => {
+      const string: RJSFSchema = { type: 'string' };
+      const properties = (schema: RJSFSchema) =>
+        Object.keys(retrieveSchema({ validator: testValidator }, schema, schema).properties ?? {});
+      it.each<[string, RJSFSchema]>([
+        ['the entry alone holds a list', {}],
+        ['the merge rebuilds the list', { oneOf: [{ title: 'X' }] }],
+      ])('leaves out a property of the schema none of its options declare, where %s', (_, beside) => {
+        expect(
+          properties({
+            type: 'object',
+            properties: { own: string, a: { title: 'A' } },
+            ...beside,
+            allOf: [{ oneOf: [{ properties: { a: string } }], unevaluatedProperties: false }],
+          }),
+        ).toEqual(['a']);
+      });
+      it('keeps a property one of its options declares where the entry is the first schema the merge meets', () => {
+        expect(
+          properties({
+            allOf: [
+              { oneOf: [{ properties: { a: string } }], unevaluatedProperties: false },
+              { type: 'object', properties: { own: string, a: { title: 'A' } }, oneOf: [{ title: 'X' }] },
+            ],
+          }),
+        ).toEqual(['a']);
+      });
+      it.each<[string, RJSFSchema]>([
+        ['a $ref, which may declare it', { oneOf: [{ $ref: '#/definitions/D' }] }],
+        ['an additionalProperties', { oneOf: [{ additionalProperties: string }] }],
+        ['an unevaluatedProperties of its own', { oneOf: [{ unevaluatedProperties: string }] }],
+        ['a pattern matching it', { anyOf: [{ patternProperties: { '^o': string } }] }],
+        ['an if declaring it', { anyOf: [{ if: { properties: { own: string } } }] }],
+        ['an if whose option declares it', { anyOf: [{ if: { anyOf: [{ properties: { own: string } }] } }] }],
+      ])('keeps a property of the schema beside an option holding %s', (_, entry) => {
+        expect(
+          properties({
+            type: 'object',
+            definitions: { D: { properties: { own: string } } },
+            properties: { own: string },
+            allOf: [{ ...entry, unevaluatedProperties: false }],
+          }),
+        ).toEqual(['own']);
+      });
+    });
+    it('drops an additionalProperties: true under a pattern the merge builds from two, which a then may close', () => {
+      const closing: RJSFSchema = {
+        properties: { x: { type: 'string' } },
+        if: { required: ['x'] },
+        then: { unevaluatedProperties: false },
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        allOf: [
+          { patternProperties: { '^a': { type: 'object', additionalProperties: true } } },
+          { patternProperties: { b$: closing }, additionalProperties: false },
+        ],
+      };
+      const { b$, ...built } = retrieveSchema({ validator: testValidator }, schema, schema).patternProperties ?? {};
+      expect(b$).toEqual(closing);
+      expect(Object.values(built)).toEqual([{ type: 'object', ...closing }]);
+    });
+    describe("keeps the properties an entry's unevaluatedProperties: false sees, which the plan resolves before the merge", () => {
+      const condition: RJSFSchema = {
+        if: { properties: { kind: { const: 'a' } }, required: ['kind'] },
+        then: { properties: { x: { type: 'string' } } },
+      };
+      const dependency: RJSFSchema = { properties: { kind: {}, x: { type: 'string' } } };
+      it.each<[string, RJSFSchema, string[]]>([
+        ['an if and its then', condition, ['kind', 'x']],
+        ['a schema of its dependencies', { dependencies: { kind: dependency } }, ['kind', 'x']],
+        [
+          'a schema of its dependencies beside one naming keys',
+          { dependencies: { flag: ['kind'], kind: dependency } },
+          ['kind', 'x'],
+        ],
+        [
+          'an if beside an allOf of its own',
+          { ...condition, allOf: [{ properties: { y: { type: 'string' } } }] },
+          ['kind', 'x', 'y'],
+        ],
+        ['an if beside a $ref', { ...condition, $ref: '#/definitions/D' }, ['kind', 'x', 'y']],
+      ])('in %s', (_, entry, expected) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: { D: { properties: { y: { type: 'string' } } } },
+          properties: { kind: { type: 'string' }, own: { type: 'string' } },
+          allOf: [{ ...entry, unevaluatedProperties: false }],
+        };
+        const retrieved = retrieveSchema({ validator: testValidator }, schema, schema, { kind: 'a', flag: 'y' });
+        expect(Object.keys(retrieved.properties ?? {})).toEqual(expected);
+        expect(retrieved).toHaveProperty('unevaluatedProperties', false);
+      });
+    });
+    it("leaves out the patterns and the additionalProperties an entry's kept unevaluatedProperties: false rejects", () => {
+      const string: RJSFSchema = { type: 'string' };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { own: string },
+        patternProperties: { '^x': string, '^y': string },
+        additionalProperties: { type: 'number' },
+        allOf: [
+          { anyOf: [{ properties: { a: string }, patternProperties: { '^y': string } }], unevaluatedProperties: false },
+        ],
+      };
+      expect(shallowAllOfMerge(schema)).toEqual({
+        type: 'object',
+        patternProperties: { '^y': string },
+        anyOf: [{ properties: { a: string }, patternProperties: { '^y': string } }],
+        unevaluatedProperties: false,
+      });
+    });
+    it("keeps the pattern the merge builds from a sibling's and that of an entry whose unevaluatedProperties: false it reads as an additionalProperties", () => {
+      const merged = (keyword: string) =>
+        shallowAllOfMerge({
+          allOf: [
+            { patternProperties: { '^a': { type: 'string' } }, [keyword]: false },
+            { patternProperties: { b$: { minLength: 1 } } },
+          ],
+        });
+      const closed = merged('unevaluatedProperties');
+      expect(closed).toEqual(merged('additionalProperties'));
+      expect(Object.values(typeof closed === 'object' ? (closed.patternProperties ?? {}) : {})).toEqual([
+        { type: 'string', minLength: 1 },
+        { type: 'string' },
+      ]);
+    });
+    it('reads a schema written once and used as an unevaluatedProperties as that only where it is one', () => {
+      const shared: RJSFSchema = { type: 'string' };
+      const number: RJSFSchema = { type: 'number' };
+      expect(
+        shallowAllOfMerge({
+          allOf: [{ properties: { a: shared }, unevaluatedProperties: shared }, { properties: { b: number } }],
+        }),
+      ).toEqual({ properties: { a: shared, b: false }, additionalProperties: shared });
+      expect(mergedPair({ properties: { kind: shared } }, { properties: { kind: number } })).toBeUndefined();
+    });
+    it('drops a pair of options whose properties conflict, though one was merged with an unevaluatedProperties schema', () => {
+      const a: RJSFSchema = { properties: { kind: { enum: ['a'] } } };
+      const b: RJSFSchema = { properties: { kind: { enum: ['b'] } } };
+      const options = mergeOptionLists([{ unevaluatedProperties: { minLength: 1 } }], [[a], [a, b]], []);
+      expect(options?.map(({ option }) => option)).toEqual([
+        { properties: { kind: { enum: ['a'], minLength: 1 } }, additionalProperties: { minLength: 1 } },
+      ]);
+    });
+    describe("an entry's unevaluatedProperties holding a schema, which the keys the entry doesn't declare have to meet", () => {
+      const string: RJSFSchema = { type: 'string' };
+      const number: RJSFSchema = { type: 'number' };
+      it('reaches the options a merge of lists builds', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [{ properties: { b: number }, additionalProperties: true }],
+          allOf: [{ oneOf: [{ properties: { c: string } }] }, { properties: { c: {} }, unevaluatedProperties: string }],
+        };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema).oneOf).toEqual([
+          { properties: { b: false, c: string }, additionalProperties: string },
+        ]);
+      });
+      it('reaches the properties and patterns of the other schemas where it stays a keyword', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { b: number, d: string },
+          patternProperties: { '^n': number },
+          allOf: [{ anyOf: [{ properties: { c: string } }], unevaluatedProperties: string }],
+        };
+        expect(shallowAllOfMerge(schema)).toEqual({
+          type: 'object',
+          properties: { b: false, d: string },
+          patternProperties: { '^n': false },
+          anyOf: [{ properties: { c: string } }],
+          unevaluatedProperties: string,
+        });
+      });
+      it('leaves an option that is a boolean as it is', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [false, { properties: { b: number } }],
+          allOf: [{ oneOf: [{}] }, { unevaluatedProperties: string }],
+        };
+        expect(retrieveSchema({ validator: testValidator }, schema, schema).oneOf).toEqual([
+          false,
+          { properties: { b: false } },
+        ]);
+      });
+      it('reaches no key where an option of the entry sees every key', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { b: number },
+          allOf: [{ anyOf: [{ additionalProperties: true }], unevaluatedProperties: string }],
+        };
+        expect(shallowAllOfMerge(schema)).toHaveProperty('properties', { b: number });
+      });
+    });
+    it.each<[string, RJSFSchema]>([
+      ['an additionalProperties: false', { properties: { x: {} }, additionalProperties: false }],
+      ['an unevaluatedProperties: false of its own', { properties: { x: {} }, unevaluatedProperties: false }],
+    ])(
+      "leaves out a key an entry's kept unevaluatedProperties: false rejects beside an option holding %s",
+      (_, option) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { x: { type: 'string' }, z: { type: 'string' } },
+          allOf: [{ anyOf: [option], unevaluatedProperties: false }],
+        };
+        expect(shallowAllOfMerge(schema)).toHaveProperty('properties', { x: { type: 'string' } });
+      },
+    );
+    it('rejects the pairs of a merge of lists beside a closer holding a pattern that is no regular expression', () => {
+      const own: RJSFSchema[] = [{ properties: { b: { type: 'number' } }, additionalProperties: true }];
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: own,
+        allOf: [
+          { oneOf: [{ properties: { c: {} } }] },
+          { properties: { c: {} }, patternProperties: { '(': {} }, unevaluatedProperties: false },
+        ],
+      };
+      expect(retrieveSchema({ validator: testValidator }, schema, schema).oneOf).toEqual(own);
+    });
     it('keeps the false or schema another entry names, which the merge keeps', () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -305,10 +665,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         true,
       ],
       [
-        "leaves out an additionalProperties: true beside a $ref the definition's unevaluatedProperties: false closes",
+        "closes an additionalProperties: true beside a $ref the definition's unevaluatedProperties: false closes",
         { properties: { a: { type: 'string' } }, unevaluatedProperties: false },
         { additionalProperties: true },
-        undefined,
+        false,
       ],
     ])('%s', (_, definition, beside, expected) => {
       const site: RJSFSchema = { $ref: '#/definitions/open', ...beside };
@@ -371,9 +731,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
       it.each<[string, (RJSFSchema | boolean)[], boolean | undefined]>([
         [
-          "leaves it out where another declaration's unevaluatedProperties: false closes",
+          "closes it where another declaration's unevaluatedProperties: false closes",
           [{ additionalProperties: true }, { properties: { a }, unevaluatedProperties: false }],
-          undefined,
+          false,
         ],
         [
           "keeps it beside another declaration's unevaluatedProperties: false that its own additionalProperties opens",
@@ -392,7 +752,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const p = merged(...declarations);
         expect(typeof p === 'object' ? p.additionalProperties : p).toBe(expected);
       });
-      it("leaves it out where the object's own declaration of the property closes", () => {
+      it("closes it where the object's own declaration of the property closes", () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: { p: { properties: { a }, unevaluatedProperties: false } },
@@ -400,28 +760,28 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         expect(retrieveSchema({ validator: testValidator }, schema, schema).properties?.p).toEqual({
           properties: { a },
-          unevaluatedProperties: false,
+          additionalProperties: false,
         });
       });
-      it('leaves it out of a property of a property another declaration closes', () => {
+      it('closes it in a property of a property another declaration closes', () => {
         expect(
           merged(
             { properties: { q: { additionalProperties: true } } },
             { properties: { q: { properties: { a }, unevaluatedProperties: false } } },
           ),
-        ).toEqual({ properties: { q: { properties: { a }, unevaluatedProperties: false } } });
+        ).toEqual({ properties: { q: { properties: { a }, additionalProperties: false } } });
       });
       const closer: RJSFSchema = { properties: { a }, unevaluatedProperties: false };
       it.each<[string, RJSFSchema, boolean | undefined]>([
         [
-          "leaves it out where another entry's additionalProperties reaches the property",
+          "closes it where another entry's additionalProperties reaches the property",
           { additionalProperties: closer },
-          undefined,
+          false,
         ],
         [
-          "leaves it out where another entry's patternProperties may reach the property",
+          "closes it where another entry's patternProperties may reach the property",
           { patternProperties: { '^p': closer } },
-          undefined,
+          false,
         ],
         ["keeps it beside another entry's additionalProperties: true", { additionalProperties: true }, true],
         [
@@ -446,7 +806,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const p = retrieveSchema({ validator: testValidator }, schema, schema).properties?.p;
         expect(typeof p === 'object' ? p.additionalProperties : p).toBe(expected);
       });
-      it("leaves it out of a property named after an Object.prototype key that another entry's additionalProperties closes", () => {
+      it("closes it in a property named after an Object.prototype key that another entry's additionalProperties closes", () => {
         const key = 'constructor' as string;
         const schema: RJSFSchema = {
           type: 'object',
@@ -457,9 +817,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ],
         };
         const p = retrieveSchema({ validator: testValidator }, schema, schema).properties?.[key];
-        expect(typeof p === 'object' ? p.additionalProperties : p).toBeUndefined();
+        expect(typeof p === 'object' ? p.additionalProperties : p).toBe(false);
       });
-      it('leaves out of a patternProperties subschema one another declaration of it closes, as the merge does', () => {
+      it('closes it in a patternProperties subschema another declaration of it closes', () => {
         const schema: RJSFSchema = {
           type: 'object',
           allOf: [
@@ -468,8 +828,68 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ],
         };
         expect(retrieveSchema({ validator: testValidator }, schema, schema).patternProperties).toEqual({
-          '^p': { type: 'object', ...closer },
+          '^p': { type: 'object', properties: { a }, additionalProperties: false },
         });
+      });
+      describe.each<[string, (subschema: RJSFSchema) => RJSFSchema, (merged: RJSFSchema) => unknown]>([
+        [
+          'a patternProperties subschema',
+          (p) => ({ patternProperties: { '^p': p } }),
+          (m) => m.patternProperties?.['^p'],
+        ],
+        ['an additionalProperties subschema', (p) => ({ additionalProperties: p }), (m) => m.additionalProperties],
+        ['an items describing every item', (p) => ({ items: p }), (m) => m.items],
+      ])('in %s merged from several declarations of it', (_, holding, held) => {
+        const additional = (...declarations: RJSFSchema[]) => {
+          const schema: RJSFSchema = { allOf: declarations.map(holding) };
+          const subschema = held(retrieveSchema({ validator: testValidator }, schema, schema)) as RJSFSchema;
+          return subschema.additionalProperties;
+        };
+        const open: RJSFSchema = { type: 'object', additionalProperties: true };
+        it('keeps it', () => {
+          expect(additional(open, { properties: { a } })).toBe(true);
+        });
+        it("closes it where another declaration's unevaluatedProperties: false closes", () => {
+          expect(additional(open, closer)).toBe(false);
+        });
+        it("leaves it out where another declaration's then closes", () => {
+          expect(
+            additional(open, { properties: { a }, if: { required: ['a'] }, then: { unevaluatedProperties: false } }),
+          ).toBeUndefined();
+        });
+      });
+      it('drops it from a tuple item and from a subschema under any other keyword, as the merge does', () => {
+        const open: RJSFSchema = { type: 'object', additionalProperties: true };
+        const merged = { type: 'object', properties: { a } };
+        expect(
+          shallowAllOfMerge({
+            allOf: [
+              { items: [open], dependencies: { k: open } },
+              { items: [{ properties: { a } }], dependencies: { k: { properties: { a } } } },
+            ],
+          }),
+        ).toEqual({ items: [merged], dependencies: { k: merged } });
+      });
+      const strings: RJSFSchema = { type: 'object', additionalProperties: a };
+      const beside: RJSFSchema = { unevaluatedProperties: false, anyOf: [{ properties: { a } }] };
+      it.each<[string, RJSFSchema[], RJSFSchema]>([
+        [
+          'a tuple of another entry',
+          [{ items: strings }, { items: strings }, { items: [{ type: 'object' }] }],
+          { items: [strings], additionalItems: strings },
+        ],
+        [
+          'no items beside the prefixItems of another entry',
+          [{ items: {} }, { items: {} }, { prefixItems: [a] }],
+          { prefixItems: [a] },
+        ],
+        [
+          'an additionalProperties another entry closes',
+          [{ additionalProperties: {} }, { additionalProperties: {} }, beside],
+          beside,
+        ],
+      ])('merges several declarations of a value that merge to %s', (_, allOf, expected) => {
+        expect(shallowAllOfMerge({ allOf })).toEqual(expected);
       });
     });
   });
@@ -504,7 +924,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         { properties: { p: { type: 'object', additionalProperties: true, properties: { a: { type: 'string' } } } } },
       ]);
     });
-    it("leaves out a property's additionalProperties: true the pair's other option closes (#5958)", () => {
+    it("closes a property's additionalProperties: true the pair's other option closes (#5958)", () => {
       expect(
         retrieved({
           type: 'object',
@@ -513,7 +933,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             { oneOf: [{ properties: { p: { properties: { a: { type: 'string' } }, unevaluatedProperties: false } } }] },
           ],
         }),
-      ).toEqual([{ properties: { p: { properties: { a: { type: 'string' } }, unevaluatedProperties: false } } }]);
+      ).toEqual([{ properties: { p: { properties: { a: { type: 'string' } }, additionalProperties: false } } }]);
     });
     describe("leaves out a property's additionalProperties: true the pair's other option closes under a choice or condition (#5958)", () => {
       const a: RJSFSchema = { type: 'string' };
@@ -725,7 +1145,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             const property = typeof option === 'object' ? option.properties?.p : undefined;
             return typeof property === 'object' ? property.additionalProperties : property;
           });
-          expect(additional).toEqual([undefined, true]);
+          expect(additional).toEqual([false, true]);
         },
       );
       it("in an allOf's other entry, beside the options a then of an entry merges with the entry's", () => {
@@ -774,14 +1194,174 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const option: RJSFSchema = { properties: { a: { type: 'string' } } };
       expect(retrieved({ type: 'object', oneOf: [false, option], allOf: [{ oneOf: [{}] }] })).toEqual([false, option]);
     });
-    it("leaves out an option's additionalProperties: true the allOf option's unevaluatedProperties: false closes", () => {
+    it("closes an option's additionalProperties: true, and drops the property the allOf option's unevaluatedProperties: false rejects", () => {
       expect(
         retrieved({
           type: 'object',
           oneOf: [{ properties: { b: { type: 'number' } }, additionalProperties: true }],
           allOf: [{ oneOf: [{ properties: { c: { type: 'string' } }, unevaluatedProperties: false }] }],
         }),
-      ).toEqual([{ properties: { b: { type: 'number' }, c: { type: 'string' } }, unevaluatedProperties: false }]);
+      ).toEqual([{ properties: { c: { type: 'string' } }, additionalProperties: false }]);
+    });
+    it('drops a pair of options whose property no value meets where the options hold unevaluatedProperties: false', () => {
+      const a: RJSFSchema = { properties: { kind: { enum: ['a'] } } };
+      const b: RJSFSchema = { properties: { kind: { enum: ['b'] } } };
+      expect(
+        retrieved({
+          type: 'object',
+          oneOf: [
+            { ...a, unevaluatedProperties: false },
+            { ...b, unevaluatedProperties: false },
+          ],
+          allOf: [{ oneOf: [a, b] }],
+        }),
+      ).toEqual([
+        { ...a, additionalProperties: false },
+        { ...b, additionalProperties: false },
+      ]);
+    });
+    describe("an option's additionalProperties: true beside a schema outside the pair whose unevaluatedProperties: false, which sees only its own keys (#5967)", () => {
+      const a: RJSFSchema = { properties: { a: { type: 'string' } } };
+      const open: RJSFSchema = { properties: { b: { type: 'string' } }, additionalProperties: true };
+      const merged = { properties: { a: { type: 'string' }, b: { type: 'string' } } };
+      it('is left out, with each key the closer rejects, where the allOf entry holding the other list closes the object', () => {
+        expect(
+          retrieved({ type: 'object', oneOf: [open], allOf: [{ oneOf: [a], unevaluatedProperties: false }] }),
+        ).toEqual([{ properties: { a: { type: 'string' } } }]);
+      });
+      it('is left out, with each key the closer rejects, where an allOf entry holding no list closes the object', () => {
+        expect(
+          retrieved({ type: 'object', oneOf: [open], allOf: [{ oneOf: [a] }, { unevaluatedProperties: false }] }),
+        ).toEqual([{}]);
+      });
+      it('is left out, with each key the closer rejects, where another entry of an enclosing allOf closes the object', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            allOf: [{ oneOf: [open], allOf: [{ oneOf: [a] }] }, { unevaluatedProperties: false }],
+          }),
+        ).toEqual([{}]);
+      });
+      it('is left out, with each key the closer rejects, where the definition a $ref entry of an enclosing allOf names closes the object', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Closed: { unevaluatedProperties: false } },
+            allOf: [{ oneOf: [open], allOf: [{ oneOf: [a] }] }, { $ref: '#/$defs/Closed' }],
+          }),
+        ).toEqual([{}]);
+      });
+      it('is kept where the definition a $ref entry of an enclosing allOf names leaves the object open', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Open: { properties: {} } },
+            allOf: [{ oneOf: [open], allOf: [{ oneOf: [a] }] }, { $ref: '#/$defs/Open' }],
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where the definition an entry closing the object names opens every key, which the entry sees', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Open: { additionalProperties: true } },
+            allOf: [
+              { oneOf: [open], allOf: [{ oneOf: [a] }] },
+              { $ref: '#/$defs/Open', unevaluatedProperties: false },
+            ],
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where a list of the entry closing the object opens every key, which the entry sees', () => {
+        expect(
+          retrieved({
+            type: 'object',
+            allOf: [
+              { oneOf: [open], allOf: [{ oneOf: [a] }] },
+              { anyOf: [{ additionalProperties: true }], unevaluatedProperties: false },
+            ],
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where the allOf entry closing the object holds the option, whose keys its unevaluatedProperties sees', () => {
+        expect(
+          retrieved({ type: 'object', oneOf: [a], allOf: [{ oneOf: [open], unevaluatedProperties: false }] }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it('is kept where an enclosing entry closing the object holds the option object in a list of its own, which it sees', () => {
+        const other: RJSFSchema = { properties: { d: { type: 'string' } }, additionalProperties: true };
+        const c: RJSFSchema = { properties: { c: { type: 'string' } } };
+        expect(
+          retrieved({
+            type: 'object',
+            allOf: [
+              { oneOf: [open, other], allOf: [{ oneOf: [c] }] },
+              { anyOf: [open], unevaluatedProperties: false },
+            ],
+          }),
+        ).toEqual([
+          { properties: { b: { type: 'string' }, c: { type: 'string' } }, additionalProperties: true },
+          { properties: { d: { type: 'string' }, c: { type: 'string' } }, additionalProperties: true },
+        ]);
+      });
+      it("is kept where the object's own unevaluatedProperties closes it, which sees every option's keys", () => {
+        expect(
+          retrieved({ type: 'object', unevaluatedProperties: false, oneOf: [a], allOf: [{ oneOf: [open] }] }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      it("is left out, with each key the closer rejects, where the definition a $ref beside the lists names closes the object, which doesn't see the site's keys", () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Closed: { oneOf: [a], unevaluatedProperties: false } },
+            $ref: '#/$defs/Closed',
+            oneOf: [open],
+          }),
+        ).toEqual([{ properties: { a: { type: 'string' } } }]);
+      });
+      it("is kept where the keywords beside a $ref close the object, which see its definition's keys", () => {
+        expect(
+          retrieved({
+            type: 'object',
+            $defs: { Open: { oneOf: [open] } },
+            $ref: '#/$defs/Open',
+            oneOf: [a],
+            unevaluatedProperties: false,
+          }),
+        ).toEqual([{ ...merged, additionalProperties: true }]);
+      });
+      describe('beside the list of a then the data meets', () => {
+        const branched = (then: RJSFSchema, own: RJSFSchema, beside: RJSFSchema = {}) => {
+          const schema: RJSFSchema = { type: 'object', oneOf: [own], if: { required: ['a'] }, then, ...beside };
+          return retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x' }).oneOf;
+        };
+        it("is left out, with each key the closer rejects, where an entry of the object's own allOf closes the object", () => {
+          expect(branched({ oneOf: [a] }, open, { allOf: [{ unevaluatedProperties: false }] })).toEqual([{}]);
+        });
+        it("is left out, with each key the closer rejects, where the definition a $ref entry of the object's own allOf names closes the object", () => {
+          expect(
+            branched({ oneOf: [a] }, open, {
+              $defs: { Closed: { unevaluatedProperties: false } },
+              allOf: [{ $ref: '#/$defs/Closed' }],
+            }),
+          ).toEqual([{}]);
+        });
+        it("is kept where the object's own allOf leaves the object open", () => {
+          expect(branched({ oneOf: [a] }, open, { allOf: [{ properties: {} }] })).toEqual([
+            { ...merged, additionalProperties: true },
+          ]);
+        });
+        it('is left out, with each key the closer rejects, where the then closes the object', () => {
+          expect(branched({ oneOf: [a], unevaluatedProperties: false }, open)).toEqual([
+            { properties: { a: { type: 'string' } } },
+          ]);
+        });
+        it('is kept where the then closing the object holds the option, whose keys its unevaluatedProperties sees', () => {
+          expect(branched({ oneOf: [open], unevaluatedProperties: false }, a)).toEqual([
+            { ...merged, additionalProperties: true },
+          ]);
+        });
+      });
     });
     it("leaves the field's own list as written where the rest of the allOf fails to merge", () => {
       const field: RJSFSchema = {

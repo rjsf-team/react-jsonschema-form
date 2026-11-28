@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@types/json-schema": "^7.0.15",
-    "@x0k/json-schema-merge": "^1.2.0",
+    "@x0k/json-schema-merge": "^1.3.0",
     "fast-equals": "^6.2.2"
   },
   "devDependencies": {

@@ -4960,6 +4960,67 @@ describe('ObjectField', () => {
       },
     );
 
+    it.each<[string, (subschema: RJSFSchema) => RJSFSchema]>([
+      ['a pattern property', (subschema) => ({ patternProperties: { '^p': subschema } })],
+      ['an additional property', (subschema) => ({ additionalProperties: subschema })],
+    ])(
+      'offers the add button and renders the extra keys of %s whose additionalProperties: true an allOf merges with another declaration of it (#5958)',
+      (_, holding) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            holding({ type: 'object', additionalProperties: true }),
+            holding({ properties: { a: { type: 'string' } } }),
+          ],
+        };
+        const { node } = createFormComponent({ schema, initialFormData: { p: { a: 'x', extra: 'y' } } });
+
+        expect(node.querySelectorAll('.rjsf-object-property-expand')).toHaveLength(2);
+        expect(node.querySelector('#root_p_extra')).toHaveValue('y');
+      },
+    );
+
+    it("leaves out of a merged option the property the other option's unevaluatedProperties: false rejects (#5958)", () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        oneOf: [{ properties: { b: { type: 'number' } }, additionalProperties: true }],
+        allOf: [{ oneOf: [{ properties: { c: { type: 'string' } }, unevaluatedProperties: false }] }],
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('#root_c')).not.toBeNull();
+      expect(node.querySelector('#root_b')).toBeNull();
+    });
+
+    it("renders the properties an allOf entry's unevaluatedProperties: false rejects only where the keyword sits beside the allOf (#5958)", () => {
+      const own: RJSFSchema = { type: 'object', properties: { own: { type: 'string' } } };
+      const a: RJSFSchema = { properties: { a: { type: 'string' } } };
+      const ids = (schema: RJSFSchema) =>
+        [...createFormComponent({ schema }).node.querySelectorAll('input')].map((input) => input.id);
+
+      expect(ids({ ...own, allOf: [{ ...a, unevaluatedProperties: false }] })).toEqual(['root_a']);
+      expect(ids({ ...own, allOf: [{ oneOf: [a], unevaluatedProperties: false }] })).toEqual(['root_a']);
+      expect(ids({ ...own, unevaluatedProperties: false, allOf: [a] })).toEqual(['root_own', 'root_a']);
+    });
+
+    it("renders the property an if declares beside the entry's unevaluatedProperties: false, and not one nothing in the entry declares (#5958)", () => {
+      const string: RJSFSchema = { type: 'string' };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { kind: string, own: string },
+        allOf: [
+          {
+            if: { properties: { kind: { const: 'a' } }, required: ['kind'] },
+            then: { properties: { x: string } },
+            unevaluatedProperties: false,
+          },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { kind: 'a' } });
+
+      expect([...node.querySelectorAll('input')].map((input) => input.id)).toEqual(['root_kind', 'root_x']);
+    });
+
     it('offers the add button once the setting changes to allow', () => {
       const schema: RJSFSchema = { type: 'object' };
       const { node, rerender } = createFormComponent({ schema });

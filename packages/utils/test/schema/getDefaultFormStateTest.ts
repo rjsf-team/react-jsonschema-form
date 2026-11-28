@@ -16916,6 +16916,52 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       );
 
+      it.each<[string, RJSFSchema]>([
+        ['a declaration of it is false', { properties: { b: false } }],
+        [
+          "it can't meet a sibling entry's unevaluatedProperties",
+          { properties: { a: { type: 'string' } }, unevaluatedProperties: { type: 'string' } },
+        ],
+      ])('fills no default into a property an allOf merges to false, where %s (#5958)', (_, entry) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [entry, { properties: { b: { type: 'number', default: 3 } } }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual({});
+      });
+
+      describe("a nested object's property beside an allOf entry's unevaluatedProperties: false (#5958)", () => {
+        const own: RJSFSchema = { type: 'number', default: 3 };
+        const a: RJSFSchema = { type: 'string' };
+        const closing: RJSFSchema = { properties: { a }, unevaluatedProperties: false };
+        const defaultsOf = (p: RJSFSchema, formData?: unknown) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            definitions: { closing },
+            properties: { p: { type: 'object', properties: { own }, ...p } },
+            required: ['p'],
+          };
+          return getDefaultFormState({ validator: testValidator }, { schema, formData });
+        };
+        it.each<[string, RJSFSchema]>([
+          ['the entry rejects it', { allOf: [closing] }],
+          ['an entry behind a $ref rejects it', { allOf: [{ $ref: '#/definitions/closing' }] }],
+          [
+            'none of the options beside the keyword declares it',
+            { allOf: [{ oneOf: [{ properties: { a } }], unevaluatedProperties: false }] },
+          ],
+        ])('takes no default where %s, and keeps its data', (_, p) => {
+          expect(defaultsOf(p)).toEqual({ p: {} });
+          expect(defaultsOf(p, { p: { own: 9 } })).toEqual({ p: { own: 9 } });
+        });
+        it.each<[string, RJSFSchema]>([
+          ['the entry declares it too', { allOf: [{ properties: { a, own: {} }, unevaluatedProperties: false }] }],
+          ['the keyword sits beside the allOf', { unevaluatedProperties: false, allOf: [{ properties: { a } }] }],
+        ])('takes its default where %s', (_, p) => {
+          expect(defaultsOf(p)).toEqual({ p: { own: 3 } });
+        });
+      });
+
       it('seeds object defaults beside a property declared as false', () => {
         const schema: RJSFSchema = {
           type: 'object',
