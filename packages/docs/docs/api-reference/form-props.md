@@ -760,7 +760,16 @@ Sometimes you may want to trigger events or modify external state when a field h
 ## onChange
 
 Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes, such as the schema's defaults: read those with `getFormData()`. The edit has been applied by the time it is called, so not storing it does not undo it; refuse or rewrite edits in [`transformChange`](#transformchange).
-The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields). A change to the status alone fires no `onChange`, so a blur that only touches a field fires none: the next event carries it. Neither does a prop change that moves the baseline with the data, so read `getStatus()` after one. `submitCount` counts the submits that reach the form, including one the form ignores while a promise `onSubmit` returned is pending: one the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set, except, while a promise is pending, a click on the form's own submit button, Enter in a field that clicks it, or `submit()`, which the form ignores before that validation would run.
+
+The event also carries the form's status: `dirty`, `dirtyFields`, `touched`, `touchedFields` and `submitCount`, see [Unsaved changes](../usage/submitting.md#unsaved-changes) and [Touched fields](../usage/submitting.md#touched-fields).
+
+A change to the status alone fires no `onChange`:
+
+- A blur that only touches a field fires none. The next event carries it.
+- A prop change that moves the baseline with the data fires none either, so read `getStatus()` after one.
+
+`submitCount` counts the submits that reach the form, including one the form ignores while a promise `onSubmit` returned is pending. A submit that the browser's constraint validation blocks isn't counted unless `noHtml5Validate` is set. While a promise is pending, though, a click on the form's own submit button, Enter in a field that clicks it, and `submit()` are counted even without it, since the form ignores them before that validation would run.
+
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
@@ -879,9 +888,7 @@ Dictionary of registered templates in the form. See [Custom Templates](../advanc
 
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
 
-Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
-
-Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a new `schema` is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
+Pass a stable reference and keep it pure, as for [`customValidate`](#customvalidate).
 
 ## transformChange
 

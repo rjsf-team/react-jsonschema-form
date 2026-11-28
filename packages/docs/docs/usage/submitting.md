@@ -280,7 +280,16 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
 
 To render from `dirty`, keep it in state from `onChange`. `onChange` fires for every edit and for the reset after a save, so the state follows the user's changes. A prop change, such as a new `schema` filling in a default, updates the status without calling `onChange`; if your form's props change while it is shown, read `getStatus().dirty` after passing them as well. A field typed into and cleared counts as changed, see `dirty` above, so the button stays available after that.
 
-Mark the default submit button `aria-disabled` through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions), and cancel its click while nothing has changed, as the form does while a save is pending, see [A pending submission](#a-pending-submission). Don't pass `disabled`: the save makes the form clean, and the browser moves focus away from a focused button that becomes disabled, so a keyboard user who saved with it would lose their place. Canceling the click also stops Enter pressed in a field, which clicks the button, and keeps the browser's constraint validation from running. `FormRef.submit()` doesn't click the button, so check `getStatus().dirty` before calling it. While a save is pending, the form marks the button `aria-disabled` and cancels its click whatever you pass, and still calls your `onClick`:
+Mark the default submit button `aria-disabled` through [`ui:submitButtonOptions`](../api-reference/uiSchema.md#submitbuttonoptions), and cancel its click while nothing has changed, as the form does while a save is pending, see [A pending submission](#a-pending-submission).
+
+Don't pass `disabled`: the save makes the form clean, and the browser moves focus away from a focused button that becomes disabled, so a keyboard user who saved with it would lose their place.
+
+Canceling the click also:
+
+- stops Enter pressed in a field, which clicks the button;
+- keeps the browser's constraint validation from running.
+
+`FormRef.submit()` doesn't click the button, so check `getStatus().dirty` before calling it. While a save is pending, the form marks the button `aria-disabled` and cancels its click whatever you pass, and still calls your `onClick`:
 
 ```tsx
 function PersonForm({ person }: { person: Person }) {
