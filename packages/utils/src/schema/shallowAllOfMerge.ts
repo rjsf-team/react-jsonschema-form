@@ -11,6 +11,7 @@ import { createDeduplicator, createIntersector } from '@x0k/json-schema-merge/li
 import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
 
 import { patternRegExp } from '../additionalPropertiesUtils.ts';
+import { getByPath } from '../pathUtils.ts';
 
 const { compareSchemaDefinitions, compareSchemaValues } = createComparator();
 
@@ -398,20 +399,32 @@ function withoutClosedAdditionalProperties(
   return result;
 }
 
-/** Whether an `unevaluatedProperties: false` of `entry` rejects the keys none of the subschemas the entry applies to
- * its own value, nor an `if` among them to its own, `declares`. An `additionalProperties` or `unevaluatedProperties`
- * among them sees every key, and a `$ref`, which isn't resolved here, is read as declaring them
+/** Returns the subschemas `entry` applies to its own value, and those an `if` among them applies to its own, or
+ * undefined where one of them sees every key: it holds an `additionalProperties` or, the entry aside, an
+ * `unevaluatedProperties` that takes keys, so one other than `false`, or a `$ref`, which isn't resolved here and is read
+ * as declaring every key
+ */
+function seenBy(entry: JSONSchema7): JSONSchema7[] | undefined {
+  const subschemas = withInPlaceSubschemas(entry).flatMap((subschema) => [
+    subschema,
+    ...(isObjectSchema(subschema.if) ? withInPlaceSubschemas(subschema.if) : []),
+  ]);
+  const takesKeys = (value: unknown) => value != null && value !== false;
+  return subschemas.some(
+    (subschema) =>
+      takesKeys(subschema.additionalProperties) ||
+      (subschema !== entry && takesKeys(Reflect.get(subschema, 'unevaluatedProperties'))) ||
+      IN_PLACE_KEYS.slice(-3).some((ref) => Reflect.get(subschema, ref) !== undefined),
+  )
+    ? undefined
+    : subschemas;
+}
+
+/** Whether an `unevaluatedProperties` of `entry` reaches the keys none of the subschemas the entry sees (see
+ * `seenBy()`) `declares`
  */
 function rejects(entry: JSONSchema7, declares: (subschema: JSONSchema7) => boolean): boolean {
-  return !withInPlaceSubschemas(entry)
-    .flatMap((subschema) => [subschema, ...(isObjectSchema(subschema.if) ? withInPlaceSubschemas(subschema.if) : [])])
-    .some(
-      (subschema) =>
-        subschema.additionalProperties != null ||
-        (subschema !== entry && Reflect.get(subschema, 'unevaluatedProperties') !== undefined) ||
-        IN_PLACE_KEYS.slice(-3).some((ref) => Reflect.get(subschema, ref) !== undefined) ||
-        declares(subschema),
-    );
+  return seenBy(entry)?.some(declares) === false;
 }
 
 /** Returns `record` without the keys one of `closers` rejects (see `rejects()`), or undefined where none is left */
@@ -454,6 +467,66 @@ function withoutRejected(open: JSONSchema7Definition, closers: readonly JSONSche
   return { ...rest, ...Object.fromEntries(Object.entries(seen).filter(([, value]) => value !== undefined)) };
 }
 
+/** Returns `open` with the keys `closer` doesn't declare meeting the schema its `unevaluatedProperties` holds, which
+ * sees only the closer's own subschemas: a property or pattern of `open` that none of them declares is merged with that
+ * schema, to `false` where it can't meet it, and so is an `additionalProperties` of `open`
+ */
+function meeting(open: JSONSchema7, closer: JSONSchema7): JSONSchema7 {
+  const seen = seenBy(closer);
+  if (seen === undefined) {
+    return open;
+  }
+  const declared = (keyword: 'properties' | 'patternProperties') =>
+    Object.fromEntries(seen.flatMap((subschema) => Object.keys(subschema[keyword] ?? {})).map((key) => [key, {}]));
+  const closing: JSONSchema7 = { properties: declared('properties'), patternProperties: declared('patternProperties') };
+  Reflect.set(closing, 'unevaluatedProperties', Reflect.get(closer, 'unevaluatedProperties'));
+  // An `unevaluatedProperties` the schema keeps as a keyword stays one, rather than being read as closing its keys
+  const { unevaluatedProperties, ...bare } = open as JSONSchema7 & { unevaluatedProperties?: JSONSchema7Definition };
+  const merged = mergeArrayOfSchemaDefinitions([bare, closing]) as JSONSchema7;
+  // The merge adds the keys the closer declares and the schema it holds, which stay the closer's
+  const own = (keyword: 'properties' | 'patternProperties') =>
+    open[keyword] && {
+      [keyword]: Object.fromEntries(Object.keys(open[keyword]).map((key) => [key, getByPath(merged, [keyword, key])])),
+    };
+  const { properties: _properties, patternProperties: _patterns, additionalProperties, ...rest } = merged;
+  return {
+    ...rest,
+    ...own('properties'),
+    ...own('patternProperties'),
+    ...(open.additionalProperties !== undefined && { additionalProperties }),
+    ...(unevaluatedProperties !== undefined && { unevaluatedProperties }),
+  };
+}
+
+/** Returns the schemas of `entries` as written whose `unevaluatedProperties` closes keys beside no
+ * `additionalProperties` of their own
+ */
+function closersOf(entries: readonly JSONSchema7[]): JSONSchema7[] {
+  return entries
+    .map((entry) => partial.get(entry) ?? entry)
+    .filter((entry) => {
+      const unevaluated: unknown = Reflect.get(entry, 'unevaluatedProperties');
+      return (
+        (typeof unevaluated === 'boolean' || isObjectSchema(unevaluated)) &&
+        !isAllowAnySchema(unevaluated) &&
+        entry.additionalProperties == null
+      );
+    });
+}
+
+/** Returns `open` as `closers` leave it (see `closersOf()`): without the keys an `unevaluatedProperties: false` rejects
+ * (see `withoutRejected()`), and with those one holding a schema reaches meeting it (see `meeting()`)
+ */
+function closedBy(open: JSONSchema7Definition, closers: readonly JSONSchema7[]): JSONSchema7Definition {
+  const isFalse = (closer: JSONSchema7) => Reflect.get(closer, 'unevaluatedProperties') === false;
+  return closers
+    .filter((closer) => !isFalse(closer))
+    .reduce(
+      (result, closer) => (typeof result === 'object' ? meeting(result, closer) : result),
+      withoutRejected(open, closers.filter(isFalse)),
+    );
+}
+
 /** Shared `@x0k/json-schema-merge` shallow-allOf merge function used by `retrieveSchema` and
  * `omitExtraData`. Constructed once from a single comparator/merger/intersector/deduplicator
  * pipeline so both consumers share the same configuration without duplicating setup code.
@@ -489,11 +562,7 @@ export default function shallowAllOfMerge(schema: JSONSchema7Definition): JSONSc
   // An entry's `unevaluatedProperties: false` the merge kept as a keyword lands on the merged schema, where it would
   // read as seeing the keys the other entries declare. An option a merge of lists builds is read the same way, see
   // `mergeOptionLists()`
-  const closers = objects
-    .filter((entry) => rewriteUnevaluated(entry) === entry)
-    .map((entry) => partial.get(entry) ?? entry)
-    .filter((entry) => Reflect.get(entry, 'unevaluatedProperties') === false && entry.additionalProperties == null);
-  open = withoutRejected(open, closers);
+  open = closedBy(open, closersOf(objects.filter((entry) => rewriteUnevaluated(entry) === entry)));
   return unevaluatedProperties === undefined || seesNothing || typeof open === 'boolean'
     ? open
     : { ...open, unevaluatedProperties };
@@ -539,8 +608,8 @@ export function mergedPair(
  * under one keyword: each option of the first merged with each of the next's, a list at a time and in their order, a
  * pair that can't merge left out and one equal to an option already kept dropped, as the merge combines them. Merged
  * here, each keeps the options it was built from, and each pair keeps an `additionalProperties: true` the merge would
- * drop. A pair is left without the keys an `unevaluatedProperties: false` of `closers` rejects (see `withoutRejected()`),
- * since it sees only the closer's own subschemas, the options of a list it holds included.
+ * drop. A pair is left as the `unevaluatedProperties` of `closers` leave it (see `closedBy()`), since each sees only the
+ * closer's own subschemas, the options of a list it holds included.
  *
  * @param first - The first list, in the order their schemas are merged
  * @param rest - The lists after it
@@ -570,9 +639,7 @@ export function mergeOptionLists(
   closers: readonly JSONSchema7[] = [],
 ): MergedOption[] | undefined {
   const outside = inPlaceResolved(beside, resolve);
-  const closing = closers
-    .map((closer) => partial.get(closer) ?? closer)
-    .filter((closer) => Reflect.get(closer, 'unevaluatedProperties') === false && closer.additionalProperties == null);
+  const closing = closersOf(closers);
   // A `$ref` the pair can't follow, one declaring a property outside any followed definition, is read as closing it
   const unchecked = beside.flatMap(withInPlaceSubschemas);
   let merged: MergedOption[] = first.map((option) => ({ option, sources: [option] }));
@@ -580,8 +647,13 @@ export function mergeOptionLists(
     const next: MergedOption[] = [];
     for (const left of merged) {
       for (const right of list) {
-        const paired = pair(left.option, right, outside, unchecked, resolve);
-        const option = paired === undefined ? undefined : withoutRejected(paired, closing);
+        let option = pair(left.option, right, outside, unchecked, resolve);
+        try {
+          option = option === undefined ? undefined : closedBy(option, closing);
+        } catch {
+          // A closer the pair can't be read against, as one holding a pattern that is no regular expression, rejects it
+          option = undefined;
+        }
         if (
           option !== undefined &&
           !(dropEqual && next.some((kept) => compareSchemaDefinitions(kept.option, option) === 0))
