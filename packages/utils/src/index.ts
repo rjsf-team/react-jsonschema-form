@@ -9,6 +9,7 @@ import asNumber from './asNumber.ts';
 import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import createErrorHandler from './createErrorHandler.ts';
+import createFieldTitleLookup from './createFieldTitleLookup.ts';
 import createRootSchemaGuard from './createRootSchemaGuard.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
@@ -61,14 +62,13 @@ import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
 import type { FieldLabelSources } from './getFieldLabel.ts';
 import getFieldLabel from './getFieldLabel.ts';
-import getFieldSchemaPath from './getFieldSchemaPath.ts';
+import getFieldTitle from './getFieldTitle.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getGroupAttributes from './getGroupAttributes.ts';
 import type { GroupRole } from './getGroupAttributes.ts';
 import getGroupLabelling from './getGroupLabelling.ts';
 import getInheritedOptionUiSchema from './getInheritedOptionUiSchema.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
-import getKeywordParentSchema from './getKeywordParentSchema.ts';
 import getLabelId from './getLabelId.ts';
 import getOptionSelectorSchema from './getOptionSelectorSchema.ts';
 import getOptionUiSchema, { selectOptionUiSchema, withoutFieldOptions } from './getOptionUiSchema.ts';
@@ -88,7 +88,6 @@ import getTemplates from './getTemplates.ts';
 import getTestIds from './getTestIds.ts';
 import getUiOptions from './getUiOptions.ts';
 import getUnionTypes from './getUnionTypes.ts';
-import getValidatorErrorUiTitle from './getValidatorErrorUiTitle.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import {
   DEFAULT_BOOLEAN_WIDGET,
@@ -344,6 +343,7 @@ export {
   callerInputProps,
   callWithDeferredThrow,
   createErrorHandler,
+  createFieldTitleLookup,
   createRootSchemaGuard,
   createSchemaUtils,
   DateElement,
@@ -394,7 +394,6 @@ export {
   getExampleSuggestions,
   getFieldClassNames,
   getFieldLabel,
-  getFieldSchemaPath,
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getFreePropertyNames,
@@ -403,7 +402,6 @@ export {
   getInheritedOptionUiSchema,
   getItemUiSchemaForItem,
   getItemsUiSchemaKey,
-  getKeywordParentSchema,
   getLabelId,
   getMatchingPatternProperties,
   getOptionalDataControlsType,
@@ -425,7 +423,6 @@ export {
   getTestIds,
   getUiOptions,
   getUnionTypes,
-  getValidatorErrorUiTitle,
   getWidgetDescription,
   getWidgetType,
   getXxxOfKey,
@@ -552,6 +549,10 @@ export {
  * own packages, `prefixItems` included
  */
 export { allowAdditionalItems, isFixedItems };
+/** @public The title the form labels one field with, which the validator packages read for many fields at once through
+ * `createFieldTitleLookup()`
+ */
+export { getFieldTitle };
 /** @public Set from an app's development entry point or a test setup to make chosen warnings throw, which no other RJSF
  * package's source does
  */

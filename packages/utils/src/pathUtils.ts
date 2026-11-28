@@ -67,7 +67,7 @@ function normalizePath(path: ObjectPath): FieldPathList {
 }
 
 /** Determines whether a path segment represents a valid array index */
-export function isIndex(segment: string | number): boolean {
+function isIndex(segment: string | number): boolean {
   return typeof segment === 'number' ? Number.isInteger(segment) && segment >= 0 : reIsIndex.test(segment);
 }
 

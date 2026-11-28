@@ -1,4 +1,5 @@
 import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import { createFieldTitleLookup } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
@@ -6,6 +7,8 @@ import processRawValidationErrors, {
   transformRJSFValidationErrors,
 } from '../src/processRawValidationErrors.ts';
 import type { CFWorkerValidationError } from '../src/types.ts';
+
+const context = { validator: customizeValidator() };
 
 function rawError(overrides: Partial<CFWorkerValidationError> = {}): CFWorkerValidationError {
   return {
@@ -42,9 +45,7 @@ describe('transformRJSFValidationErrors()', () => {
           error: 'Instance does not have required property "value".',
         }),
       ],
-      undefined,
-      undefined,
-      schema,
+      createFieldTitleLookup(context, schema),
     );
     expect(errors[0]).toEqual(
       expect.objectContaining({
@@ -57,6 +58,7 @@ describe('transformRJSFValidationErrors()', () => {
   });
 
   it('prefers the uiSchema title for required errors', () => {
+    const uiSchema: UiSchema = { nested: { value: { 'ui:title': 'UI value' } } };
     const errors = transformRJSFValidationErrors(
       [
         rawError({
@@ -66,9 +68,12 @@ describe('transformRJSFValidationErrors()', () => {
           error: 'Instance does not have required property "value".',
         }),
       ],
-      { nested: { value: { 'ui:title': 'UI value' } } },
-      undefined,
-      { properties: { nested: { properties: { value: { title: 'Schema value' } } } } },
+      createFieldTitleLookup(
+        context,
+        { properties: { nested: { properties: { value: { title: 'Schema value' } } } } },
+        undefined,
+        uiSchema,
+      ),
     );
     expect(errors[0]).toEqual(
       expect.objectContaining({
@@ -89,9 +94,7 @@ describe('transformRJSFValidationErrors()', () => {
           error: 'Instance does not have required property "value".',
         }),
       ],
-      undefined,
-      undefined,
-      { properties: { nested: { properties: { value: { title: 'Nested value' } } } } },
+      createFieldTitleLookup(context, { properties: { nested: { properties: { value: { title: 'Nested value' } } } } }),
     );
     expect(errors[0].title).toBe('Nested value');
   });
@@ -138,12 +141,15 @@ describe('transformRJSFValidationErrors()', () => {
   });
 
   it('uses uiSchema and schema titles for non-required errors', () => {
-    const uiErrors = transformRJSFValidationErrors([rawError()], { value: { 'ui:title': 'UI value' } });
+    const schema: RJSFSchema = { properties: { value: { title: 'Schema value' } } };
+    const uiSchema: UiSchema = { value: { 'ui:title': 'UI value' } };
+    const uiErrors = transformRJSFValidationErrors(
+      [rawError()],
+      createFieldTitleLookup(context, schema, undefined, uiSchema),
+    );
     expect(uiErrors[0].stack).toBe("'UI value' Instance type is invalid.");
 
-    const schemaErrors = transformRJSFValidationErrors([rawError()], undefined, undefined, {
-      properties: { value: { title: 'Schema value' } },
-    });
+    const schemaErrors = transformRJSFValidationErrors([rawError()], createFieldTitleLookup(context, schema));
     expect(schemaErrors[0].stack).toBe("'Schema value' Instance type is invalid.");
 
     const untitled = transformRJSFValidationErrors([rawError()]);
@@ -397,7 +403,7 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
-    it('reads the anyOf branch of a $ref schema whose definition holds anyOf too from the $ref schema', () => {
+    it("names a property of a $ref schema's anyOf option, whose definition holds anyOf too, by the option the form shows for the data", () => {
       const schema: RJSFSchema = {
         $defs: { T: { type: 'object', anyOf: [{ properties: { z: {} } }, { properties: { y: {} } }] } },
         type: 'object',
@@ -405,17 +411,18 @@ describe('transformRJSFValidationErrors()', () => {
           a: {
             $ref: '#/$defs/T',
             anyOf: [
-              { properties: { m: { title: 'W0' }, n: { title: 'Wrong' } }, required: ['m'] },
-              { properties: { n: { type: 'string', title: 'W1' } }, required: ['n'] },
+              { properties: { m: { title: 'W0' }, n: { title: 'Shown N' } }, required: ['m'] },
+              { properties: { n: { type: 'string', title: 'Other N' } }, required: ['n'] },
             ],
           },
         },
       };
+      // Neither data meets the second option better than the first, so the form shows the first, labelling `n` by it
       const missing = customizeValidator().validateFormData({ a: {} }, schema).errors;
-      expect(missing.find((error) => error.property === '.a.n')).toEqual(expect.objectContaining({ title: 'W1' }));
+      expect(missing.find((error) => error.property === '.a.n')).toEqual(expect.objectContaining({ title: 'Shown N' }));
       const typed = customizeValidator().validateFormData({ a: { n: 5 } }, schema).errors;
       expect(typed.find((error) => error.property === '.a.n' && error.name === 'type')).toEqual(
-        expect.objectContaining({ title: 'W1' }),
+        expect.objectContaining({ title: 'Shown N' }),
       );
     });
 
@@ -468,7 +475,7 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
-    it('names a property in the $ref schema’s own anyOf branch, under a property its target declares too, by that branch', () => {
+    it('names a property in the $ref schema’s own anyOf branch, under a property its target declares too, by the option the form shows for the data', () => {
       const schema: RJSFSchema = {
         $defs: {
           T: {
@@ -483,8 +490,8 @@ describe('transformRJSFValidationErrors()', () => {
             properties: {
               n: {
                 anyOf: [
-                  { properties: { m: { title: 'M' }, q: { title: 'Wrong Q' } }, required: ['m'] },
-                  { properties: { q: { type: 'string', title: 'Right Q' } }, required: ['q'] },
+                  { properties: { m: { title: 'M' }, q: { title: 'Shown Q' } }, required: ['m'] },
+                  { properties: { q: { type: 'string', title: 'Other Q' } }, required: ['q'] },
                 ],
               },
             },
@@ -497,8 +504,8 @@ describe('transformRJSFValidationErrors()', () => {
           .validateFormData(formData, schema)
           .errors.filter((error) => error.property === '.a.n.q')
           .map(({ name, title }) => ({ name, title }));
-      expect(titlesOfQ({ a: { n: {} } })).toEqual([{ name: 'required', title: 'Right Q' }]);
-      expect(titlesOfQ({ a: { n: { q: 5 } } })).toEqual([{ name: 'type', title: 'Right Q' }]);
+      expect(titlesOfQ({ a: { n: {} } })).toEqual([{ name: 'required', title: 'Shown Q' }]);
+      expect(titlesOfQ({ a: { n: { q: 5 } } })).toEqual([{ name: 'type', title: 'Shown Q' }]);
     });
 
     it('titles the $ref error of a $ref schema whose merge with its target fails by the $ref schema, as its other errors', () => {

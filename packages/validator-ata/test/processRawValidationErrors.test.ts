@@ -6,6 +6,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
+import { createFieldTitleLookup } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
@@ -21,6 +22,7 @@ import processRawValidationErrors, {
  * the cases here target the post-validation transformation surface only.
  */
 const stubValidator = customizeValidator() as unknown as ValidatorType;
+const context = { validator: stubValidator };
 
 const ataError = (over: Partial<ValidationError> = {}): ValidationError => ({
   keyword: 'required',
@@ -116,12 +118,13 @@ describe('transformRJSFValidationErrors()', () => {
       }),
     ];
     const uiSchema: UiSchema = { name: { 'ui:title': 'Full Name' } };
-    const out = transformRJSFValidationErrors(errors, uiSchema);
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, undefined, uiSchema));
     expect(out[0].message).toContain('Full Name');
     expect(out[0].title).toBe('Full Name');
   });
 
-  it('falls back to schemaPath-derived uiSchema title', () => {
+  it('reads the uiSchema entry of the anyOf option shown for the data', () => {
     const errors: ValidationError[] = [
       ataError({
         instancePath: '/user',
@@ -130,23 +133,30 @@ describe('transformRJSFValidationErrors()', () => {
       }),
     ];
     const uiSchema: UiSchema = { user: { anyOf: [{ name: { 'ui:title': 'User Name' } }] } };
-    const out = transformRJSFValidationErrors(errors, uiSchema);
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        user: { type: 'object', anyOf: [{ properties: { name: { type: 'string' } }, required: ['name'] }] },
+      },
+    };
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, { user: {} }, uiSchema));
     expect(out[0].title).toBe('User Name');
   });
 
-  it('falls back to parentSchema property title when uiSchema is empty', () => {
+  it("names a missing property by its field's schema title, not the parentSchema ata hands over", () => {
     const errors: ValidationError[] = [
       ataError({
         params: { missingProperty: 'name' },
-        parentSchema: { properties: { name: { title: 'Schema Title' } } },
+        parentSchema: { properties: { name: { title: 'Parent Title' } } },
       }),
     ];
-    const out = transformRJSFValidationErrors(errors);
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Schema Title' } } };
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema));
     expect(out[0].title).toBe('Schema Title');
     expect(out[0].message).toContain('Schema Title');
   });
 
-  it('falls back to uiSchema title via instance path when schemaPath contains non-property segments (e.g. allOf)', () => {
+  it('reads the ui:title at the data path when an allOf requires the property', () => {
     const errors: ValidationError[] = [
       ataError({
         instancePath: '',
@@ -156,13 +166,18 @@ describe('transformRJSFValidationErrors()', () => {
         parentSchema: { required: ['animal'] },
       }),
     ];
-    const uiSchema: UiSchema = { animal: { title: 'My animal uiSchema' } };
-    const out = transformRJSFValidationErrors(errors, uiSchema);
+    const uiSchema: UiSchema = { animal: { 'ui:title': 'My animal uiSchema' } };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { animal: { enum: ['Cat'] } },
+      allOf: [{ required: ['animal'] }],
+    };
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, undefined, uiSchema));
     expect(out[0].title).toBe('My animal uiSchema');
     expect(out[0].message).toContain('My animal uiSchema');
   });
 
-  it('falls back to root schema title when parentSchema lacks properties (e.g. allOf)', () => {
+  it("reads the field's schema title when an allOf requires the property", () => {
     const errors: ValidationError[] = [
       ataError({
         instancePath: '',
@@ -177,7 +192,7 @@ describe('transformRJSFValidationErrors()', () => {
       properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
       allOf: [{ required: ['animal'] }],
     };
-    const out = transformRJSFValidationErrors(errors, undefined, undefined, schema);
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema));
     expect(out[0].title).toBe('My animal');
     expect(out[0].message).toContain('My animal');
   });
@@ -193,12 +208,13 @@ describe('transformRJSFValidationErrors()', () => {
       },
     ];
     const uiSchema: UiSchema = { email: { 'ui:title': 'Email Address' } };
-    const out = transformRJSFValidationErrors(errors, uiSchema);
+    const schema: RJSFSchema = { type: 'object', properties: { email: { type: 'string', title: 'Email' } } };
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, undefined, uiSchema));
     expect(out[0].title).toBe('Email Address');
     expect(out[0].stack).toContain('Email Address');
   });
 
-  it('uses parentSchema title at the property level when uiSchema is empty', () => {
+  it("uses the field's schema title at the property level, not the parentSchema ata hands over", () => {
     const errors: ValidationError[] = [
       {
         keyword: 'minLength',
@@ -209,8 +225,9 @@ describe('transformRJSFValidationErrors()', () => {
         parentSchema: { title: 'Parent Email' },
       },
     ];
-    const out = transformRJSFValidationErrors(errors);
-    expect(out[0].title).toBe('Parent Email');
+    const schema: RJSFSchema = { type: 'object', properties: { email: { type: 'string', title: 'Email' } } };
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema));
+    expect(out[0].title).toBe('Email');
   });
 
   it('appends params.missingProperty into the property path when instancePath is non-empty', () => {
@@ -351,8 +368,7 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
-    // ata leaves the `$ref` out of the path, so `/allOf/0` can name either list's first branch
-    it('gives no title to an error under a $ref whose schema and target both hold an allOf', () => {
+    it("names an error under a $ref whose schema and target both hold an allOf by the field's label", () => {
       const target: RJSFSchema = {
         type: 'object',
         allOf: [{ properties: { n: { type: 'string', title: 'Target' } } }],
@@ -363,7 +379,9 @@ describe('transformRJSFValidationErrors()', () => {
         properties: { a: { $ref: '#/$defs/T', allOf: [{ properties: { n: { title: 'Own' } } }] } },
       };
       const { errors } = customizeValidator().validateFormData({ a: { n: 5 } }, schema);
-      expect(errors).toEqual([expect.objectContaining({ property: '.a.n', title: '', stack: '.a.n must be string' })]);
+      expect(errors).toEqual([
+        expect.objectContaining({ property: '.a.n', title: 'Own', stack: "'Own' must be string" }),
+      ]);
     });
 
     it.each<[string, RJSFSchema, unknown, string[]]>([
@@ -487,7 +505,7 @@ describe('transformRJSFValidationErrors()', () => {
       expect(errors.map(({ title }) => title)).toEqual(['Wrapper', 'Wrapper']);
     });
 
-    it('names an error from the target’s allOf branch, or of a keyword only the target holds, where merging fails', () => {
+    it('names an error from the target’s allOf branch, or of a keyword only the target holds, by the field’s own title where merging fails', () => {
       const schema: RJSFSchema = {
         $defs: {
           T: { type: 'number', title: 'T', allOf: [{ title: 'T0', minimum: 5 }] },
@@ -502,7 +520,7 @@ describe('transformRJSFValidationErrors()', () => {
       const { errors } = customizeValidator().validateFormData({ a: 3, b: { z: 1 } }, schema);
       expect(errors.map(({ name, title }) => [name, title])).toEqual(
         expect.arrayContaining([
-          ['minimum', 'T0'],
+          ['minimum', 'W'],
           ['additionalProperties', 'W'],
         ]),
       );
@@ -536,7 +554,7 @@ describe('transformRJSFValidationErrors()', () => {
       );
     });
 
-    it('names an error from an allOf branch further along a $ref chain whose merge fails there', () => {
+    it('names an error from an allOf branch further along a $ref chain whose merge fails there by the field’s own title', () => {
       const schema: RJSFSchema = {
         $defs: {
           T: { $ref: '#/$defs/U', type: 'string', title: 'T' },
@@ -546,7 +564,7 @@ describe('transformRJSFValidationErrors()', () => {
         properties: { a: { $ref: '#/$defs/T', title: 'W' } },
       };
       const { errors } = customizeValidator().validateFormData({ a: 3 }, schema);
-      expect(errors.find(({ name }) => name === 'minimum')?.title).toBe('U0');
+      expect(errors.find(({ name }) => name === 'minimum')?.title).toBe('W');
     });
 
     it('names a missing property from the $ref schema’s own allOf branch where its target also holds one', () => {
@@ -584,7 +602,7 @@ describe('transformRJSFValidationErrors()', () => {
       // Merging warns that the two `n` schemas conflict, then falls back to an `allOf` of both
       setupConsoleWarnSuppression();
 
-      it('names a missing property from the $ref schema’s own allOf branch', () => {
+      it('names a missing property the $ref schema’s own allOf branch requires by the title the $ref schema declares it with', () => {
         const schema: RJSFSchema = {
           $defs: { T: { type: 'object', minProperties: 1, properties: { n: { type: 'number' } } } },
           type: 'object',
@@ -598,12 +616,12 @@ describe('transformRJSFValidationErrors()', () => {
         };
         const { errors } = customizeValidator().validateFormData({ a: {} }, schema);
         expect(errors.find((error) => error.property === '.a.n')).toEqual(
-          expect.objectContaining({ title: 'BranchN' }),
+          expect.objectContaining({ title: 'WrapperN' }),
         );
       });
     });
 
-    it('gives no title to a missing property a branch under a $ref whose schema and target both hold an allOf requires', () => {
+    it("names a missing property a branch under a $ref whose schema and target both hold an allOf requires by the field's label", () => {
       const target: RJSFSchema = {
         type: 'object',
         allOf: [{ properties: { b: { allOf: [{ required: ['n'] }], properties: { n: { title: 'Target' } } } } }],
@@ -620,7 +638,7 @@ describe('transformRJSFValidationErrors()', () => {
       };
       const { errors } = customizeValidator().validateFormData({ a: { b: {} } }, schema);
       expect(errors).toEqual([
-        expect.objectContaining({ property: '.a.b.n', title: '', stack: "must have required property 'n'" }),
+        expect.objectContaining({ property: '.a.b.n', title: 'Own', stack: "must have required property 'Own'" }),
       ]);
     });
 

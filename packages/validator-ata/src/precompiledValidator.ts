@@ -198,6 +198,8 @@ export default class ATAPrecompiledValidator<
       uiSchema,
       this.suppressDuplicateFiltering,
       getCustomValidateFormData,
+      // The validator checks options and conditions under its own root, whatever resolution of it `schema` is
+      this.rootSchema,
     );
   }
 

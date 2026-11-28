@@ -2170,7 +2170,7 @@ describe('AJV8Validator', () => {
             };
             const uiSchema: UiSchema = {
               animal: {
-                title: 'My animal uiSchema',
+                'ui:title': 'My animal uiSchema',
               },
             };
 
@@ -2212,7 +2212,7 @@ describe('AJV8Validator', () => {
             };
             const uiSchema: UiSchema = {
               animal: {
-                title: 'My animal uiSchema',
+                'ui:title': 'My animal uiSchema',
               },
             };
 
@@ -2502,7 +2502,7 @@ describe('AJV8Validator', () => {
             );
           });
         });
-        describe('ui:title is in validation message when it is defined in definitions', () => {
+        describe("ui:title under uiSchema.definitions isn't in validation message, as the form doesn't label a field with it", () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
               definitions: {
@@ -2555,7 +2555,7 @@ describe('AJV8Validator', () => {
 
             const expected = [
               "must have required property 'uiSchema Billing Address'",
-              "must have required property 'uiSchema City'",
+              "must have required property 'city'",
             ];
 
             const messages = errors.map((e) => e.message);
@@ -2571,9 +2571,7 @@ describe('AJV8Validator', () => {
             );
 
             expect(errorSchema.shippingAddress!.city!.__errors).toHaveLength(1);
-            expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual(
-              "must have required property 'uiSchema City'",
-            );
+            expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual("must have required property 'city'");
           });
         });
         describe('uiSchema title in validation when defined in nested field', () => {
@@ -4098,7 +4096,7 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
     ['an allOf branch', { allOf: [{ required: ['name'] }] }, {}],
     ['a then branch', { if: { required: ['flag'] }, then: { required: ['name'] } }, { flag: 1 }],
   ])(
-    'takes no title or ui:title from a root property of the same name where the root holds %s equal to the target’s',
+    'names a property by the target’s title, not a root property’s title or ui:title, where the root holds %s equal to the target’s',
     (_, branch, a) => {
       const schema: RJSFSchema = {
         $defs: {
@@ -4118,13 +4116,17 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
         uiSchema,
       );
       expect(errors.find((error) => error.name === 'required')).toEqual(
-        expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+        expect.objectContaining({
+          property: '.a.name',
+          title: 'F name',
+          message: "must have required property 'F name'",
+        }),
       );
     },
   );
 
   // The root a recursive `$ref: '#'` names is reached again only at its kids, so `.a` still doesn't lead to it
-  it('takes no ui:title from a root property of the same name where the root also names itself in a recursive $ref', () => {
+  it('names a property by the target’s title, not a root property’s ui:title, where the root also names itself in a recursive $ref', () => {
     const branch: RJSFSchema = { allOf: [{ required: ['name'] }] };
     const schema: RJSFSchema = {
       $defs: {
@@ -4148,7 +4150,11 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
       uiSchema,
     );
     expect(errors.find((error) => error.name === 'required')).toEqual(
-      expect.objectContaining({ property: '.a.name', title: '', message: "must have required property 'name'" }),
+      expect.objectContaining({
+        property: '.a.name',
+        title: 'F name',
+        message: "must have required property 'F name'",
+      }),
     );
   });
 
@@ -4446,6 +4452,36 @@ describe('an if of a field holding NaN (#5916)', () => {
     expect(retrieved.default).toBeUndefined();
     expect(getDefaultFormState({ validator }, { schema: n, formData: Number.NaN })).toBeNaN();
     expect(getDefaultFormState({ validator }, { schema: { type: 'object', properties: { n } } })).toEqual({});
+  });
+});
+
+describe('AJV8Validator naming the errors of a form root resolved for the data, as live validation passes it', () => {
+  const option: RJSFSchema = { type: 'object', properties: { x: { type: 'string', title: 'X', minLength: 3 } } };
+  const rootFor = (withId: boolean): RJSFSchema => ({
+    ...(withId ? { $id: 'https://example.com/root' } : {}),
+    type: 'object',
+    allOf: [{ properties: { a: { type: 'string', title: 'A' } } }],
+    properties: {
+      p: { oneOf: [option, { type: 'object', properties: { y: { type: 'number' } }, required: ['y'] }] },
+    },
+  });
+
+  it.each([
+    ['with an $id', true],
+    ['without one', false],
+  ])("keeps the form's root and what was compiled against it, a root %s", (_, withId) => {
+    const validator = new AJV8Validator({});
+    const root = rootFor(withId);
+    const removeSchema = vi.spyOn(validator.ajv, 'removeSchema');
+    // What a form does on each keystroke: checks an option against its root as it renders, then validates the data
+    // against its root resolved for the data
+    for (const x of ['x', 'xx', 'x', 'xx']) {
+      const formData = { a: 'a', p: { x } };
+      validator.isValid(option, formData.p, root);
+      const { errors } = validator.validateFormData(formData, retrieveSchema({ validator }, root, root, formData));
+      expect(errors).toContainEqual(expect.objectContaining({ property: '.p.x', title: 'X' }));
+    }
+    expect(removeSchema).not.toHaveBeenCalled();
   });
 });
 

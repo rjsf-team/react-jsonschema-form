@@ -12,10 +12,10 @@ import type {
 import {
   ANY_OF_KEY,
   applyValidatorErrorTitles,
+  createFieldTitleLookup,
   createErrorHandler,
   getByPath,
   getDefaultFormState,
-  getValidatorErrorUiTitle,
   ONE_OF_KEY,
   pathToProperty,
   toErrorSchema,
@@ -25,22 +25,6 @@ import {
 import type { ErrorObject } from 'ajv';
 
 import type { SuppressDuplicateFilteringType } from './types.ts';
-
-/** Returns the key a token of Ajv's `schemaPath` names. Ajv writes each key as a JSON Pointer token in a URI fragment
- * (`a/b` as `a~1b`, `a b` as `a%20b`), where the uiSchema keys it plainly
- *
- * @param token - The token of the schema path
- * @returns - The key it names
- */
-function decodeSchemaPathToken(token: string): string {
-  let decoded = token;
-  try {
-    decoded = decodeURIComponent(token);
-  } catch {
-    // An inlined `$ref` puts its own URI in the path as written, which may escape a byte that isn't UTF-8, as `%E9`
-  }
-  return unescapePointerToken(decoded);
-}
 
 /** Returns the key a JSON Pointer token names, such as a token of Ajv's `instancePath`, which isn't percent-encoded
  *
@@ -104,28 +88,24 @@ export function filterDuplicateErrors(
   }, []);
 }
 
-/** Transforming the error output from ajv to format used by @rjsf/utils.
- * At some point, components should be updated to support ajv.
+/** Transforming the error output from ajv to format used by @rjsf/utils. Each error is named by the title the form
+ * labels its field with (see `createFieldTitleLookup()`).
  *
  * @param errors - The list of AJV errors to convert to `RJSFValidationErrors`
- * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+ * @param [titleOf] - Returns the title of the field at a data path in the form the data was validated in, see
+ *        `createFieldTitleLookup()`; errors are left untitled without it
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed; see `filterDuplicateErrors`
- * @param [schema] - The schema for the validation
  */
-export function transformRJSFValidationErrors<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(
+export function transformRJSFValidationErrors(
   errors: ErrorObject[] = [],
-  uiSchema?: UiSchema<T, S, F>,
+  titleOf?: (path: string[]) => string | undefined,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
-  schema?: S,
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ErrorObject) => {
-    const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
+    const { instancePath, keyword, params, schemaPath, ...rest } = e;
     let { message = '' } = rest;
-    let property = pathToProperty(instancePath.split('/').slice(1).map(unescapePointerToken));
+    const path = instancePath.split('/').slice(1).map(unescapePointerToken);
+    let property = pathToProperty(path);
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const depNames = dependencyNames(e);
@@ -134,17 +114,9 @@ export function transformRJSFValidationErrors<
     );
 
     if (rawPropertyNames.length > 0) {
-      const applied = applyValidatorErrorTitles<T, S, F>({
-        message,
-        names: rawPropertyNames,
-        quote: "'",
-        property,
-        schemaPath,
-        decodeSchemaPathKey: decodeSchemaPathToken,
-        uiSchema,
-        parentSchema,
-        schema,
-      });
+      const applied = titleOf
+        ? applyValidatorErrorTitles({ titleOf, message, names: rawPropertyNames, quote: "'", property })
+        : { message, titles: new Map<string, string>() };
       const { titles } = applied;
       message = applied.message;
       // The error is placed on its missing property, so that is the one its `title` names
@@ -166,24 +138,10 @@ export function transformRJSFValidationErrors<
 
       stack = message;
     } else {
-      const uiSchemaTitle = getValidatorErrorUiTitle<T, S, F>({
-        property,
-        schemaPath,
-        decodeSchemaPathKey: decodeSchemaPathToken,
-        uiSchema,
-        schema,
-      });
-
-      if (uiSchemaTitle) {
-        stack = `'${uiSchemaTitle}' ${message}`.trim();
-        uiTitle = uiSchemaTitle;
-      } else {
-        const parentSchemaTitle = parentSchema?.title;
-
-        if (parentSchemaTitle) {
-          stack = `'${parentSchemaTitle}' ${message}`.trim();
-          uiTitle = parentSchemaTitle;
-        }
+      const title = titleOf?.(path);
+      if (title) {
+        stack = `'${title}' ${message}`.trim();
+        uiTitle = title;
       }
     }
 
@@ -225,6 +183,9 @@ export function transformRJSFValidationErrors<
  * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
  *        already applied. `Form` supplies it so those defaults honor its `customMergeAllOf` and
  *        `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
+ * @param [titleRootSchema=schema] - The root the data was validated against, which the fields of the errors are looked
+ *        up in: the root Ajv holds under the `schema`'s `$id`, or the one a precompiled validator was built for,
+ *        whatever `schema` it is handed
  */
 export default function processRawValidationErrors<
   T = unknown,
@@ -240,9 +201,14 @@ export default function processRawValidationErrors<
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
   getCustomValidateFormData?: () => T,
+  titleRootSchema: S = schema,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
-  let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
+  let errors = transformRJSFValidationErrors(
+    rawErrors.errors,
+    createFieldTitleLookup<T, S, F>(context, titleRootSchema, formData, uiSchema),
+    suppressDuplicateFiltering,
+  );
 
   if (invalidSchemaError) {
     errors = [...errors, { stack: invalidSchemaError.message }];

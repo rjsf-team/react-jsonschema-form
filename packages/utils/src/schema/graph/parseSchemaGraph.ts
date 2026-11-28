@@ -199,8 +199,7 @@ export function childPointer(pointer: string, tokens: readonly string[]): string
   return `${pointer}/${tokens.map(escapeToken).join('/')}`;
 }
 
-/** Returns a JSON pointer token unescaped */
-export function unescapeToken(token: string): string {
+function unescapeToken(token: string): string {
   return token.replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
