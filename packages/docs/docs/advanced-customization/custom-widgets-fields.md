@@ -36,10 +36,9 @@ const widgets: RegistryWidgetsType = {
   CheckboxWidget: CustomCheckbox,
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />;
+}
 ```
 
 This allows you to create a reusable customized form class with your custom fields and widgets:
@@ -154,10 +153,9 @@ const widgets: RegistryWidgetsType = {
   TextWidget: CustomTextWidget,
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />;
+}
 ```
 
 This creates a custom text widget that raises an error if the input value does not match 'test'.
@@ -194,7 +192,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 The following props are passed to custom widget components:
@@ -254,10 +254,9 @@ const uiSchema: UiSchema = {
   'ui:widget': 'myCustomWidget',
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />;
+}
 ```
 
 This is useful if you expose the `uiSchema` as pure JSON, which can't carry functions.
@@ -291,7 +290,9 @@ const uiSchema: UiSchema = {
 };
 
 // renders red on yellow input
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
@@ -385,10 +386,9 @@ const fields: RegistryFieldsType = { geo: GeoPosition };
 
 // Render the form with all the properties we just defined passed
 // as props
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} fields={fields} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} fields={fields} />;
+}
 ```
 
 `GeoPosition` copies `formData` into its state once, in its constructor, so it keeps showing the old values after a reset or when the parent sends new `formData`.
@@ -517,7 +517,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} fields={fields} />;
+}
 ```
 
 If you're curious how this could ever be useful, have a look at the [Kinto formbuilder](https://github.com/Kinto/formbuilder) repository to see how it's used to provide editing capabilities to any form field.
@@ -556,7 +558,9 @@ const schema: RJSFSchema = {
   items: { type: 'string' },
 };
 
-render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} fields={fields} />;
+}
 ```
 
 ### Custom Field by Id
@@ -589,7 +593,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} fields={fields} />;
+}
 ```
 
 A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.

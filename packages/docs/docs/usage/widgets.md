@@ -24,7 +24,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 Here's a list of supported alternative widgets for different JSON Schema data types:
@@ -120,7 +122,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 You can also specify negative values which will be treated relative to the current year, so if it is 2020 and the range is set as follows.
@@ -174,7 +178,9 @@ const uiSchema: UiSchema = {
   foo: { 'ui:widget': 'hidden' },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 Notes:
@@ -200,7 +206,9 @@ const schema: RJSFSchema = {
   format: 'data-url',
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 2. By specifying a `ui:widget` field uiSchema directive as `file`:

@@ -149,7 +149,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 #### Local Overrides
@@ -320,7 +322,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### autocomplete
@@ -429,7 +433,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### disabled
@@ -456,10 +462,9 @@ const schema: RJSFSchema = { type: 'string', description: '**bolded** text in th
 const uiSchema: UiSchema = {
   'ui:enableMarkdownInDescription': true,
 };
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />;
+}
 ```
 
 It can also be enabled globally by setting the `enableMarkdownInDescription` option to `true` in the `ui:globalOptions`
@@ -478,10 +483,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />;
+}
 ```
 
 ### enableMarkdownInHelp
@@ -501,10 +505,9 @@ const uiSchema: UiSchema = {
   'ui:enableMarkdownInHelp': true,
   'ui:help': '**bolded** text in the help',
 };
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />;
+}
 ```
 
 It can also be enabled globally by setting the `enableMarkdownInHelp` option to `true` in the `ui:globalOptions`
@@ -524,10 +527,9 @@ const uiSchema: UiSchema = {
   'ui:help': '**bolded** text in the help',
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />;
+}
 ```
 
 ### enableOptionalDataFieldForType
@@ -584,16 +586,17 @@ const defaultFormStateBehavior = {
   emptyObjectFields: 'populateRequiredDefaults',
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    uiSchema={uiSchema}
-    defaultFormStateBehavior={defaultFormStateBehavior}
-    templates={{ OptionalDataControlsTemplate }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      uiSchema={uiSchema}
+      defaultFormStateBehavior={defaultFormStateBehavior}
+      templates={{ OptionalDataControlsTemplate }}
+    />
+  );
+}
 ```
 
 #### Add Optional Data Controls
@@ -808,7 +811,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 They can also be omitted globally by setting the `label` option to `false` in the `ui:globalOptions` uiSchema directive.
@@ -825,7 +830,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### optgroups
@@ -874,7 +881,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### optionValueFormat
@@ -914,7 +923,9 @@ const fieldUiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### order
@@ -935,7 +946,9 @@ const uiSchema: UiSchema = {
   'ui:placeholder': 'http://',
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 Fields using `enum` can also use `ui:placeholder`. The value will be used as the text for the empty option in the select widget.
@@ -950,7 +963,9 @@ const uiSchema: UiSchema = {
   'ui:placeholder': 'Choose an option',
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### readonly
@@ -1021,7 +1036,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### title

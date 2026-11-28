@@ -17,7 +17,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Arrays of objects
@@ -40,7 +42,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## uiSchema for array items
@@ -64,7 +68,9 @@ const uiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 > NOTE: The `items` property in `uiSchema` can also accept a function for dynamic UI schema generation based on array item data. See [Dynamic UI Schema Examples](../api-reference/dynamic-ui-schema-examples.md) for advanced use cases.
@@ -101,7 +107,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Tuples with `prefixItems`
@@ -128,7 +136,9 @@ const uiSchema: UiSchema = {
 
 const validator = customizeValidator({ AjvClass: Ajv2020 });
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 The default `@rjsf/validator-ajv8` validator is draft-07 and ignores `prefixItems`, so it checks each item against `items` alone. Pass the 2020-12 Ajv class, as [`AjvClass`](../usage/validation.md#ajvclass) describes, to check each position against its own schema.
@@ -159,7 +169,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### `addable` option
@@ -183,7 +195,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### `copyable` option
@@ -208,7 +222,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### `removable` option
@@ -232,7 +248,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### `itemLabel` option
@@ -260,15 +278,16 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    initialFormData={[{ fileName: 'report.pdf' }, { fileName: 'invoice.pdf' }]}
-    validator={validator}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      uiSchema={uiSchema}
+      initialFormData={[{ fileName: 'report.pdf' }, { fileName: 'invoice.pdf' }]}
+      validator={validator}
+    />
+  );
+}
 ```
 
 A dotted path, such as `'file.name'`, reads a nested property, and `'.'` names each item by its own value, for an array of strings or numbers. Since `.`, `[` and `]` always separate the parts of the path, a property whose own key contains one of them can't name the items, and a path of only separators other than `'.'`, such as `'[]'`, names nothing. An item whose value there isn't a non-empty string or a number keeps the default titles, such as one added to an array whose items have no default for that property.
@@ -297,7 +316,9 @@ const schema: RJSFSchema = {
   uniqueItems: true,
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 By default, this will render a multiple select box. If you prefer a list of checkboxes, just set the uiSchema `ui:widget` directive to `checkboxes` for that field:
@@ -320,7 +341,9 @@ const uiSchema: UiSchema = {
   'ui:widget': 'checkboxes',
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ## Custom widgets
@@ -361,10 +384,9 @@ const widgets = {
   CustomSelect: CustomSelectComponent,
 };
 
-render(
-  <Form schema={schema} uiSchema={uiSchema} widgets={widgets} validator={validator} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} widgets={widgets} validator={validator} />;
+}
 ```
 
 ## Specifying the minimum or maximum number of items
@@ -388,7 +410,9 @@ const schema: RJSFSchema = {
   uniqueItems: true,
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 You can also specify the maximum number of items in an array using the `maxItems` property.
@@ -419,7 +443,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ## Long arrays

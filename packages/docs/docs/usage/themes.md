@@ -99,7 +99,9 @@ const layout: ClassMap = {
   objectFieldset: 'min-w-0',
 };
 
-render(<Form schema={schema} validator={validator} classMap={layout} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} classMap={layout} />;
+}
 ```
 
 The rest of `rjsf.css` lays out elements the class map has no key for, or reaches them through the markup around them: the gap between fields, the `legend` and the optional-data control in it, the array item's rows, which line its toolbox up with its field's control, the add button, the additional-property row, the cyclic-schema box and the [layout grid](./layout-grid.md)'s rows and columns.

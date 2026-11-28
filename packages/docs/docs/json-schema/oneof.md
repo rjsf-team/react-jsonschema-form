@@ -34,7 +34,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## anyOf
@@ -67,7 +69,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## allOf
@@ -90,7 +94,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 A field with a `oneOf` or `anyOf` of its own beside one in an `allOf` entry, or in the `then` or `else` written on the field that applies, offers each of its own options merged with each of the other list's, since the data has to match both.

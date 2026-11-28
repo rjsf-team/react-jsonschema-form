@@ -22,7 +22,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Titles and descriptions
@@ -41,7 +43,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Deprecated fields
@@ -59,7 +63,9 @@ const schema: RJSFSchema = {
   deprecated: true,
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 By default, RJSF will append ` (deprecated)` to the field label. You can customize this behavior using the `deprecatedHandling` option in the uiSchema. See [deprecatedHandling](../api-reference/uiSchema.md#deprecatedhandling) for more details.
@@ -77,7 +83,9 @@ const schema: RJSFSchema = {
   enum: ['one', 'two', 'three'],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ### Custom labels for `enum` fields
@@ -109,7 +117,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ```tsx
@@ -124,7 +134,9 @@ const schema: RJSFSchema = {
   ],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 If you use `enum` in your JSON Schema, you may instead specify `ui:enumNames` in your `uiSchema`, which RJSF can use to label an enumeration. `ui:enumNames` can be an array, matched by index:
@@ -142,7 +154,9 @@ const uiSchema: UiSchema = {
   'ui:enumNames': ['one', 'two', 'three'],
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 Or a map, matched by value:
@@ -160,7 +174,9 @@ const uiSchema: UiSchema = {
   'ui:enumNames': { 1: 'one', 2: 'two', 3: 'three' },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### Ordering `enum` fields
@@ -180,7 +196,9 @@ const uiSchema: UiSchema = {
   'ui:enumOrder': ['cherry', '*', 'apple'],
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ### Disabled attribute for `enum` fields
@@ -200,7 +218,9 @@ const uiSchema: UiSchema = {
   'ui:enumDisabled': [true],
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ## Nullable types
@@ -216,7 +236,9 @@ const schema: RJSFSchema = {
   type: ['string', 'null'],
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 ## Multiple types
@@ -232,7 +254,9 @@ const schema: RJSFSchema = {
   type: ['string', 'boolean', 'null'],
 };
 
-render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />;
+}
 ```
 
 The same selector, offering every JSON Schema type, is rendered for a property the schema puts no constraint on at all — an `additionalProperties: true` entry, or one whose schema is empty:
@@ -246,7 +270,9 @@ const schema: RJSFSchema = {
   additionalProperties: true,
 };
 
-render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />;
+}
 ```
 
 Switching the type converts the value that is already there where it can — a number becomes its string spelling, a string becomes the number it reads as — and starts from an empty value where it cannot, such as when switching to an object or an array, or to a number from text that reads as no number at all.

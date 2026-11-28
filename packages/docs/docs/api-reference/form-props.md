@@ -32,10 +32,9 @@ A schema that is no object, an untyped `{}` included, gets no add button, nor do
 import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
-render(
-  <Form schema={{ type: 'object' }} validator={validator} additionalPropertiesWhenAbsent='allow' />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={{ type: 'object' }} validator={validator} additionalPropertiesWhenAbsent='allow' />;
+}
 ```
 
 See [Objects naming no `additionalProperties`](../json-schema/objects.md#objects-naming-no-additionalproperties) for more.
@@ -60,10 +59,9 @@ See [Custom Themes](../advanced-customization/custom-themes.md#class-map) for mo
 import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
-render(
-  <Form schema={schema} validator={validator} classMap={{ input: 'my-input', submitButton: 'my-button' }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} classMap={{ input: 'my-input', submitButton: 'my-button' }} />;
+}
 ```
 
 ## children
@@ -81,15 +79,16 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(
-  <Form schema={schema} validator={validator}>
-    <div>
-      <button type='submit'>Submit</button>
-      <button type='button'>Cancel</button>
-    </div>
-  </Form>,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form schema={schema} validator={validator}>
+      <div>
+        <button type='submit'>Submit</button>
+        <button type='button'>Cancel</button>
+      </div>
+    </Form>
+  );
+}
 ```
 
 > **Warning:** There needs to be a button or an input with `type="submit"` to trigger the form submission (and then the form validation).
@@ -180,18 +179,19 @@ const computeSkipPopulateNumberArrays = (context, schema, rootSchema) =>
   typeof schema?.items !== 'boolean' &&
   schema?.items?.type === 'number';
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    defaultFormStateBehavior={{
-      arrayMinItems: {
-        computeSkipPopulate: computeSkipPopulateNumberArrays,
-      },
-    }}
-  />,
-  document.getElementById('app')
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      defaultFormStateBehavior={{
+        arrayMinItems: {
+          computeSkipPopulate: computeSkipPopulateNumberArrays,
+        },
+      }}
+    />
+  );
+}
 ```
 
 #### arrayMinItems.mergeExtraDefaults
@@ -225,16 +225,17 @@ const schema: RJSFSchema = {
   minItems: 3,
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    defaultFormStateBehavior={{
-      emptyObjectFields: 'populateRequiredDefaults',
-    }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      defaultFormStateBehavior={{
+        emptyObjectFields: 'populateRequiredDefaults',
+      }}
+    />
+  );
+}
 ```
 
 ### allOf
@@ -313,16 +314,17 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    defaultFormStateBehavior={{
-      allOf: 'populateDefaults',
-    }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      defaultFormStateBehavior={{
+        allOf: 'populateDefaults',
+      }}
+    />
+  );
+}
 ```
 
 ### constAsDefaults
@@ -393,16 +395,17 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    defaultFormStateBehavior={{
-      nestedDefaultsPrecedence: 'ancestorWins',
-    }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      defaultFormStateBehavior={{
+        nestedDefaultsPrecedence: 'ancestorWins',
+      }}
+    />
+  );
+}
 ```
 
 ### requiredBooleanDefault
@@ -440,16 +443,17 @@ const schema: RJSFSchema = {
   required: ['agree'],
 };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    defaultFormStateBehavior={{
-      requiredBooleanDefault: 'skip',
-    }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      defaultFormStateBehavior={{
+        requiredBooleanDefault: 'skip',
+      }}
+    />
+  );
+}
 ```
 
 ## customMergeAllOf
@@ -470,10 +474,9 @@ const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
   // Your custom implementation here
 };
 
-render(
-  <Form schema={schema} validator={validator} customMergeAllOf={customMergeAllOf} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} customMergeAllOf={customMergeAllOf} />;
+}
 ```
 
 ## disabled
@@ -489,7 +492,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} disabled />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} disabled />;
+}
 ```
 
 If you just want to disable some fields, see the `ui:disabled` parameter in `uiSchema`.
@@ -507,7 +512,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} readonly />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} readonly />;
+}
 ```
 
 If you just want to make some fields read-only, see the `ui:readonly` parameter in `uiSchema`.
@@ -549,7 +556,9 @@ const focusOnError = (error: RJSFValidationError) => {
   console.log('I need to handle focusing this error');
 };
 
-render(<Form schema={schema} validator={validator} focusOnFirstError={focusOnError} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} focusOnFirstError={focusOnError} />;
+}
 ```
 
 ## formContext
@@ -596,10 +605,9 @@ const globalOptions: GlobalUISchemaOptions<{ density?: 'compact' | 'comfortable'
 const uiSchema: UiSchema = { 'ui:globalOptions': globalOptions };
 
 // Each widget's `options.density` is 'compact', unless its own uiSchema sets another
-render(
-  <Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} globalUiOptionsKeys={['density']} />;
+}
 ```
 
 ## id
@@ -619,7 +627,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} idPrefix={'rjsf_prefix'} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} idPrefix={'rjsf_prefix'} />;
+}
 ```
 
 This will render `<input id="rjsf_prefix_key">` instead of `<input id="root_key">`
@@ -642,7 +652,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} idSeparator={'/'} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} idSeparator={'/'} />;
+}
 ```
 
 This will render `<input id="root/first">` instead of `<input
@@ -689,10 +701,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(
-  <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />;
+}
 ```
 
 You can also create a custom generator by implementing the `NameGeneratorFunction` type, which receives `path` (array of path segments), `idPrefix` (typically `'root'`), and optional `isMultiValue` (boolean for multi-value fields).
@@ -786,7 +797,9 @@ const schema: RJSFSchema = {
 };
 const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 
-render(<Form schema={schema} validator={validator} onError={onError} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} onError={onError} />;
+}
 ```
 
 ## onFocus
@@ -809,7 +822,9 @@ const schema: RJSFSchema = {
 };
 const onSubmit = ({ formData }, e) => console.log('Data submitted: ', formData);
 
-render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} onSubmit={onSubmit} />;
+}
 ```
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
@@ -832,10 +847,9 @@ import validator from '@rjsf/validator-ajv8';
 // MyLabelledWidget draws its own label, so the FieldTemplate draws none for it
 const presentation: ThemePresentation = { widgets: { MyLabelledWidget: { label: 'self' } } };
 
-render(
-  <Form schema={schema} validator={validator} widgets={{ MyLabelledWidget }} presentation={presentation} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} widgets={{ MyLabelledWidget }} presentation={presentation} />;
+}
 ```
 
 ## schema

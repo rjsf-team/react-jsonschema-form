@@ -88,10 +88,9 @@ function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ArrayFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ArrayFieldTemplate }} />;
+}
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property with your Component :
@@ -168,10 +167,9 @@ function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ArrayFieldDescriptionTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ArrayFieldDescriptionTemplate }} />;
+}
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component :
@@ -227,10 +225,9 @@ function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateProps) {
   return <div className={className}>{children}</div>;
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ArrayFieldItemTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ArrayFieldItemTemplate }} />;
+}
 ```
 
 The following props are passed to each `ArrayFieldItemTemplate`:
@@ -285,10 +282,9 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ArrayFieldItemButtonsTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ArrayFieldItemButtonsTemplate }} />;
+}
 ```
 
 The following props are passed to each `ArrayFieldItemButtonsTemplate`:
@@ -336,10 +332,9 @@ function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
   return <h1 id={titleId(id)}>{title}</h1>;
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ArrayFieldTitleTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ArrayFieldTitleTemplate }} />;
+}
 ```
 
 You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldTitleTemplate` property with your Component :
@@ -472,10 +467,9 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }} />;
+}
 ```
 
 ### Wrapping BaseInputTemplate to customize it
@@ -562,10 +556,9 @@ function CyclicSchemaExpandTemplate<T = unknown>(props: CyclicSchemaExpandProps<
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ CyclicSchemaExpandTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ CyclicSchemaExpandTemplate }} />;
+}
 ```
 
 You can also provide a per-field template via `uiSchema`:
@@ -623,10 +616,9 @@ function DescriptionFieldTemplate(props: DescriptionFieldProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />;
+}
 ```
 
 The following props are passed to the `DescriptionFieldTemplate`:
@@ -672,10 +664,9 @@ function ErrorListTemplate(props: ErrorListProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ErrorListTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ErrorListTemplate }} />;
+}
 ```
 
 The following props are passed to the `ErrorListTemplate`:
@@ -708,10 +699,9 @@ function FallbackFieldTemplate(props: FallbackFieldTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ FallbackFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ FallbackFieldTemplate }} />;
+}
 ```
 
 The following props are passed to the `FallbackFieldTemplate`:
@@ -754,10 +744,9 @@ function FieldErrorTemplate(props: FieldErrorProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ FieldErrorTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ FieldErrorTemplate }} />;
+}
 ```
 
 The following props are passed to the `FieldErrorTemplate`:
@@ -789,10 +778,9 @@ function FieldHelpTemplate(props: FieldHelpProps) {
   return <aside id={presentation?.help.id ?? helpId(id)}>{help}</aside>;
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ FieldHelpTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ FieldHelpTemplate }} />;
+}
 ```
 
 The following props are passed to the `FieldHelpTemplate`:
@@ -837,10 +825,9 @@ function CustomFieldTemplate(props: FieldTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ FieldTemplate: CustomFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ FieldTemplate: CustomFieldTemplate }} />;
+}
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property with your Component :
@@ -933,7 +920,9 @@ function GridTemplate(props: GridTemplateProps) {
   );
 }
 
-render(<Form schema={schema} validator={validator} templates={{ GridTemplate }} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ GridTemplate }} />;
+}
 ```
 
 The following props are passed to the `GridTemplate`:
@@ -960,15 +949,16 @@ import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    templates={{ MarkdownTemplate }}
-    uiSchema={{ 'ui:globalOptions': { enableMarkdownInDescription: true, enableMarkdownInHelp: true } }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      templates={{ MarkdownTemplate }}
+      uiSchema={{ 'ui:globalOptions': { enableMarkdownInDescription: true, enableMarkdownInHelp: true } }}
+    />
+  );
+}
 ```
 
 Like any template it can also be registered in a theme, or swapped per field with the `ui:MarkdownTemplate` uiSchema directive.
@@ -1034,10 +1024,9 @@ function MultiSchemaFieldTemplate(props: MultiSchemaFieldTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ MultiSchemaFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ MultiSchemaFieldTemplate }} />;
+}
 ```
 
 The following props are passed to the `MultiSchemaFieldTemplate`:
@@ -1083,10 +1072,9 @@ function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ObjectFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ObjectFieldTemplate }} />;
+}
 ```
 
 You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property with your Component :
@@ -1200,16 +1188,17 @@ function OptionalDataControlsTemplate(props: OptionalDataControlsTemplateProps) 
   return <em id={id}>{label}</em>;
 }
 
-render(
-  <Form
-    schema={schema}
-    validator={validator}
-    uiSchema={uiSchema}
-    defaultFormStateBehavior={defaultFormStateBehavior}
-    templates={{ OptionalDataControlsTemplate }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      validator={validator}
+      uiSchema={uiSchema}
+      defaultFormStateBehavior={defaultFormStateBehavior}
+      templates={{ OptionalDataControlsTemplate }}
+    />
+  );
+}
 ```
 
 The following props are passed to each `OptionalDataControlsTemplate` as defined by the `OptionalDataControlsTemplateProps` in `@rjsf/utils`:
@@ -1247,10 +1236,9 @@ function TitleFieldTemplate(props: TitleFieldProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ TitleFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ TitleFieldTemplate }} />;
+}
 ```
 
 The following props are passed to each `TitleFieldTemplate`:
@@ -1287,10 +1275,9 @@ function UnsupportedFieldTemplate(props: UnsupportedFieldProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ UnsupportedFieldTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ UnsupportedFieldTemplate }} />;
+}
 ```
 
 The following props are passed to each `UnsupportedFieldTemplate`:
@@ -1365,10 +1352,9 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ WrapIfAdditionalTemplate }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ WrapIfAdditionalTemplate }} />;
+}
 ```
 
 The following props are passed to the `WrapIfAdditionalTemplate`:
@@ -1433,10 +1419,9 @@ function AddButton(props: IconButtonProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { AddButton } }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { AddButton } }} />;
+}
 ```
 
 ### ClearButton
@@ -1467,16 +1452,17 @@ function ClearButton(props: IconButtonProps) {
   );
 }
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    formData='Clear me'
-    validator={validator}
-    templates={{ ButtonTemplates: { ClearButton } }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      uiSchema={uiSchema}
+      formData='Clear me'
+      validator={validator}
+      templates={{ ButtonTemplates: { ClearButton } }}
+    />
+  );
+}
 ```
 
 ### CopyButton
@@ -1508,16 +1494,17 @@ function CopyButton(props: IconButtonProps) {
   );
 }
 
-render(
-  <Form
-    schema={schema}
-    uiSchema={uiSchema}
-    formData={['first', 'second']}
-    validator={validator}
-    templates={{ ButtonTemplates: { CopyButton } }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      uiSchema={uiSchema}
+      formData={['first', 'second']}
+      validator={validator}
+      templates={{ ButtonTemplates: { CopyButton } }}
+    />
+  );
+}
 ```
 
 ### MoveDownButton
@@ -1545,15 +1532,16 @@ function MoveDownButton(props: IconButtonProps) {
   );
 }
 
-render(
-  <Form
-    schema={schema}
-    formData={['first', 'second']}
-    validator={validator}
-    templates={{ ButtonTemplates: { MoveDownButton } }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      formData={['first', 'second']}
+      validator={validator}
+      templates={{ ButtonTemplates: { MoveDownButton } }}
+    />
+  );
+}
 ```
 
 ### MoveUpButton
@@ -1581,15 +1569,16 @@ function MoveUpButton(props: IconButtonProps) {
   );
 }
 
-render(
-  <Form
-    schema={schema}
-    formData={['first', 'second']}
-    validator={validator}
-    templates={{ ButtonTemplates: { MoveUpButton } }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      formData={['first', 'second']}
+      validator={validator}
+      templates={{ ButtonTemplates: { MoveUpButton } }}
+    />
+  );
+}
 ```
 
 ### RemoveButton
@@ -1617,15 +1606,16 @@ function RemoveButton(props: IconButtonProps) {
   );
 }
 
-render(
-  <Form
-    schema={schema}
-    formData={['first', 'second']}
-    validator={validator}
-    templates={{ ButtonTemplates: { RemoveButton } }}
-  />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return (
+    <Form
+      schema={schema}
+      formData={['first', 'second']}
+      validator={validator}
+      templates={{ ButtonTemplates: { RemoveButton } }}
+    />
+  );
+}
 ```
 
 ### SubmitButton
@@ -1658,10 +1648,9 @@ function SubmitButton(props: SubmitButtonProps) {
   );
 }
 
-render(
-  <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { SubmitButton } }} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { SubmitButton } }} />;
+}
 ```
 
 The following props are passed to a `SubmitButton`:

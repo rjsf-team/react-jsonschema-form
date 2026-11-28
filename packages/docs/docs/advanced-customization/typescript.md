@@ -71,7 +71,9 @@ const formData: FormData = {};
 
 const validator = customizeValidator();
 
-render(<Form<FormData> schema={schema} validator={validator} initialFormData={formData} />, document.getElementById('app'));
+export default function App() {
+  return <Form<FormData> schema={schema} validator={validator} initialFormData={formData} />;
+}
 ```
 
 ### S
@@ -103,7 +105,9 @@ const schema: MySchema = {
 
 const validator = customizeValidator<MySchema>();
 
-render(<Form<FormData, MySchema> schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form<FormData, MySchema> schema={schema} validator={validator} />;
+}
 ```
 
 A subschema is still a `JSONSchema7Definition`, so a keyword declared this way type-checks on the root alone; to declare one at every depth, see [Keywords of your own](#keywords-of-your-own).
@@ -178,10 +182,9 @@ const formContext: FormContext = {
 
 const validator = customizeValidator<RJSFSchema, FormContext>();
 
-render(
-  <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />,
-  document.getElementById('app'),
-);
+export default function App() {
+  return <Form<any, RJSFSchema, FormContext> schema={schema} validator={validator} formContext={formContext} />;
+}
 ```
 
 ## Overriding generics in core

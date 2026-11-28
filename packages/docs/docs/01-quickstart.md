@@ -17,7 +17,9 @@ const schema: RJSFSchema = {
   type: 'string',
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 You can also render an object with multiple fields with the below schema:
@@ -40,7 +42,9 @@ const schema: RJSFSchema = {
   },
 };
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} validator={validator} />;
+}
 ```
 
 For more information and examples of JSON Schema properties that this library supports, see [Using JSON Schema](json-schema/single.md).
@@ -64,7 +68,9 @@ const uiSchema: UiSchema = {
   'ui:classNames': 'custom-css-class',
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 To customize object fields in the uiSchema, the structure of the
@@ -98,7 +104,9 @@ const uiSchema: UiSchema = {
   },
 };
 
-render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
+}
 ```
 
 ## Form initialization
@@ -127,7 +135,9 @@ const formData = {
   done: true,
 };
 
-render(<Form schema={schema} initialFormData={formData} validator={validator} />, document.getElementById('app'));
+export default function App() {
+  return <Form schema={schema} initialFormData={formData} validator={validator} />;
+}
 ```
 
 > Note: If your form has a single field, pass a single value to `initialFormData`. ex: `initialFormData="Charlie"`
@@ -143,11 +153,12 @@ You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`,
 `<Form />` owns its data, as an [uncontrolled input](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input) does, when you pass it `initialFormData`, which seeds it when the form mounts. Passed [`formData`](./api-reference/form-props.md#formdata) instead, it also shows each new value you pass after mount. To keep a copy of the value in your own state, store what `onChange` reports, as in the below example. To show another record, remount the form under a `key`.
 
 ```tsx
+import { useState } from 'react';
 import Form from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
 const App = () => {
-  const [formData, setFormData] = React.useState<string>();
+  const [formData, setFormData] = useState<string>();
   return (
     <Form
       schema={{ type: 'string' }}
@@ -158,7 +169,7 @@ const App = () => {
   );
 };
 
-render(<App />, document.getElementById('app'));
+export default App;
 ```
 
 ## Server components

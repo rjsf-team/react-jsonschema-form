@@ -38,7 +38,7 @@ function PersonForm() {
   );
 }
 
-render(<PersonForm />, document.getElementById('app'));
+export default PersonForm;
 ```
 
 The form does not handle a rejection for you. When the promise rejects, the form's own copy of it rejects with the same error and is reported as an unhandled rejection, even if you handle the promise you return, and it never reaches an Error Boundary. A transition is different, see [below](#with-useactionstate). Catch the error inside `onSubmit` and return a promise that resolves, as `save` does, and show the error, for example as above or as [`extraErrors`](#errors-from-the-server).
@@ -95,6 +95,8 @@ function PersonForm() {
     />
   );
 }
+
+export default PersonForm;
 ```
 
 `markSaved()` makes the saved data the baseline and keeps any edit made while the save ran, see [Making the saved data the baseline](#making-the-saved-data-the-baseline).
@@ -150,6 +152,8 @@ The action's state is a good place for errors the server reports. Return them as
       </Form>
     );
   }
+
+  export default PersonForm;
   ```
 
   Canceling the click while saving keeps the browser's constraint validation from running for a submit the form ignores. Or call `useFormStatus()` in them, and start the submission in a transition, by dispatching a `useActionState` action as above or with `startTransition`. While an async transition runs, React holds every other transition in your app until it settles. `onSubmit` returns no promise then, so the form doesn't ignore a second submit, and the button below cancels its click while pending to stop one, as the one above does. Catch the error inside the transition too: one thrown in a transition the standalone `startTransition` started reaches no Error Boundary and is reported as an uncaught error, and one thrown in a transition `useTransition` started reaches the nearest Error Boundary of the component that called `useTransition`.
@@ -175,24 +179,25 @@ The action's state is a good place for errors the server reports. Return them as
     );
   }
 
-  render(
-    <Form
-      schema={schema}
-      validator={validator}
-      onSubmit={({ formData }) =>
-        startTransition(async () => {
-          try {
-            await save(formData);
-          } catch {
-            // Show the error, as the first example does
-          }
-        })
-      }
-    >
-      <SaveButton />
-    </Form>,
-    document.getElementById('app'),
-  );
+  export default function App() {
+    return (
+      <Form
+        schema={schema}
+        validator={validator}
+        onSubmit={({ formData }) =>
+          startTransition(async () => {
+            try {
+              await save(formData);
+            } catch {
+              // Show the error, as the first example does
+            }
+          })
+        }
+      >
+        <SaveButton />
+      </Form>
+    );
+  }
   ```
 
 - **A button outside the `<form>`**, such as one in a dialog's footer that submits the form through its `form` attribute, can't read `useFormStatus()`, which only reads the `<form>` a component is rendered inside. Get the pending state from the component that owns the submission instead: `isPending` from `useActionState`, or state you keep around your own promise.
@@ -274,6 +279,8 @@ function EditPersonDialog({ person, onClose }: { person: Person; onClose: () => 
     </dialog>
   );
 }
+
+export default EditPersonDialog;
 ```
 
 ### Disabling submit when nothing changed
@@ -317,6 +324,8 @@ function PersonForm({ person }: { person: Person }) {
     />
   );
 }
+
+export default PersonForm;
 ```
 
 ## Touched fields
