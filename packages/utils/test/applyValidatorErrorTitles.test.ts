@@ -183,9 +183,10 @@ describe('applyValidatorErrorTitles()', () => {
   });
 
   // `.kids.0` is one step of the kids' `$ref: '#'` or two of `additionalProperties`', which a regular expression would
-  // split every way before failing, doubling its time with each kid: over 10 minutes at 40 kids
+  // split every way before failing, doubling its time with each kid: over 10 minutes at 40 kids. The `ui:title` along
+  // the schemaPath stops short of the kid's data path, so neither reads it
   it.each<[string, string, Map<string, string>]>([
-    ['leads to', `${'.kids.0'.repeat(40)}.q`, new Map([['name', 'Q UI name']])],
+    ['leads to', `${'.kids.0'.repeat(40)}.q`, new Map([['name', 'Q name']])],
     ['doesn’t lead to', `${'.kids.0'.repeat(40)}.zz.q.r`, new Map([['name', 'Q name']])],
   ])('reads a property where the root names itself from places that overlap a path %s', (_, property, expected) => {
     const q: RJSFSchema = { type: 'object', properties: { name: { title: 'Q name' } } };
