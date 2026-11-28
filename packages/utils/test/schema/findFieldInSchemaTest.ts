@@ -311,6 +311,16 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         expect(schemaUtils.findFieldInSchema(schema, '')).toEqual(NOT_FOUND);
         expect(schemaUtils.findFieldInSchema(schema, 'a.')).toEqual(NOT_FOUND);
       });
+      it("finds a property keyed '' a key list names", () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { '': { type: 'object', properties: { '': { type: 'string' } }, required: [''] } },
+        };
+        expect(schemaUtils.findFieldInSchema(schema, ['', ''])).toEqual({
+          field: { type: 'string' },
+          isRequired: true,
+        });
+      });
       it('does not find a key additionalProperties forbids, or one a schema says nothing about', () => {
         expect(schemaUtils.findFieldInSchema({ type: 'object', additionalProperties: false }, 'x')).toEqual(NOT_FOUND);
         expect(schemaUtils.findFieldInSchema({ type: 'object' }, 'x')).toEqual(NOT_FOUND);

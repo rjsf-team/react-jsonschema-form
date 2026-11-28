@@ -137,6 +137,58 @@ describe('an error is titled by the label the form renders for its field', () =>
       '.a.n',
       'root_a_n',
     ],
+    [
+      "the title an array hands an untitled item, from the array's title over its ui:title",
+      {
+        type: 'object',
+        properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string', minLength: 3 } } },
+      },
+      { tags: ['x'] },
+      { tags: { 'ui:title': 'Tags ui' } },
+      '.tags.0',
+      'root_tags_0',
+    ],
+    [
+      'the title an untitled array item hands an untitled item of its own',
+      {
+        type: 'object',
+        properties: {
+          m: { type: 'array', title: 'M', items: { type: 'array', items: { type: 'string', minLength: 3 } } },
+        },
+      },
+      { m: [['abc', 'x']] },
+      undefined,
+      '.m.0.1',
+      'root_m_0_1',
+    ],
+    [
+      'the title a fixed array hands an untitled position',
+      {
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        type: 'object',
+        properties: { t: { type: 'array', title: 'T', items: [{ type: 'string' }, { type: 'number', minimum: 5 }] } },
+      },
+      { t: ['a', 1] },
+      undefined,
+      '.t.1',
+      'root_t_1',
+    ],
+    [
+      "the ui:title a function-form uiSchema.items gives an item's field for its data",
+      {
+        type: 'object',
+        properties: {
+          arr: {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+          },
+        },
+      },
+      { arr: [{ name: 'x' }] },
+      { arr: { items: (item: unknown) => ({ name: { 'ui:title': `Name of ${JSON.stringify(item)}` } }) } },
+      '.arr.0.name',
+      'root_arr_0_name',
+    ],
   ])('takes %s', async (_, schema, initialFormData, uiSchema, property, id) => {
     const submitted = await submittedErrors({ schema, initialFormData, uiSchema, noHtml5Validate: true });
     const { node } = submitted;

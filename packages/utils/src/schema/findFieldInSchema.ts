@@ -45,7 +45,11 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
   holder: S,
   key: string,
 ): S | undefined {
-  const field = getFromSchema<S | undefined, S, F>(context, rootSchema, holder, [PROPERTIES_KEY, key], undefined);
+  // The key is read apart, since a property can be keyed `''`, a segment `getFromSchema()` reads as no key
+  const properties = getFromSchema<unknown, S, F>(context, rootSchema, holder, [PROPERTIES_KEY], undefined);
+  const declared = getByPath<S | undefined>(properties, [key]);
+  const field =
+    declared === undefined ? undefined : getFromSchema<S, S, F>(context, rootSchema, declared, [], declared);
   // `??` since a property YAML leaves empty is `null`, which declares nothing
   return hasSchemaMarker(field, ADDITIONAL_PROPERTY_FLAG) ? undefined : (field ?? undefined);
 }
@@ -70,8 +74,8 @@ export function findChildField<T, S extends StrictRJSFSchema, F extends FormCont
   key: string,
   data: T | undefined,
 ): FoundFieldType<S> & { origin?: FieldOrigin<S> } {
-  // A boolean subschema has no keys to find, and an empty segment, as the `a.` path leaves, names none
-  if (!isSchemaObject<S>(rawParent) || key === '') {
+  // A boolean subschema has no keys to find
+  if (!isSchemaObject<S>(rawParent)) {
     return NOT_FOUND;
   }
   // Read as the form renders it, with its `$ref`, `allOf` and the `if`/`then` its data meets merged in
@@ -146,7 +150,12 @@ export default function findFieldInSchema<
   let parent: S | undefined = schema;
   let found: FoundFieldType<S> = NOT_FOUND;
   let data = formData;
-  for (const key of (Array.isArray(path) ? path : path.split('.')).map(String)) {
+  const keys = Array.isArray(path) ? path.map(String) : path.split('.');
+  // An empty segment of a dotted path, as `a.` leaves, names no key, while a key list can name a property keyed `''`
+  if (!Array.isArray(path) && keys.includes('')) {
+    return { ...NOT_FOUND };
+  }
+  for (const key of keys) {
     found = findChildField<T, S, F>(context, rootSchema, parent, key, data);
     parent = found.field;
     data = getByPath<T>(data, key);

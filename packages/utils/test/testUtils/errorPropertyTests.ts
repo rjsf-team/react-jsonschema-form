@@ -521,6 +521,69 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       expect(fieldErrors.map((error) => error.title)).toEqual(fieldErrors.map(() => title));
     });
 
+    it.each<[string, RJSFSchema, unknown, UiSchema | undefined, string]>([
+      [
+        "a property keyed ''",
+        { type: 'object', properties: { '': { type: 'string', title: 'Empty' } } },
+        { '': 1 },
+        undefined,
+        'Empty',
+      ],
+      [
+        "a field under a property keyed ''",
+        {
+          type: 'object',
+          properties: { '': { type: 'object', properties: { name: { type: 'string', title: 'Name' } } } },
+        },
+        { '': { name: 1 } },
+        undefined,
+        'Name',
+      ],
+      [
+        "the title an array hands an untitled item, from the array's title",
+        { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        { tags: [1] },
+        { tags: { 'ui:title': 'Tags ui' } },
+        'Tags-1',
+      ],
+      [
+        'the title an untitled array hands an untitled item of its own item, from the outer array',
+        {
+          type: 'object',
+          properties: {
+            m: { type: 'array', title: 'M', items: { type: 'array', items: { type: 'string' } } },
+          },
+        },
+        { m: [['a', 1]] },
+        undefined,
+        'M-1-2',
+      ],
+      [
+        'the ui:title a function-form uiSchema.items gives an item field for its data',
+        {
+          type: 'object',
+          properties: {
+            arr: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } },
+          },
+        },
+        { arr: [{ name: 1 }] },
+        { arr: { items: (item: unknown) => ({ name: { 'ui:title': `Name of ${JSON.stringify(item)}` } }) } },
+        'Name of {"name":1}',
+      ],
+    ])('takes %s', (_, schema, formData, uiSchema, title) => {
+      const { errors } = buildValidator().validateFormData(formData, schema, undefined, undefined, uiSchema);
+      const typeErrors = errors.filter((error) => error.name === 'type');
+      expect(typeErrors).toEqual([expect.objectContaining({ title, stack: `'${title}' ${typeErrors[0]?.message}` })]);
+    });
+
+    it("takes no title for an untitled item of an untitled array, which the form labels by the array's key", () => {
+      const schema: RJSFSchema = { type: 'object', properties: { tags: { type: 'array', items: { type: 'string' } } } };
+      const { errors } = buildValidator().validateFormData({ tags: [1] }, schema);
+      expect(errors.filter((error) => error.name === 'type')).toEqual([
+        expect.objectContaining({ property: '.tags.0', title: '' }),
+      ]);
+    });
+
     it("takes no title for an option's property the option shown for the data doesn't declare", () => {
       const schema = p({
         type: 'object',

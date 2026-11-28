@@ -68,6 +68,73 @@ describe('getFieldTitle()', () => {
     ).toEqual('UI 2');
   });
 
+  it("reads a property keyed '' and the fields under it", () => {
+    const empty: RJSFSchema = {
+      type: 'object',
+      properties: { '': { type: 'object', title: 'Empty', properties: { name: { type: 'string', title: 'Name' } } } },
+    };
+    expect(titleOf(empty, [''], { '': {} })).toEqual('Empty');
+    expect(titleOf(empty, ['', 'name'], { '': {} })).toEqual('Name');
+  });
+
+  it("reads the title an array hands an untitled item, after the array's schema title, as the form does", () => {
+    const arrays: RJSFSchema = {
+      type: 'object',
+      properties: {
+        tags: { type: 'array', title: 'Tags', items: { type: 'string' } },
+        untitled: { type: 'array', items: { type: 'array', items: { type: 'string' } } },
+        nested: { type: 'array', title: 'N', items: { type: 'array', items: { type: 'string' } } },
+        named: { type: 'array', title: 'Named', items: { type: 'object', properties: { x: { type: 'string' } } } },
+      },
+    };
+    const uiSchema: UiSchema = { tags: { 'ui:title': 'Tags ui' }, untitled: { 'ui:title': 'Untitled ui' } };
+    expect(titleOf(arrays, ['tags', '1'], { tags: ['a', 'b'] }, uiSchema)).toEqual('Tags-2');
+    expect(titleOf(arrays, ['tags', '1'], { tags: ['a', 'b'] }, { tags: { items: { 'ui:title': 'UI' } } })).toEqual(
+      'UI',
+    );
+    // The form labels these items after the array's key, which is no title
+    expect(titleOf(arrays, ['untitled', '0'], { untitled: [['a']] }, uiSchema)).toBeUndefined();
+    expect(titleOf(arrays, ['untitled', '0', '0'], { untitled: [['a']] }, uiSchema)).toBeUndefined();
+    expect(titleOf(arrays, ['nested', '0', '1'], { nested: [['a', 'b']] })).toEqual('N-1-2');
+    // A property of an item is handed no title
+    expect(titleOf(arrays, ['named', '0', 'x'], { named: [{ x: 'a' }] })).toBeUndefined();
+  });
+
+  it('reads an item field under the uiSchema a function-form items returns for its data and index', () => {
+    const list: RJSFSchema = {
+      type: 'object',
+      properties: { arr: { type: 'array', items: { type: 'object', properties: { name: { type: 'string' } } } } },
+    };
+    const items = vi.fn((item: unknown, index: number) => ({
+      name: { 'ui:title': `${JSON.stringify(item)} ${index}` },
+    }));
+    expect(titleOf(list, ['arr', '1', 'name'], { arr: [{}, { name: 'b' }] }, { arr: { items } })).toEqual(
+      '{"name":"b"} 1',
+    );
+    expect(items).toHaveBeenCalledWith({ name: 'b' }, 1, undefined);
+  });
+
+  it("reports a function-form items that throws under the item's field path, as the form reports it", () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const error = new Error('items');
+    const nested: RJSFSchema = {
+      type: 'object',
+      properties: { o: { type: 'object', properties: { arr: { type: 'array', title: 'Arr', items: {} } } } },
+    };
+    const uiSchema: UiSchema = {
+      o: {
+        arr: {
+          items: () => {
+            throw error;
+          },
+        },
+      },
+    };
+    expect(titleOf(nested, ['o', 'arr', '2'], { o: { arr: [1, 2, 3] } }, uiSchema)).toEqual('Arr-3');
+    expect(consoleError).toHaveBeenCalledWith('Error executing dynamic uiSchema.items function for o.arr[2]:', error);
+    consoleError.mockRestore();
+  });
+
   it("gives an extra key no title, since the form labels it by its key, but reads its own fields' titles", () => {
     const extra: RJSFSchema = {
       type: 'object',
