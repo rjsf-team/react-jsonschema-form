@@ -172,7 +172,7 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 ### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
 
 Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
-A name's title is its `ui:title` at the error's `property`, then at it with each array index read as `items`, then, unless the root leads along the `schemaPath` to no schema at the `property`, at the `schemaPath`, then at it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
+A name's title is its `ui:title` (see [`getValidatorErrorUiTitle()`](#getvalidatorerroruititle)), then the `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch the keyword sits in, then in the root `schema`.
 A schema that is a `$ref` is read resolved, its own `title` kept over its target's and read where its `$ref` can't be merged.
 Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
 
@@ -182,7 +182,7 @@ Each name with a title is replaced, in one pass so a title that matches another 
   - message: string - The engine's message, which names each of the `names` between a pair of `quote`s
   - names: string[] - The names of the properties the message names
   - quote: "'" | '"' - The quote the engine puts around a property name, `'` or `"`
-  - property: string - The error's property path, dot-separated as RJSF writes it, `''` for the root
+  - property: string - The error's property path, as [`pathToProperty()`](#pathtoproperty) writes it, `''` for the root
   - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/required`
   - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
   - [skipsRefs]: boolean - The engine leaves every `$ref` out of the `schemaPath`, as [`getKeywordParentSchema()`](#getkeywordparentschema)'s `skipsRefs` reads it
@@ -1021,7 +1021,7 @@ A key that is missing reads as one holding `undefined`, whichever object lacks i
 So does an empty slot of an array.
 
 When `deep` is true, a field holding a nested object or a same-length array is descended into and the dotted path of the deepest field that changed is returned instead of the name of the top-level field holding it.
-A key that contains a `.` or a `[` is descended into like any other: the path it produces cannot be told apart from a path through nested keys, and neither can the entry an `ErrorSchema` keeps for it, since [toErrorSchema()](#toerrorschema) spells such a name out as a path in the same way.
+A key in the path that is empty or holds a `.`, `[` or `]` is written in brackets and single quotes, as [`pathToProperty()`](#pathtoproperty) writes it, such as `['has.dot'].inner`, so [`propertyToPath()`](#propertytopath) reads the path back.
 
 #### Parameters
 
@@ -1946,6 +1946,33 @@ A schema [`retrieveSchema()`](#retrieveschemat--unknown-s-extends-strictrjsfsche
 #### Returns
 
 - S: The schema to hand the validator
+
+### getValidatorErrorUiTitle&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getvalidatorerroruititle}
+
+Used by the validator packages to find the `ui:title` of the field an error names: of the `name` under the error's `property`, or of the `property` itself when no `name` is given.
+It is read at that field's data path, an array item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`, though a key that looks like an index is read as the key when the uiSchema holds it or the schema at that point declares it or, when known, renders as no array (see [`getSchemaType()`](#getschematype)) and has no items, and a key the uiSchema doesn't hold and the known schema doesn't declare is read from `additionalProperties`, as the form renders an additional property. A schema holding a `$ref`, `allOf`, `anyOf`, `oneOf`, `if`, `dependencies` or `dependentSchemas` isn't known, since those can declare more keys and items. The `name` is read as the key it is, never as an item or an additional property.
+A `name` with none there has it read along the `schemaPath`, where `#/properties/a/properties/b/required` points into the uiSchema at `['a', 'b']`, which reaches one under `additionalProperties`, then along it with the branches the keyword sits in removed (see [`getFieldSchemaPath()`](#getfieldschemapath)).
+The branches are kept when the root `schema` doesn't lead along the `schemaPath` to the keyword, as for a keyword in a `$ref` target Ajv compiles on its own.
+A `schemaPath` that names another property than the data path at the same level, as Ajv's does for a keyword behind a `$ref` to another property, or that stops short of the data path, as for one behind a `$ref` to the root, isn't read; one into `definitions` or `$defs` is, since every `$ref` to that definition shares its uiSchema.
+An error other than `required` doesn't read the `schemaPath`, which a `$ref` can lead into another field's uiSchema.
+An empty `ui:title` is returned as found, and the root's own `ui:title` is never read.
+A tuple's item is read from the `prefixItems` or `additionalItems` uiSchema that describes it, as the form reads it, except past a schema that isn't known, where it is read from `items`. An item that a function form of `items` gives isn't found.
+
+#### Parameters
+
+- source: object - The error's `property` and `schemaPath`, the uiSchema they point into and the schemas the path is read in:
+  - property: string - The error's property path, as [`pathToProperty()`](#pathtoproperty) writes it, `''` for the root
+  - [name]: string - The name of a property under the `property`, such as one a `required` error names
+  - schemaPath: string - The URI fragment of the JSON Pointer to the schema keyword that failed, such as `#/properties/a/type`
+  - [decodeSchemaPathKey]: (key: string) => string - Decodes a key of the `schemaPath`, for an engine that escapes them; they are read as written without it
+  - [skipsRefs]: boolean - The engine leaves every `$ref` out of the `schemaPath`, as `getKeywordParentSchema()`'s `skipsRefs` reads it
+  - [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
+  - [parentSchema]: unknown - The schema object that holds the keyword that failed, when the engine hands it over
+  - [schema]: S - The form's root schema
+
+#### Returns
+
+- string | undefined: The `ui:title` found, otherwise `undefined`
 
 ### getWidgetDescription()
 
@@ -2877,6 +2904,27 @@ Generates the `id` of an element that is part of a field, such as its descriptio
 partId('root_when', 'time'); // 'root_when__time'
 ```
 
+### pathToProperty()
+
+Writes a list of path segments as the `property` of a validation error, the reverse of [`propertyToPath()`](#propertytopath).
+Each key is written as `.key`, or in brackets and single quotes when it is empty or holds a `.`, `[` or `]`, with its `\` and `'` escaped by a backslash, so a key `a.b` and a key `a` holding `b` don't come out the same.
+
+#### Parameters
+
+- path: string[] - The list of path segments, such as `['a.b', 'name']`
+
+#### Returns
+
+- string: The `property`, such as `"['a.b'].name"`, or `''` for an empty path
+
+#### Example
+
+```typescript
+pathToProperty(['list', '0', 'name']); // '.list.0.name'
+pathToProperty(['a.b', 'name']); // "['a.b'].name"
+pathToProperty([]); // ''
+```
+
 ### pickGlobalUiOptions() {#pickglobaluioptions}
 
 Picks the options a form reads from its root uiSchema's `ui:globalOptions`: the ones RJSF reads, which `GlobalUISchemaOptionsKeys` names, and the extension keys the form's theme and the `Form` itself declare.
@@ -2897,7 +2945,8 @@ An extension key that `RESERVED_UI_OPTION_NAMES` lists is left out too, with a w
 ### propertyToPath()
 
 Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the errors it builds.
-It is [toPath()](#topath) for a `property` that may be missing: a missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path.
+It splits on `.`, `[` and `]` as [toPath()](#topath) does, but reads a key in brackets and single quotes, as [`pathToProperty()`](#pathtoproperty) writes one, whole: `"['a.b'].name"` gives `['a.b', 'name']`.
+A missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path.
 
 #### Parameters
 
@@ -2911,6 +2960,7 @@ It is [toPath()](#topath) for a `property` that may be missing: a missing `prope
 
 ```typescript
 propertyToPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
+propertyToPath("['a.b'].name"); // ['a.b', 'name']
 propertyToPath(undefined); // []
 propertyToPath('.'); // []
 ```
@@ -3499,9 +3549,9 @@ Reads a widget's `value` as a number, for a widget that draws one such as a slid
 
 ### toPath()
 
-Converts a dotted path string, such as the `property` of a validation error, into its list of path segments.
+Converts a dotted path string into its list of path segments; read the `property` of a validation error with [`propertyToPath()`](#propertytopath), which reads a key written in brackets and single quotes whole.
 Array indexes may be written bracketed (`'a[0].b'`) or dotted (`'a.0.b'`), and empty segments — from a leading `.`, a trailing `.` or a `..` run — are dropped.
-Only the grammar RJSF itself produces is supported: dots and brackets are always separators, so quoted keys are not recognized and keys containing dots must be addressed with a segment list instead of a string.
+Dots and brackets are always separators, so quoted keys are not recognized and keys containing dots must be addressed with a segment list instead of a string.
 
 #### Parameters
 
@@ -3516,7 +3566,6 @@ Only the grammar RJSF itself produces is supported: dots and brackets are always
 ```typescript
 toPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
 toPath('a.0.b'); // ['a', '0', 'b']
-getByPath(formData, toPath(error.property)); // the usual pairing with the path utilities
 ```
 
 ### uiBooleanOption()

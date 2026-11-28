@@ -204,21 +204,22 @@ describe('getChangedFields()', () => {
       const b = { outer: 'gone' };
       expect(getChangedFields(a, b, true)).toEqual(['outer']);
     });
-    it('descends into a key holding a dot, spelling the name out as part of the path', () => {
+    it('descends into a key holding a dot, writing the name in brackets as part of the path', () => {
       const a = { 'has.dot': { inner: 1, other: 2 } };
       const b = { 'has.dot': { inner: 3, other: 2 } };
       expect(getChangedFields(a, b)).toEqual(['has.dot']);
-      expect(getChangedFields(a, b, true)).toEqual(['has.dot.inner']);
+      expect(getChangedFields(a, b, true)).toEqual(["['has.dot'].inner"]);
     });
     it('descends into a key holding a bracket', () => {
       const a = { 'has[0]': { inner: 1, other: 2 } };
       const b = { 'has[0]': { inner: 3, other: 2 } };
-      expect(getChangedFields(a, b, true)).toEqual(['has[0].inner']);
+      expect(getChangedFields(a, b, true)).toEqual(["['has[0]'].inner"]);
     });
-    it('reports a key holding a dot whole when the difference cannot be narrowed', () => {
+    it('reports a key holding a dot whole, in brackets, when the difference cannot be narrowed', () => {
       const a = { 'has.dot': 1 };
       const b = { 'has.dot': 2 };
-      expect(getChangedFields(a, b, true)).toEqual(['has.dot']);
+      expect(getChangedFields(a, b)).toEqual(['has.dot']);
+      expect(getChangedFields(a, b, true)).toEqual(["['has.dot']"]);
     });
     it('reads a key that is missing as one holding undefined at any depth', () => {
       expect(getChangedFields({ outer: { one: 1 } }, { outer: { one: 1, two: undefined } }, true)).toEqual([]);
