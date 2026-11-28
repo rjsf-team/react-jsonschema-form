@@ -147,6 +147,8 @@ export type CoreUiOptionsChecks =
         removable?: boolean;
         copyable?: boolean;
         itemLabel?: string;
+        showCollapseButton?: boolean;
+        autoCollapse?: boolean;
         inline?: boolean;
         accept?: string;
         filePreview?: boolean;

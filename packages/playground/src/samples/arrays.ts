@@ -104,6 +104,17 @@ const arrays: Sample = {
           $ref: '#/definitions/Thing',
         },
       },
+      addresses: {
+        title: 'Delivery addresses',
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', title: 'Address name' },
+            street: { type: 'string', title: 'Street address' },
+          },
+        },
+      },
       unremovable: {
         title: 'Unremovable items',
         type: 'array',
@@ -175,6 +186,13 @@ const arrays: Sample = {
         itemLabel: 'name',
       },
     },
+    addresses: {
+      'ui:options': {
+        showCollapseButton: true,
+        autoCollapse: true,
+        itemLabel: 'name',
+      },
+    },
     unremovable: {
       'ui:options': {
         removable: false,
@@ -203,6 +221,10 @@ const arrays: Sample = {
     unorderable: ['one', 'two'],
     copyable: ['one', 'two'],
     namedItems: [{ name: 'report.pdf' }, { name: 'invoice.pdf' }],
+    addresses: [
+      { name: 'Home', street: '18 Oak Street' },
+      { name: 'Office', street: '42 Market Street' },
+    ],
     unremovable: ['one', 'two'],
     noToolbar: ['one', 'two'],
     fixedNoToolbar: [42, true, 'additional item one', 'additional item two'],

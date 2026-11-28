@@ -1428,6 +1428,256 @@ describe('ArrayField', () => {
     });
   });
 
+  describe('collapsible array items', () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string', minLength: 2 } };
+    const initialFormData = ['Alpha', 'Beta'];
+    const uiSchema = { 'ui:options': { showCollapseButton: true, autoCollapse: true } };
+
+    it('keeps items visible when only autoCollapse is set', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        uiSchema: { 'ui:options': { autoCollapse: true } },
+      });
+
+      expect(node.querySelector('summary')).toBeNull();
+      expect(input(node, 'root_0')).toBeVisible();
+    });
+
+    it('can collapse an expanded item and submit its edited value', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema,
+        initialFormData,
+        uiSchema: { 'ui:options': { showCollapseButton: true } },
+      });
+      const first = input(node, 'root_0');
+      expect(first).toBeVisible();
+
+      await user.type(first, ' edited');
+      await user.click(elementOf(node, 'summary'));
+
+      expect(first).not.toBeVisible();
+      expect(input(node, 'root_1')).toBeVisible();
+
+      await submitForm(node, user);
+      expectToHaveBeenCalledWithFormData(onSubmit, ['Alpha edited', 'Beta'], true);
+    });
+
+    it('keeps the expanded item open when it moves to another position', async () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        uiSchema: { 'ui:options': { showCollapseButton: true, autoCollapse: true, itemLabel: '.' } },
+      });
+
+      expect(input(node, 'root_0')).not.toBeVisible();
+      expect(input(node, 'root_1')).not.toBeVisible();
+
+      await user.click(screen.getByText('Alpha', { selector: 'summary' }));
+      await user.click(elementOf(node, '.rjsf-array-item-move-down'));
+
+      expect(input(node, 'root_0')).toHaveValue('Beta');
+      expect(input(node, 'root_0')).not.toBeVisible();
+      expect(input(node, 'root_1')).toHaveValue('Alpha');
+      expect(input(node, 'root_1')).toBeVisible();
+    });
+
+    it('labels fixed items even when there are no item buttons', () => {
+      const translateString = vi.fn(englishStringTranslator);
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: [{ type: 'string' }, { type: 'string' }], additionalItems: false },
+        initialFormData,
+        uiSchema: { 'ui:options': { showCollapseButton: true, itemLabel: '.', orderable: false, removable: false } },
+        translateString,
+      });
+
+      expect(Array.from(node.querySelectorAll('summary'), (summary) => summary.textContent)).toEqual(['Alpha', 'Beta']);
+      expect(translateString.mock.calls.map(([key]) => key)).not.toContain(TranslatableString.ItemNameWithNumber);
+    });
+
+    it('opens the invalid item when the form focuses its first error', async () => {
+      const { node, onError } = createFormComponent({
+        schema,
+        initialFormData: ['Alpha', 'B'],
+        uiSchema,
+        noHtml5Validate: true,
+        focusOnFirstError: true,
+      });
+
+      expect(input(node, 'root_1')).not.toBeVisible();
+
+      await submitForm(node, user);
+
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(input(node, 'root_0')).not.toBeVisible();
+      expect(input(node, 'root_1')).toBeVisible();
+      expect(input(node, 'root_1')).toHaveFocus();
+    });
+
+    it.each([false, true])('restores nested disclosures when focus fails with the outer item open: %s', (outerOpen) => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'array', items: schema },
+        initialFormData: [['Alpha']],
+        uiSchema: { ...uiSchema, items: uiSchema },
+      });
+      const [outer, inner] = node.querySelectorAll('details');
+      outer.open = outerOpen;
+
+      // jsdom has no layout. A control hidden by CSS would ignore focus() in a browser.
+      const focus = vi.spyOn(input(node, 'root_0_0'), 'focus').mockImplementation(() => {
+        expect(outer.open && inner.open).toBe(true);
+      });
+
+      act(() => handleOf(ref).focusOnError({ property: '[0][0]', stack: '' }));
+
+      expect(focus).toHaveBeenCalledOnce();
+      expect(outer.open).toBe(outerOpen);
+      expect(inner.open).toBe(false);
+    });
+
+    it.each([false, true])('starts an invalid item open only when it shows its errors (hideError: %s)', (hideError) => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        extraErrors: { 0: { __errors: ['Check this entry'] } },
+        uiSchema: { ...uiSchema, items: { 'ui:hideError': hideError } },
+      });
+      const [invalid, valid] = node.querySelectorAll('details');
+
+      expect(invalid.open).toBe(!hideError);
+      expect(valid.open).toBe(false);
+    });
+
+    it('uses the position when the translator supplies no item title', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        uiSchema,
+        translateString: (key, params) =>
+          key === TranslatableString.ArrayItemTitle ? '' : englishStringTranslator(key, params),
+      });
+
+      expect(Array.from(node.querySelectorAll('summary'), (summary) => summary.textContent)).toEqual(['1', '2']);
+    });
+
+    it('does not count a fixed item without buttons when JSON supplies a string for showCollapseButton', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: [{ type: 'string' }], additionalItems: { type: 'string' } },
+        initialFormData: ['Alpha', 'Alpha'],
+        uiSchema: { 'ui:options': { itemLabel: '.', showCollapseButton: 'true' as unknown as boolean } },
+      });
+
+      expect(node.querySelector('summary')).toBeNull();
+      expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove Alpha');
+    });
+
+    it('preserves edited form data when the disclosure option changes', async () => {
+      const props = { schema, initialFormData };
+      const { node, rerender } = createFormComponent(props);
+      const original = input(node, 'root_0');
+
+      await user.type(original, ' edited');
+      rerender({ ...props, uiSchema });
+
+      const wrapped = input(node, 'root_0');
+      expect(wrapped).not.toBe(original);
+      expect(wrapped).toHaveValue('Alpha edited');
+
+      rerender(props);
+      expect(input(node, 'root_0')).toHaveValue('Alpha edited');
+    });
+
+    it('shows an item-level error without moving focus and lets the user close the item again', async () => {
+      const itemSchema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        additionalProperties: { type: 'string' },
+        minProperties: 2,
+      };
+      const options = { showCollapseButton: true, autoCollapse: true, itemLabel: 'name' };
+      const props = {
+        schema: { type: 'array', items: itemSchema } satisfies RJSFSchema,
+        initialFormData: [{ name: 'Alpha', city: 'Austin' }, { name: 'Beta' }],
+        uiSchema: { 'ui:options': options },
+        noHtml5Validate: true,
+        showErrorList: false as const,
+      };
+      const { node, rerender } = createFormComponent(props);
+      expect(input(node, 'root_1_name')).not.toBeVisible();
+
+      await submitForm(node, user);
+
+      const message = screen.getByText('must NOT have fewer than 2 properties');
+      expect(message).toBeVisible();
+      expect(input(node, 'root_0_name')).not.toBeVisible();
+      expect(elementOf(node, '[type=submit]')).toHaveFocus();
+
+      await user.click(screen.getByText('Beta', { selector: 'summary' }));
+      rerender({ ...props, uiSchema: { 'ui:options': { ...options, copyable: true } } });
+
+      expect(message).toBeInTheDocument();
+      expect(message).not.toBeVisible();
+    });
+
+    it('reveals a required field when native validation prevents submission', async () => {
+      const { node, onSubmit, onError } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+        },
+        initialFormData: [{ name: 'Alpha' }, {}],
+        uiSchema,
+      });
+
+      expect(input(node, 'root_1_name')).not.toBeVisible();
+
+      await submitForm(node, user);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError).not.toHaveBeenCalled();
+      expect(input(node, 'root_0_name')).not.toBeVisible();
+      expect(input(node, 'root_1_name')).toBeVisible();
+    });
+
+    it('updates the layout only when native validation opens an item and leaves focus to the browser', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+        },
+        initialFormData: [{}],
+        uiSchema,
+      });
+      const field = input(node, 'root_0_name');
+      const details = elementOf(node, 'details', HTMLDetailsElement);
+      const summary = elementOf(details, 'summary', HTMLElement);
+      const layout = vi.spyOn(details, 'getBoundingClientRect');
+      summary.focus();
+
+      expect(field.checkValidity()).toBe(false);
+      expect(details.open).toBe(true);
+      expect(layout).toHaveBeenCalledOnce();
+      expect(summary).toHaveFocus();
+
+      expect(field.checkValidity()).toBe(false);
+      expect(layout).toHaveBeenCalledOnce();
+      expect(summary).toHaveFocus();
+    });
+
+    it('keeps a hidden item hidden without adding a disclosure', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData,
+        uiSchema: { ...uiSchema, items: { 'ui:widget': 'hidden' } },
+      });
+
+      expect(node.querySelector('summary')).toBeNull();
+      expect(node.querySelector('input[type=hidden]')).toHaveValue('Alpha');
+    });
+  });
+
   describe('Multiple choices list', () => {
     const schema: RJSFSchema = {
       type: 'array',

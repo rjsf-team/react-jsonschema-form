@@ -25,6 +25,25 @@ const user = userEvent.setup();
 formTests(Form);
 themeTests({ generateTemplates, generateTheme, generateWidgets });
 
+describe('react-bootstrap array item layout', () => {
+  test('keeps the disclosure and its toolbar at the top without extra vertical padding', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'array', items: { type: 'string' } }}
+        uiSchema={{ 'ui:options': { showCollapseButton: true, autoCollapse: true, itemLabel: '.' } }}
+        initialFormData={['Home']}
+        validator={validator}
+      />,
+    );
+
+    const row = container.querySelector('summary')?.closest('.row');
+    const toolbar = row?.querySelector('button')?.closest('.col-4');
+    expect(row).toHaveClass('align-items-start');
+    expect(toolbar).toBeInTheDocument();
+    expect(toolbar).not.toHaveClass('py-4');
+  });
+});
+
 describe('a checkbox whose presentation gives its label and description to the template', () => {
   test('draws each once, from the template', () => {
     const { container } = render(

@@ -593,4 +593,16 @@ export function arrayTests(Form: ComponentType<FormProps>) {
       expect(container).not.toHaveTextContent('Other desc');
     });
   });
+
+  test('a collapsed array item keeps its field and exposes its name in the summary', () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
+    const uiSchema: UiSchema = { 'ui:options': { showCollapseButton: true, autoCollapse: true, itemLabel: '.' } };
+    const { getByDisplayValue } = render(
+      <Form schema={schema} uiSchema={uiSchema} validator={validator} initialFormData={['Home']} />,
+    );
+    const disclosure = getByDisplayValue('Home').closest('details');
+    expect(disclosure).not.toBeNull();
+    expect(disclosure).not.toHaveAttribute('open');
+    expect(disclosure?.querySelector('summary')).toHaveTextContent('Home');
+  });
 }

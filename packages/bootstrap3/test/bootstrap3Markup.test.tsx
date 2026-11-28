@@ -100,6 +100,25 @@ describe('Bootstrap 3 markup', () => {
     ).toBeInTheDocument();
   });
 
+  it('keeps the native disclosure marker when Bootstrap resets summary to a block', () => {
+    const { container } = render(
+      <>
+        <style>{'summary { display: block; }'}</style>
+        {/* oxlint-disable-next-line typescript/no-deprecated -- the deprecated package under test */}
+        <Form
+          schema={{ type: 'array', items: { type: 'string' } }}
+          uiSchema={{ 'ui:options': { showCollapseButton: true, autoCollapse: true, itemLabel: '.' } }}
+          initialFormData={['Home']}
+          validator={validator}
+        />
+      </>,
+    );
+
+    const summary = container.querySelector('summary');
+    expect(summary).toHaveTextContent('Home');
+    expect(summary).toHaveStyle({ display: 'list-item' });
+  });
+
   it("adds a Form's arrayItem and arrayItemToolbox classes beside the grid classes", () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
     const { container } = render(

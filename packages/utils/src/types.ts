@@ -1626,6 +1626,8 @@ export type ArrayFieldItemTemplateProps<
   className: string;
   /** Whether the array item's buttons are disabled, by the array's lock or the item's own; its inputs can stay enabled, under an item's `ui:disabled: false` */
   disabled?: boolean;
+  /** Whether the item shows an expand/collapse control above its fields */
+  hasDisclosure?: boolean;
   /** A boolean value stating whether the array item has a toolbar */
   hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
@@ -2161,9 +2163,9 @@ type UIOptionsDeclaredType<
      * discriminator
      */
     optionsSchemaSelector?: string;
-    /** On an array field, the property of each item's form data whose value names that item in the titles of its
-     * buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested property, and `'.'`
-     * names each item by its own value, for an array of strings or numbers. Items whose value there isn't a non-empty
+    /** On an array field, the property of each item's form data whose value names that item in its disclosure summary
+     * and the titles of its buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested
+     * property, and `'.'` names each item by its own value, for an array of strings or numbers. Items whose value there isn't a non-empty
      * string or a number keep the default titles. Items that share a name are numbered in the order they were added,
      * such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so while the items change through the field a number
      * stays with its item and a copy takes the next one. Remounting the field or replacing its data from outside can
@@ -2171,6 +2173,12 @@ type UIOptionsDeclaredType<
      * is ignored, and only `'.'` names items by their own value
      */
     itemLabel?: string;
+    /** On an array field, let users expand or collapse each item's fields. Defaults to false. */
+    showCollapseButton?: boolean;
+    /** Start existing and newly added items closed when `showCollapseButton` is enabled, unless the item already has
+     * errors to show. Defaults to false.
+     */
+    autoCollapse?: boolean;
     /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
      * hierarchy
      */

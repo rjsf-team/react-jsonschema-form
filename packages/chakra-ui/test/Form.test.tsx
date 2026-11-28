@@ -1133,6 +1133,24 @@ describe('chakra-ui ArrayFieldTemplate', () => {
 });
 
 describe('chakra-ui ArrayFieldItemTemplate', () => {
+  test('keeps the disclosure and its toolbar aligned at the top', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'array', items: { type: 'string' } }}
+        uiSchema={{ 'ui:options': { showCollapseButton: true, autoCollapse: true, itemLabel: '.' } }}
+        initialFormData={['Home']}
+        validator={validator}
+      />,
+    );
+
+    const row = container.querySelector('summary')?.closest('.chakra-stack');
+    const emotionClass = row?.className.split(' ').at(-1);
+    const css = Array.from(document.querySelectorAll('style'), (style) => style.textContent).join('');
+
+    expect(emotionClass).toMatch(/^css-/);
+    expect(css).toMatch(new RegExp(`\\.${emotionClass}\\{[^}]*align-items:flex-start`));
+  });
+
   // This theme's own item template doesn't lay its buttons out by `displayLabel`, so a custom one records it
   test.each<{ named: string; items: RJSFSchema; uiSchema?: UiSchema; value: unknown; displayLabel: boolean }>([
     {

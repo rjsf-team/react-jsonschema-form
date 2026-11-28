@@ -7,12 +7,12 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
+  const { children, buttonsProps, hasDisclosure, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   return (
-    <HStack alignItems='flex-end' py={1}>
+    <HStack alignItems={hasDisclosure ? 'flex-start' : 'flex-end'} py={1}>
       <Box w='100%'>{children}</Box>
       {hasToolbar && (
         <Box>

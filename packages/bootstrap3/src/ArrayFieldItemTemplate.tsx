@@ -11,7 +11,17 @@ export default function ArrayFieldItemTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: ArrayFieldItemTemplateProps<T, S, F>) {
-  const { children, className, buttonsProps, displayLabel, hasDescription, hasToolbar, registry, uiSchema } = props;
+  const {
+    children,
+    className,
+    buttonsProps,
+    displayLabel,
+    hasDescription,
+    hasDisclosure,
+    hasToolbar,
+    registry,
+    uiSchema,
+  } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldItemButtonsTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const { classMap } = registry;
@@ -25,7 +35,17 @@ export default function ArrayFieldItemTemplate<
   const containerStyle = { display: 'flex', alignItems: displayLabel ? 'center' : 'baseline' };
   const toolbarStyle = { display: 'flex', justifyContent: 'flex-end', marginTop: displayLabel ? `${margin}px` : 0 };
   return (
-    <div className={joinClassNames(className, classMap.arrayItem)} style={containerStyle}>
+    <div
+      className={joinClassNames(className, classMap.arrayItem, hasDisclosure && 'rjsf-bootstrap3-disclosure')}
+      style={containerStyle}
+    >
+      {hasDisclosure && (
+        <style href='rjsf-bootstrap3-disclosure' precedence='default'>
+          {
+            ':where(.rjsf-bootstrap3-disclosure > div) > details:where(.rjsf-array-item-details) > summary { display: list-item; }'
+          }
+        </style>
+      )}
       <div className={hasToolbar ? 'col-xs-9 col-md-10 col-xl-11' : 'col-xs-12'}>{children}</div>
       {hasToolbar && (
         <div
