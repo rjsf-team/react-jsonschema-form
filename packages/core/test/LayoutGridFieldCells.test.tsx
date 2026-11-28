@@ -1261,6 +1261,84 @@ describe('a cell in options with no discriminator', () => {
     expect(onChange.mock.lastCall?.[0].formData.thing).not.toHaveProperty('kind');
   });
 
+  // C alone doesn't pin `kind`, so its selector value, `undefined`, would read as clearing the selection
+  it('switches to a lone option that declares the selector without pinning it (#5962)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          anyOf: [
+            {
+              title: 'Option A',
+              properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+            },
+            { title: 'Option C', properties: { kind: { type: 'string' }, c: { type: 'string', title: 'C' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      ...selectorUiSchema,
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.c'] }] },
+    };
+    const onFocus = vi.fn();
+    const { onChange } = createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } }, onFocus });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+    expect(getSelectedOptionValue(select)).toBe('Option A');
+
+    await user.selectOptions(select, 'Option C');
+
+    expect(onFocus).toHaveBeenCalledWith(expect.any(String), 'a');
+    expect(getSelectedOptionValue(select)).toBe('Option C');
+    expect(screen.getByLabelText('C')).toBeInTheDocument();
+    expect(screen.queryByLabelText('A')).not.toBeInTheDocument();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ thing: {} });
+  });
+
+  // `ui:optgroups` names selector values, though the widget offers the options by index; each `'a'` claims the next
+  // option holding it, and C, which pins none, is left out of every group
+  it('groups by selector value where the widget offers the options by index', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          type: 'object',
+          anyOf: [
+            {
+              title: 'Option A',
+              properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string', title: 'A' } },
+            },
+            {
+              title: 'Option A2',
+              properties: { kind: { type: 'string', const: 'a' }, a2: { type: 'string', title: 'A2' } },
+            },
+            { title: 'Option C', properties: { kind: { type: 'string' }, c: { type: 'string', title: 'C' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = {
+      ...selectorUiSchema,
+      'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['thing', 'thing.a', 'thing.a2', 'thing.c'] }] },
+      thing: {
+        ...selectorCellUiSchema,
+        'ui:options': { optionsSchemaSelector: 'kind', optgroups: { Pinned: ['a', 'a'] } },
+      },
+    };
+    createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } } });
+    const select = screen.getByRole<HTMLSelectElement>('combobox');
+    const group = within(screen.getByRole('group', { name: 'Pinned' }));
+
+    expect(group.getAllByRole('option').map((option) => option.textContent)).toEqual(['Option A', 'Option A2']);
+    expect(screen.getByRole('option', { name: 'Option C' }).closest('optgroup')).toBeNull();
+
+    await user.selectOptions(select, 'Option A2');
+
+    expect(getSelectedOptionValue(select)).toBe('Option A2');
+    expect(screen.getByLabelText('A2')).toBeInTheDocument();
+  });
+
   // The form's sanitize judges a key only the old option declares, as for the option selector (#5812)
   it.each([
     { case: 'drops what its default filled in', typed: '', expected: { kind: 'b' } },
