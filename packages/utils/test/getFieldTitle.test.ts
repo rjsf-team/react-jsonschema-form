@@ -1,5 +1,5 @@
 import type { RJSFSchema, UiSchema } from '../src/index.ts';
-import { getFieldTitle } from '../src/index.ts';
+import { createFieldTitleLookup, getFieldTitle } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const context = { validator: getTestValidator({}) };
@@ -37,8 +37,13 @@ describe('getFieldTitle()', () => {
     expect(titleOf(schema, [key])).toEqual(title);
   });
 
-  it('gives no title to a field behind a $ref that resolves to nothing', () => {
-    expect(titleOf({ type: 'object', properties: { p: { $ref: '#/$defs/Missing' } } }, ['p'])).toBeUndefined();
+  it.each<[string, RJSFSchema]>([
+    ['behind a $ref', { $ref: '#/$defs/Missing' }],
+    ['merging an allOf entry that is a $ref', { type: 'string', allOf: [{ $ref: '#/$defs/Missing' }] }],
+  ])('gives no title to a field %s that resolves to nothing, nor to an item', (_, p) => {
+    expect(titleOf({ type: 'object', properties: { p } }, ['p'])).toBeUndefined();
+    const list: RJSFSchema = { type: 'array', title: 'List', items: p };
+    expect(titleOf({ type: 'object', properties: { list } }, ['list', '0'], { list: ['z'] })).toBeUndefined();
   });
 
   it('reads the ui:title over the schema title, past an empty one', () => {
@@ -196,5 +201,28 @@ describe('getFieldTitle()', () => {
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: ['null', 'array'], items: {} } } };
     const uiSchema: UiSchema = { a: { items: { 'ui:title': 'IT' }, additionalProperties: { 'ui:title': 'AP' } } };
     expect(titleOf(schema, ['a', '0'], { a: ['x'] }, uiSchema)).toEqual('IT');
+  });
+});
+
+describe('createFieldTitleLookup()', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      list: {
+        type: 'array',
+        title: 'List',
+        items: { type: 'object', properties: { a: { type: 'string', title: 'A' }, b: { type: 'string' } } },
+      },
+    },
+  };
+
+  it('reads each path as getFieldTitle() does, the paths sharing a field and a path asked again included', () => {
+    const formData = { list: [{ a: 'x' }, { b: 'y' }] };
+    const uiSchema: UiSchema = { list: { items: { b: { 'ui:title': 'B' } } } };
+    const titleAt = createFieldTitleLookup(context, schema, formData, uiSchema);
+    const paths = [['list', '0', 'a'], ['list', '0', 'b'], ['list', '1'], ['list', '1', 'b'], ['list', '0', 'a'], []];
+    const expected = ['A', 'B', 'List-2', 'B', 'A', undefined];
+    expect(paths.map((path) => titleAt(path))).toEqual(expected);
+    expect(paths.map((path) => titleOf(schema, path, formData, uiSchema))).toEqual(expected);
   });
 });

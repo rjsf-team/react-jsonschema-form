@@ -4455,6 +4455,36 @@ describe('an if of a field holding NaN (#5916)', () => {
   });
 });
 
+describe('AJV8Validator naming the errors of a form root resolved for the data, as live validation passes it', () => {
+  const option: RJSFSchema = { type: 'object', properties: { x: { type: 'string', title: 'X', minLength: 3 } } };
+  const rootFor = (withId: boolean): RJSFSchema => ({
+    ...(withId ? { $id: 'https://example.com/root' } : {}),
+    type: 'object',
+    allOf: [{ properties: { a: { type: 'string', title: 'A' } } }],
+    properties: {
+      p: { oneOf: [option, { type: 'object', properties: { y: { type: 'number' } }, required: ['y'] }] },
+    },
+  });
+
+  it.each([
+    ['with an $id', true],
+    ['without one', false],
+  ])("keeps the form's root and what was compiled against it, a root %s", (_, withId) => {
+    const validator = new AJV8Validator({});
+    const root = rootFor(withId);
+    const removeSchema = vi.spyOn(validator.ajv, 'removeSchema');
+    // What a form does on each keystroke: checks an option against its root as it renders, then validates the data
+    // against its root resolved for the data
+    for (const x of ['x', 'xx', 'x', 'xx']) {
+      const formData = { a: 'a', p: { x } };
+      validator.isValid(option, formData.p, root);
+      const { errors } = validator.validateFormData(formData, retrieveSchema({ validator }, root, root, formData));
+      expect(errors).toContainEqual(expect.objectContaining({ property: '.p.x', title: 'X' }));
+    }
+    expect(removeSchema).not.toHaveBeenCalled();
+  });
+});
+
 describe('package surface', () => {
   it('exports the validator classes as values', () => {
     const schema: RJSFSchema = { $id: 'surface', type: 'string' };

@@ -4,11 +4,12 @@ import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import applyValidatorErrorTitles from './applyValidatorErrorTitles.ts';
-import type { ValidatorErrorFieldSource, ValidatorErrorTitleSource } from './applyValidatorErrorTitles.ts';
+import type { ValidatorErrorTitleSource } from './applyValidatorErrorTitles.ts';
 import asNumber from './asNumber.ts';
 import callerInputProps from './callerInputProps.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import createErrorHandler from './createErrorHandler.ts';
+import createFieldTitleLookup from './createFieldTitleLookup.ts';
 import createRootSchemaGuard from './createRootSchemaGuard.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
@@ -321,7 +322,6 @@ export type {
   UseOptionFocusHandlersResult,
   UseSelectFocusHandlersResult,
   UseTimeWidgetPropsResult,
-  ValidatorErrorFieldSource,
   ValidatorErrorTitleSource,
   // oxlint-disable-next-line typescript/no-deprecated -- deprecated, and kept exported through v7
   VisibleErrorsProps,
@@ -343,6 +343,7 @@ export {
   callerInputProps,
   callWithDeferredThrow,
   createErrorHandler,
+  createFieldTitleLookup,
   createRootSchemaGuard,
   createSchemaUtils,
   DateElement,
@@ -393,7 +394,6 @@ export {
   getExampleSuggestions,
   getFieldClassNames,
   getFieldLabel,
-  getFieldTitle,
   getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getFreePropertyNames,
@@ -549,6 +549,10 @@ export {
  * own packages, `prefixItems` included
  */
 export { allowAdditionalItems, isFixedItems };
+/** @public The title the form labels one field with, which the validator packages read for many fields at once through
+ * `createFieldTitleLookup()`
+ */
+export { getFieldTitle };
 /** @public Set from an app's development entry point or a test setup to make chosen warnings throw, which no other RJSF
  * package's source does
  */

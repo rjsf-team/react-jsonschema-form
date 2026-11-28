@@ -16,6 +16,7 @@ import {
   getFirstMatchingOption,
   getValidationTarget,
   omitExtraData,
+  retrieveSchema,
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -930,5 +931,32 @@ describe('findFieldInSchema() through options with no discriminator', () => {
     expect(precompiled.findFieldInSchema(schema, path, formData)).toEqual(
       live.findFieldInSchema(schema, path, formData),
     );
+  });
+});
+
+describe('the errors of a precompiled validator handed its root resolved for the data, as live validation hands it', () => {
+  it('are named by the fields of the root it was built for', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      allOf: [
+        {
+          properties: {
+            // Checked outside the options, so the first matches and each validator reports the error on `x`
+            q: {
+              type: 'object',
+              oneOf: [
+                { properties: { x: { type: 'string', title: 'X' } } },
+                { properties: { y: { type: 'number' } }, required: ['y'] },
+              ],
+              patternProperties: { '^x$': { minLength: 3 } },
+            },
+          },
+        },
+      ],
+    };
+    const validator = buildPrecompiledValidator(schema);
+    const formData = { q: { x: 'x' } };
+    const { errors } = validator.validateFormData(formData, retrieveSchema({ validator }, schema, schema, formData));
+    expect(errors).toContainEqual(expect.objectContaining({ property: '.q.x', title: 'X' }));
   });
 });

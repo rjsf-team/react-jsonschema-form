@@ -174,6 +174,18 @@ export default class AJV8Validator<
    * @param [formData] - The form data to validate
    */
   rawValidation(schema: S, formData?: unknown): RawValidationResult<ErrorObject> {
+    return this.validateAgainst(schema, formData).result;
+  }
+
+  /** Runs `rawValidation()`, returning its result and the function Ajv validated with, when it compiled one
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
+   */
+  private validateAgainst(
+    schema: S,
+    formData?: unknown,
+  ): { result: RawValidationResult<ErrorObject>; validated?: ValidateFunction } {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
@@ -217,10 +229,7 @@ export default class AJV8Validator<
       }
     }
 
-    return {
-      errors,
-      validationError: compilationError,
-    };
+    return { result: { errors, validationError: compilationError }, validated: compiledValidator };
   }
 
   /** This function processes the `formData` with an optional user contributed `customValidate` function, which receives
@@ -244,10 +253,16 @@ export default class AJV8Validator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation(schema, formData);
+    const { result, validated } = this.validateAgainst(schema, formData);
+    // A `schema` with an `$id` is validated against the schema Ajv holds under it, which is the root `isValid()` holds
+    // when the `schema` is that root resolved for the data, as `Form` passes it. The errors' fields are looked up in
+    // that root: looked up in the `schema`, which `isValid()` would register as a root, it would swap out the root
+    // holding the same `$id`, and every subschema compiled against it
+    const validatedRoot =
+      validated && this.roots.find((root) => this.ajv.schemas[root.id]?.schema === validated.schema);
     return processRawValidationErrors(
       { validator: this },
-      rawErrors,
+      result,
       formData,
       schema,
       customValidate,
@@ -255,6 +270,7 @@ export default class AJV8Validator<
       uiSchema,
       this.suppressDuplicateFiltering,
       getCustomValidateFormData,
+      validatedRoot?.schema,
     );
   }
 

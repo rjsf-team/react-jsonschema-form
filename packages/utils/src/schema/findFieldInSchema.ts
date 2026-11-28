@@ -54,11 +54,11 @@ function declaredField<S extends StrictRJSFSchema, F extends FormContextType>(
   return hasSchemaMarker(field, ADDITIONAL_PROPERTY_FLAG) ? undefined : (field ?? undefined);
 }
 
-/** Used by `findFieldInSchema()` and `getFieldTitle()` to find the schema of `key` in `parent`. A property `parent` declares comes first, then the array item an index key
- * names, then one of the option rendered for `data` when `parent` has an `anyOf` or `oneOf`, since a form renders both.
- * Only then is `key` an extra key, described by the `patternProperties` and `additionalProperties` of the two together,
- * as the form describes it. An option's field reads the `required` of its parent too, as `getRenderedOptionSchema()`
- * renders it.
+/** Used by `findFieldInSchema()` and `createFieldTitleLookup()` to find the schema of `key` in `parent`. A property
+ * `parent` declares comes first, then the array item an index key names, then one of the option rendered for `data`
+ * when `parent` has an `anyOf` or `oneOf`, since a form renders both. Only then is `key` an extra key, described by the
+ * `patternProperties` and `additionalProperties` of the two together, as the form describes it. An option's field reads
+ * the `required` of its parent too, as `getRenderedOptionSchema()` renders it.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs

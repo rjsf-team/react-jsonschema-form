@@ -439,7 +439,7 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       }
     });
 
-    // The cases #5948 and its follow-ups report, each of which a lookup along the keyword's schema path got wrong
+    // The cases #5948 and its follow-ups report, each titled as the form labels its field
     it.each<[string, RJSFSchema, unknown, string, string]>([
       [
         "its own title over an allOf entry's",
@@ -599,6 +599,45 @@ export default function errorPropertyTests(buildValidator: () => ValidatorType) 
       expect(required.map((error) => [error.property, error.title])).toEqual(
         required.map((error) => [error.property, error.property === '.p.a' ? 'Aa' : '']),
       );
+    });
+  });
+
+  describe('the errors of one validation', () => {
+    // Only the root's options declare `list`, so the walk to each item picks the option shown for the data. The items
+    // are checked outside the options, so the option matches and each validator reports each item's error
+    const schema: RJSFSchema = {
+      type: 'object',
+      anyOf: [
+        { properties: { list: { type: 'array', title: 'List', items: { type: 'string' } } } },
+        { properties: { other: { type: 'number' } }, required: ['other'] },
+      ],
+      patternProperties: { '^list$': { items: { type: 'string', minLength: 3 } } },
+    };
+    // Counts the reads of the root's `list`, which each walk from the root makes on its way to an item
+    const rootReadsFor = (items: number) => {
+      const list = Array.from({ length: items }, () => 'x');
+      let reads = 0;
+      const formData = {};
+      Object.defineProperty(formData, 'list', {
+        enumerable: true,
+        get: () => {
+          reads += 1;
+          return list;
+        },
+      });
+      const { errors } = buildValidator().validateFormData(formData, schema);
+      const itemErrors = errors.filter((error) => error.property?.startsWith('.list.'));
+      expect(new Set(itemErrors.map((error) => error.property))).toEqual(
+        new Set(list.map((_, index) => `.list.${index}`)),
+      );
+      for (const { property, title } of itemErrors) {
+        expect(title).toEqual(`List-${Number(property?.slice('.list.'.length)) + 1}`);
+      }
+      return reads;
+    };
+
+    it('share the walk to the fields above them, so the options above many errors are picked once', () => {
+      expect(rootReadsFor(12)).toEqual(rootReadsFor(2));
     });
   });
 }

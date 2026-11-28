@@ -1,8 +1,10 @@
 import type { RJSFSchema, UiSchema } from '../src/index.ts';
-import { applyValidatorErrorTitles } from '../src/index.ts';
+import { applyValidatorErrorTitles, createFieldTitleLookup } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const context = { validator: getTestValidator({}) };
+const lookupIn = (schema: RJSFSchema, uiSchema?: UiSchema) =>
+  createFieldTitleLookup(context, schema, undefined, uiSchema);
 const message = "must have required property 'name'";
 
 describe('applyValidatorErrorTitles()', () => {
@@ -13,8 +15,7 @@ describe('applyValidatorErrorTitles()', () => {
         names: ['name'],
         quote: "'",
         property: '',
-        context,
-        schema: { type: 'object', properties: { name: { type: 'string' } } },
+        titleOf: lookupIn({ type: 'object', properties: { name: { type: 'string' } } }),
       }),
     ).toEqual({ message, titles: new Map() });
   });
@@ -25,12 +26,14 @@ describe('applyValidatorErrorTitles()', () => {
       properties: { user: { type: 'object', properties: { name: { type: 'string', title: 'Schema name' } } } },
     };
     const uiSchema: UiSchema = { user: { name: { 'ui:title': 'UI name' } } };
-    const source = { message, names: ['name'], quote: "'" as const, property: '.user', context, schema };
-    expect(applyValidatorErrorTitles(source)).toEqual({
+    const source = { message, names: ['name'], quote: "'" as const, property: '.user' };
+    expect(applyValidatorErrorTitles({ ...source, titleOf: lookupIn(schema) })).toEqual({
       message: "must have required property 'Schema name'",
       titles: new Map([['name', 'Schema name']]),
     });
-    expect(applyValidatorErrorTitles({ ...source, uiSchema }).titles).toEqual(new Map([['name', 'UI name']]));
+    expect(applyValidatorErrorTitles({ ...source, titleOf: lookupIn(schema, uiSchema) }).titles).toEqual(
+      new Map([['name', 'UI name']]),
+    );
   });
 
   it('reads a name holding a dot as one key at a property holding a dot', () => {
@@ -39,12 +42,13 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['c.d'],
       quote: "'",
       property: "['a.b']",
-      context,
-      schema: {
-        type: 'object',
-        properties: { 'a.b': { type: 'object', properties: { 'c.d': { type: 'string', title: 'Right' } } } },
-      },
-      uiSchema: { a: { b: { c: { d: { 'ui:title': 'Wrong' } } } } },
+      titleOf: lookupIn(
+        {
+          type: 'object',
+          properties: { 'a.b': { type: 'object', properties: { 'c.d': { type: 'string', title: 'Right' } } } },
+        },
+        { a: { b: { c: { d: { 'ui:title': 'Wrong' } } } } },
+      ),
     });
     expect(titles).toEqual(new Map([['c.d', 'Right']]));
   });
@@ -55,8 +59,7 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['b', 'a'],
       quote: '"',
       property: '',
-      context,
-      schema: { type: 'object', properties: { a: { title: '"b"' }, b: { title: 'B' } } },
+      titleOf: lookupIn({ type: 'object', properties: { a: { title: '"b"' }, b: { title: 'B' } } }),
     });
     expect(titled).toEqual(`must have property 'B' when property '"b"' is present, and '"b"' again`);
   });
@@ -67,8 +70,7 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['a.b', 'a+b'],
       quote: "'",
       property: '',
-      context,
-      schema: { type: 'object', properties: { 'a.b': { title: "Price ($$$&$')" } } },
+      titleOf: lookupIn({ type: 'object', properties: { 'a.b': { title: "Price ($$$&$')" } } }),
     });
     expect(titled).toEqual("must have properties 'Price ($$$&$')', 'a+b' when property 'c' is present");
   });
@@ -79,8 +81,7 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['it', "it's"],
       quote: "'",
       property: '',
-      context,
-      schema: { type: 'object', properties: { it: { title: 'It' }, "it's": { title: 'Its' } } },
+      titleOf: lookupIn({ type: 'object', properties: { it: { title: 'It' }, "it's": { title: 'Its' } } }),
     });
     expect(titled).toEqual("must have property 'Its' when property 'It' is present");
   });
@@ -91,8 +92,7 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['it', "it's"],
       quote: "'",
       property: '',
-      context,
-      schema: { type: 'object', properties: { it: { title: 'It' } } },
+      titleOf: lookupIn({ type: 'object', properties: { it: { title: 'It' } } }),
     });
     expect(titled).toEqual("must have property 'it's' when property 'It' is present");
   });
@@ -109,13 +109,14 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['name'],
       quote: "'",
       property,
-      context,
-      uiSchema: { kids: { items: { q: { name: { 'ui:title': 'Q UI name' } } } } },
-      schema: {
-        type: 'object',
-        properties: { name: { type: 'string' }, q, kids: { type: 'array', items: { $ref: '#' } } },
-        additionalProperties: { $ref: '#' },
-      },
+      titleOf: lookupIn(
+        {
+          type: 'object',
+          properties: { name: { type: 'string' }, q, kids: { type: 'array', items: { $ref: '#' } } },
+          additionalProperties: { $ref: '#' },
+        },
+        { kids: { items: { q: { name: { 'ui:title': 'Q UI name' } } } } },
+      ),
     });
     expect(titles).toEqual(expected);
   });
@@ -130,13 +131,14 @@ describe('applyValidatorErrorTitles()', () => {
       names: ['name'],
       quote: "'",
       property: '.map.foo',
-      context,
-      uiSchema: { map: { additionalProperties: { name: { 'ui:title': 'Map UI name' } } } },
-      schema: {
-        $defs: { M: { $anchor: 'm', type: 'object', additionalProperties: map } },
-        type: 'object',
-        properties: { map: { $ref } },
-      },
+      titleOf: lookupIn(
+        {
+          $defs: { M: { $anchor: 'm', type: 'object', additionalProperties: map } },
+          type: 'object',
+          properties: { map: { $ref } },
+        },
+        { map: { additionalProperties: { name: { 'ui:title': 'Map UI name' } } } },
+      ),
     });
     expect(titles).toEqual(expected);
   });

@@ -1,4 +1,5 @@
 import type { FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import { createFieldTitleLookup } from '@rjsf/utils';
 
 import customizeValidator from '../src/customizeValidator.ts';
 import processRawValidationErrors, {
@@ -44,7 +45,7 @@ describe('transformRJSFValidationErrors()', () => {
           error: 'Instance does not have required property "value".',
         }),
       ],
-      { context, schema },
+      createFieldTitleLookup(context, schema),
     );
     expect(errors[0]).toEqual(
       expect.objectContaining({
@@ -57,6 +58,7 @@ describe('transformRJSFValidationErrors()', () => {
   });
 
   it('prefers the uiSchema title for required errors', () => {
+    const uiSchema: UiSchema = { nested: { value: { 'ui:title': 'UI value' } } };
     const errors = transformRJSFValidationErrors(
       [
         rawError({
@@ -66,11 +68,12 @@ describe('transformRJSFValidationErrors()', () => {
           error: 'Instance does not have required property "value".',
         }),
       ],
-      {
+      createFieldTitleLookup(
         context,
-        schema: { properties: { nested: { properties: { value: { title: 'Schema value' } } } } },
-        uiSchema: { nested: { value: { 'ui:title': 'UI value' } } },
-      },
+        { properties: { nested: { properties: { value: { title: 'Schema value' } } } } },
+        undefined,
+        uiSchema,
+      ),
     );
     expect(errors[0]).toEqual(
       expect.objectContaining({
@@ -91,7 +94,7 @@ describe('transformRJSFValidationErrors()', () => {
           error: 'Instance does not have required property "value".',
         }),
       ],
-      { context, schema: { properties: { nested: { properties: { value: { title: 'Nested value' } } } } } },
+      createFieldTitleLookup(context, { properties: { nested: { properties: { value: { title: 'Nested value' } } } } }),
     );
     expect(errors[0].title).toBe('Nested value');
   });
@@ -139,14 +142,14 @@ describe('transformRJSFValidationErrors()', () => {
 
   it('uses uiSchema and schema titles for non-required errors', () => {
     const schema: RJSFSchema = { properties: { value: { title: 'Schema value' } } };
-    const uiErrors = transformRJSFValidationErrors([rawError()], {
-      context,
-      schema,
-      uiSchema: { value: { 'ui:title': 'UI value' } },
-    });
+    const uiSchema: UiSchema = { value: { 'ui:title': 'UI value' } };
+    const uiErrors = transformRJSFValidationErrors(
+      [rawError()],
+      createFieldTitleLookup(context, schema, undefined, uiSchema),
+    );
     expect(uiErrors[0].stack).toBe("'UI value' Instance type is invalid.");
 
-    const schemaErrors = transformRJSFValidationErrors([rawError()], { context, schema });
+    const schemaErrors = transformRJSFValidationErrors([rawError()], createFieldTitleLookup(context, schema));
     expect(schemaErrors[0].stack).toBe("'Schema value' Instance type is invalid.");
 
     const untitled = transformRJSFValidationErrors([rawError()]);

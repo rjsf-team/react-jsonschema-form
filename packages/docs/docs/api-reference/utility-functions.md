@@ -44,9 +44,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`, and `labelPlacement`, whether a label the component draws itself sits `'above'` or `'beside'` its control; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws for a part the layer's own entry for it doesn't declare, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares, and `fieldDefault`, what every field draws for a part its merged entry doesn't declare, custom fields included, and what a part a field leaves to its widget falls back to when it renders none; unlike `default`, it sits beneath the merged entries rather than each layer's own, so it can't override a part a lower layer declares under a key. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the first key it is registered under that declares it, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
-**`ValidatorErrorFieldSource`** — What the validator packages name an error's fields from: the form's `context` and root `schema`, the `formData` that was validated and the `uiSchema`, as [`getFieldTitle()`](#getfieldtitle) reads them.
-
-**`ValidatorErrorTitleSource`** — What [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) reads of an error a validator package reports: its `message`, the `names` it quotes, the `quote` around them and the error's `property`, beside the `ValidatorErrorFieldSource` their fields are found in.
+**`ValidatorErrorTitleSource`** — What [`applyValidatorErrorTitles()`](#applyvalidatorerrortitles) reads of an error a validator package reports: its `message`, the `names` it quotes, the `quote` around them and the error's `property`, and `titleOf`, the function [`createFieldTitleLookup()`](#createfieldtitlelookup) returns for the form the data was validated in.
 
 ## Enums
 
@@ -171,22 +169,19 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 - boolean: True if additional items is allowed, otherwise false
 
-### applyValidatorErrorTitles&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#applyvalidatorerrortitles}
+### applyValidatorErrorTitles() {#applyvalidatorerrortitles}
 
-Used by the validator packages to name the properties an error's message names by the title the form labels their fields with (see [`getFieldTitle()`](#getfieldtitle)), each read at the error's `property` followed by the name.
+Used by the validator packages to name the properties an error's message names by the title the form labels their fields with (see [`createFieldTitleLookup()`](#createfieldtitlelookup)), each looked up with `titleOf` at the error's `property` followed by the name.
 Each name with a title is replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes, written as it is, `$` patterns included.
 
 #### Parameters
 
-- source: ValidatorErrorTitleSource&lt;T, S, F> - The error's message and what its names' titles are looked up in:
+- source: ValidatorErrorTitleSource - The error's message and what its names' titles are looked up with:
   - message: string - The engine's message, which names each of the `names` between a pair of `quote`s
   - names: string[] - The names of the properties the message names
   - quote: "'" | '"' - The quote the engine puts around a property name, `'` or `"`
   - property: string - The error's property path, as [`pathToProperty()`](#pathtoproperty) writes it, `''` for the root
-  - context: SchemaContext&lt;S, F> - The `SchemaContext` of the form
-  - schema: S - The form's root schema
-  - [formData]: T - The form data that was validated
-  - [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
+  - titleOf: (path: string[]) => string | undefined - Returns the title the form labels the field at a data path with: the function [`createFieldTitleLookup()`](#createfieldtitlelookup) returns for the form the data was validated in, shared by the errors of one validation
 
 #### Returns
 
@@ -352,6 +347,23 @@ Given a `formData` object, recursively creates a `FormValidation` error handling
 #### Returns
 
 - FormValidation&lt;T>: A `FormValidation` object based on the `formData` structure
+
+### createFieldTitleLookup&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#createfieldtitlelookup}
+
+Used by the validator packages to name the fields of the errors of one validation.
+Returns a function that returns the title the form labels the field at a data path with, as [`getFieldTitle()`](#getfieldtitle) reads it.
+Each field is walked to once, so the paths of errors that share an ancestor share its walk, and an `anyOf`/`oneOf` above many errors picks its option once rather than once per error.
+
+#### Parameters
+
+- context: SchemaContext&lt;S, F> - The `SchemaContext` of the form
+- rootSchema: S - The form's root schema
+- [formData]: T - The form's data, which picks the branches and options the form renders
+- [uiSchema]: UiSchema&lt;T, S, F> - The form's uiSchema
+
+#### Returns
+
+- (path: string[]) => string | undefined: A function returning the title of the field at the data `path`, such as `['arr', '0', 'name']`, or `undefined` when the form labels it with none or renders no field at the path
 
 ### createRootSchemaGuard&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1281,7 +1293,6 @@ A deprecated field's label is decorated with the `DeprecatedLabel` marker under 
 
 ### getFieldTitle&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldtitle}
 
-Used by the validator packages to name an error by the field it is on.
 Returns the title the form labels the field at the data `path` with: its `ui:title`, then the `title` of its schema as its parent declares it, then the `title` of that schema retrieved for its data, as [`getFieldLabel()`](#getfieldlabel) reads them, without a deprecated field's marker.
 The schema and uiSchema are walked as the form renders the data, each level retrieved for its data, so a `$ref`, an `allOf` and the `if`/`then` the data meets are merged in, an `anyOf`/`oneOf` field's keys are read from the option shown for its data, under its `uiSchema.anyOf`/`oneOf` entry, and an array item's from `items`, a function-form `items` called with the item's data and index.
 An item with no title of its own takes the one `ArrayField` hands it, the array's schema `title` and the item's position, as `Tags-1`.
@@ -1292,6 +1303,8 @@ A validator calls it with a `context` of its own, so the title can differ from t
 - the `anyOf`/`oneOf` option the user picked, since the option is found from the data alone, so data that matches two options equally, as data failing both can, is read under the first
 - a form's `additionalPropertiesWhenAbsent`, which option matching reads, so under `'allow'` data holding a key no option declares can be read under another option than the form shows
 - the `formContext`, which a function-form `items` is called without
+
+The validator packages name the fields of one validation's errors with [`createFieldTitleLookup()`](#createfieldtitlelookup), which reads them as this does.
 
 #### Parameters
 

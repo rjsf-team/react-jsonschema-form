@@ -6,6 +6,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
+import { createFieldTitleLookup } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
@@ -118,7 +119,7 @@ describe('transformRJSFValidationErrors()', () => {
     ];
     const uiSchema: UiSchema = { name: { 'ui:title': 'Full Name' } };
     const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
-    const out = transformRJSFValidationErrors(errors, { context, schema, uiSchema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, undefined, uiSchema));
     expect(out[0].message).toContain('Full Name');
     expect(out[0].title).toBe('Full Name');
   });
@@ -138,7 +139,7 @@ describe('transformRJSFValidationErrors()', () => {
         user: { type: 'object', anyOf: [{ properties: { name: { type: 'string' } }, required: ['name'] }] },
       },
     };
-    const out = transformRJSFValidationErrors(errors, { context, schema, formData: { user: {} }, uiSchema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, { user: {} }, uiSchema));
     expect(out[0].title).toBe('User Name');
   });
 
@@ -150,7 +151,7 @@ describe('transformRJSFValidationErrors()', () => {
       }),
     ];
     const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', title: 'Schema Title' } } };
-    const out = transformRJSFValidationErrors(errors, { context, schema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema));
     expect(out[0].title).toBe('Schema Title');
     expect(out[0].message).toContain('Schema Title');
   });
@@ -171,7 +172,7 @@ describe('transformRJSFValidationErrors()', () => {
       properties: { animal: { enum: ['Cat'] } },
       allOf: [{ required: ['animal'] }],
     };
-    const out = transformRJSFValidationErrors(errors, { context, schema, uiSchema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, undefined, uiSchema));
     expect(out[0].title).toBe('My animal uiSchema');
     expect(out[0].message).toContain('My animal uiSchema');
   });
@@ -191,7 +192,7 @@ describe('transformRJSFValidationErrors()', () => {
       properties: { animal: { title: 'My animal', enum: ['Cat', 'Fish'] } },
       allOf: [{ required: ['animal'] }],
     };
-    const out = transformRJSFValidationErrors(errors, { context, schema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema));
     expect(out[0].title).toBe('My animal');
     expect(out[0].message).toContain('My animal');
   });
@@ -208,7 +209,7 @@ describe('transformRJSFValidationErrors()', () => {
     ];
     const uiSchema: UiSchema = { email: { 'ui:title': 'Email Address' } };
     const schema: RJSFSchema = { type: 'object', properties: { email: { type: 'string', title: 'Email' } } };
-    const out = transformRJSFValidationErrors(errors, { context, schema, uiSchema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema, undefined, uiSchema));
     expect(out[0].title).toBe('Email Address');
     expect(out[0].stack).toContain('Email Address');
   });
@@ -225,7 +226,7 @@ describe('transformRJSFValidationErrors()', () => {
       },
     ];
     const schema: RJSFSchema = { type: 'object', properties: { email: { type: 'string', title: 'Email' } } };
-    const out = transformRJSFValidationErrors(errors, { context, schema });
+    const out = transformRJSFValidationErrors(errors, createFieldTitleLookup(context, schema));
     expect(out[0].title).toBe('Email');
   });
 

@@ -1,4 +1,5 @@
 import type { RJSFValidationError } from '@rjsf/utils';
+import { createFieldTitleLookup } from '@rjsf/utils';
 
 import validator from '../src/index.ts';
 import { filterDuplicateErrors, transformRJSFValidationErrors } from '../src/processRawValidationErrors.ts';
@@ -92,7 +93,7 @@ describe('transformRJSFValidationErrors', () => {
       properties: { x: { type: 'object' as const, properties: { name: { type: 'string' as const, title: 'Name' } } } },
     };
 
-    const [transformed] = transformRJSFValidationErrors([error], { context, schema });
+    const [transformed] = transformRJSFValidationErrors([error], createFieldTitleLookup(context, schema));
 
     expect(transformed.message).toEqual("must have required property 'Name'");
   });
@@ -106,7 +107,7 @@ describe('transformRJSFValidationErrors', () => {
     };
     const schema = { type: 'object' as const, properties: { 5: { type: 'string' as const, title: 'Five' } } };
 
-    const [transformed] = transformRJSFValidationErrors([error], { context, schema });
+    const [transformed] = transformRJSFValidationErrors([error], createFieldTitleLookup(context, schema));
 
     expect(transformed.message).toEqual("must not have property '5'");
   });
@@ -120,7 +121,7 @@ describe('transformRJSFValidationErrors', () => {
     };
     const schema = { type: 'object' as const, properties: { a: { type: 'string' as const, title: 'A' } } };
 
-    const [transformed] = transformRJSFValidationErrors([error], { context, schema });
+    const [transformed] = transformRJSFValidationErrors([error], createFieldTitleLookup(context, schema));
 
     expect(transformed.title).toEqual('A');
     expect(transformed.message).toEqual("must not have property 'A'");
