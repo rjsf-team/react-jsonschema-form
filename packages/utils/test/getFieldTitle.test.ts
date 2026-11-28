@@ -109,4 +109,25 @@ describe('getFieldTitle()', () => {
       titleOf(options, ['p', '0'], { p: ['a'] }, { p: { oneOf: [{ items: { 'ui:title': 'Option UI item' } }] } }),
     ).toEqual('Option UI item');
   });
+
+  // The form renders an array schema with no `items` as an unsupported field, so it shows no item to label
+  it.each<[string, RJSFSchema]>([
+    ['no items', { type: 'array' }],
+    ['only contains', { type: 'array', contains: { type: 'string' } }],
+    ['a type list starting with array', { type: ['array', 'object'] }],
+    ['a nullable type list', { type: ['array', 'null'] }],
+    ['a nullable type list starting with null', { type: ['null', 'array'] }],
+    ['a type list starting with object', { type: ['object', 'array'] }],
+  ])('reads no title for an index under a schema with %s, never an additional property’s', (_, a) => {
+    const uiSchema: UiSchema = { a: { items: { 'ui:title': 'IT' }, additionalProperties: { 'ui:title': 'AP' } } };
+    for (const formData of [undefined, { a: ['x'] }, { a: { 0: 'x' } }]) {
+      expect(titleOf({ type: 'object', properties: { a } }, ['a', '0'], formData, uiSchema)).toBeUndefined();
+    }
+  });
+
+  it('reads an index under a nullable type list with items as an item', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: ['null', 'array'], items: {} } } };
+    const uiSchema: UiSchema = { a: { items: { 'ui:title': 'IT' }, additionalProperties: { 'ui:title': 'AP' } } };
+    expect(titleOf(schema, ['a', '0'], { a: ['x'] }, uiSchema)).toEqual('IT');
+  });
 });

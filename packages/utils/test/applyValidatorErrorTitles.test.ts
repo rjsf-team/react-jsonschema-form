@@ -96,4 +96,48 @@ describe('applyValidatorErrorTitles()', () => {
     });
     expect(titled).toEqual("must have property 'it's' when property 'It' is present");
   });
+
+  // `.kids.0` is one step of the kids' `$ref: '#'` or two of `additionalProperties`'; the walk follows the data, so it
+  // stays linear in the path. The uiSchema names `q` one kid deep only, so 40 kids down `q.name` takes its schema title
+  it.each<[string, string, Map<string, string>]>([
+    ['a field', `${'.kids.0'.repeat(40)}.q`, new Map([['name', 'Q name']])],
+    ['no field', `${'.kids.0'.repeat(40)}.zz.q.r`, new Map()],
+  ])('reads a path to %s where the root names itself from places that overlap', (_, property, expected) => {
+    const q: RJSFSchema = { type: 'object', properties: { name: { title: 'Q name' } } };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property,
+      context,
+      uiSchema: { kids: { items: { q: { name: { 'ui:title': 'Q UI name' } } } } },
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string' }, q, kids: { type: 'array', items: { $ref: '#' } } },
+        additionalProperties: { $ref: '#' },
+      },
+    });
+    expect(titles).toEqual(expected);
+  });
+
+  it.each<[string, string, Map<string, string>]>([
+    ['a definition path', '#/$defs/M', new Map([['name', 'Map UI name']])],
+    ['an $anchor, which retrieveSchema() can’t resolve,', '#m', new Map()],
+  ])('reads a field of an extra key under a $ref to %s', (_, $ref, expected) => {
+    const map: RJSFSchema = { type: 'object', required: ['name'], properties: { name: {} } };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.map.foo',
+      context,
+      uiSchema: { map: { additionalProperties: { name: { 'ui:title': 'Map UI name' } } } },
+      schema: {
+        $defs: { M: { $anchor: 'm', type: 'object', additionalProperties: map } },
+        type: 'object',
+        properties: { map: { $ref } },
+      },
+    });
+    expect(titles).toEqual(expected);
+  });
 });
