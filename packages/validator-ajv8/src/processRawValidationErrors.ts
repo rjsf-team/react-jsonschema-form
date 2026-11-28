@@ -190,7 +190,8 @@ export function transformRJSFValidationErrors<
     const { missingProperty } = params;
     if (typeof missingProperty === 'string') {
       const missing = pathToProperty([missingProperty]);
-      // A missing property of the root is filed under its bare name
+      // A missing property of the root is filed under its bare name, which code matching `property === 'name'`
+      // relies on; one that is empty or holds a `.`, `[` or `]` keeps its brackets
       property = property ? `${property}${missing}` : missing.replace(/^\./, '');
     }
 

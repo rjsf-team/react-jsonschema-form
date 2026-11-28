@@ -2,8 +2,7 @@ import { PROPERTIES_KEY, REF_KEY } from './constants.ts';
 import getKeywordParentSchema, { keywordParentSchemaAt } from './getKeywordParentSchema.ts';
 import getValidatorErrorUiTitle, {
   escapeRegExp,
-  getErrorFieldSchemaPath,
-  isEngineParent,
+  getErrorSchemaPaths,
   uiSchemaAtDataPath,
 } from './getValidatorErrorUiTitle.ts';
 import { getByPath, propertyToPath } from './pathUtils.ts';
@@ -67,7 +66,7 @@ export default function applyValidatorErrorTitles<
   schema,
 }: ValidatorErrorTitleSource<T, S, F>): { message: string; titles: Map<string, string> } {
   const propParts = propertyToPath(property);
-  const fieldSchemaPath = getErrorFieldSchemaPath<S>(
+  const { fieldSchemaPath, leadsToParent } = getErrorSchemaPaths<S>(
     schemaPath,
     decodeSchemaPathKey,
     property,
@@ -103,24 +102,22 @@ export default function applyValidatorErrorTitles<
               skipsRefs,
             )
           : undefined) ?? getByPath(holder, [PROPERTIES_KEY, name]));
-  const parentSchemaPath =
-    schema &&
-    isEngineParent(
-      getKeywordParentSchema<S>(schema, schemaPath, decodeSchemaPathKey, skipsRefs),
-      schema,
-      schemaPath,
-      decodeSchemaPathKey,
-      property,
-      parentSchema,
-    )
-      ? schemaPath
-      : undefined;
+  const parentSchemaPath = leadsToParent ? schemaPath : undefined;
   const titles = new Map<string, string>();
   for (const name of names) {
     // A sub-field named `title` sits at the same path as a raw `title`
     const rawUiTitle = getByPath(uiSchemaAtDataPath<T, S, F>(uiSchema, propParts, schema), [name, 'title']);
     const title =
-      (getValidatorErrorUiTitle<T, S, F>({ property, name, schemaPath, decodeSchemaPathKey, uiSchema, schema }) ??
+      (getValidatorErrorUiTitle<T, S, F>({
+        property,
+        name,
+        schemaPath,
+        decodeSchemaPathKey,
+        skipsRefs,
+        uiSchema,
+        parentSchema,
+        schema,
+      }) ??
         (typeof rawUiTitle === 'string' ? rawUiTitle : undefined)) ||
       titleOf(propertyOf(parentSchemaPath, parentSchema, name)) ||
       titleOf(propertyOf(fieldSchemaPath, fieldSchema, name)) ||

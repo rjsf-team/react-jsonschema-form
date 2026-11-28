@@ -70,6 +70,34 @@ describe('getValidatorErrorUiTitle()', () => {
     expect(getValidatorErrorUiTitle({ ...source, name: 'n' })).toBeUndefined();
   });
 
+  it.each<[string, RJSFSchema]>([
+    ['no items', { type: 'array' }],
+    ['only contains', { type: 'array', contains: { type: 'string' } }],
+    ['a type list starting with array', { type: ['array', 'object'] }],
+    ['a nullable type list', { type: ['array', 'null'] }],
+    ['a nullable type list starting with null', { type: ['null', 'array'] }],
+  ])('reads an index under an array schema with %s as an item, never an additional property', (_, array) => {
+    expect(
+      getValidatorErrorUiTitle({
+        property: '.a.0',
+        schemaPath: '#/properties/a/minLength',
+        uiSchema: { a: { items: { 'ui:title': 'IT' }, additionalProperties: { 'ui:title': 'AP' } } },
+        schema: { type: 'object', properties: { a: array } },
+      }),
+    ).toEqual('IT');
+  });
+
+  it('reads an index under a type list starting with object as an additional property, as the form renders it', () => {
+    expect(
+      getValidatorErrorUiTitle({
+        property: '.a.0',
+        schemaPath: '#/properties/a/additionalProperties/minLength',
+        uiSchema: { a: { items: { 'ui:title': 'IT' }, additionalProperties: { 'ui:title': 'AP' } } },
+        schema: { type: 'object', properties: { a: { type: ['object', 'array'] } } },
+      }),
+    ).toEqual('AP');
+  });
+
   it.each<[string, RJSFSchema | undefined, string | undefined]>([
     ['reads an additional property under additionalProperties', objSchema, 'Extra ui'],
     ["doesn't guess at one without the schema", undefined, undefined],
@@ -240,6 +268,29 @@ describe('getValidatorErrorUiTitle()', () => {
         uiSchema: { name: { 'ui:title': 'Root name' } },
       }),
     ).toBeUndefined();
+  });
+
+  // The `allOf` beside `additionalProperties` leaves the walk nothing to follow, so only the stripped path names it
+  it.each<[string, unknown, string | undefined]>([
+    ['no parentSchema', undefined, 'AP n'],
+    ['the parentSchema the path leads to', { required: ['n'] }, 'AP n'],
+    ['a parentSchema the path doesn’t lead to', { required: ['m'] }, undefined],
+  ])('removes the branches from a schemaPath for a name by the inputs given, with %s', (_, parentSchema, title) => {
+    expect(
+      getValidatorErrorUiTitle({
+        property: '.obj.extra',
+        name: 'n',
+        schemaPath: '#/properties/obj/additionalProperties/allOf/0/required',
+        uiSchema: { obj: { additionalProperties: { n: { 'ui:title': 'AP n' } } } },
+        parentSchema,
+        schema: {
+          type: 'object',
+          properties: {
+            obj: { type: 'object', allOf: [{}], additionalProperties: { allOf: [{ required: ['n'] }] } },
+          },
+        },
+      }),
+    ).toEqual(title);
   });
 
   it("doesn't remove the branches from a schemaPath the root doesn't lead along to the keyword", () => {

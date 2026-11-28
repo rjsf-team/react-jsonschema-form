@@ -27,7 +27,7 @@ export default function toErrorList<T = unknown>(
  */
 function errorsFrom(errorSchema: Record<string, unknown> | unknown[], fieldPath: string[]): RJSFValidationError[] {
   const errors: unknown = Reflect.get(errorSchema, ERRORS_KEY);
-  // An error on the root itself is listed under `.`
+  // An error on the root itself is listed under `.`, where `pathToProperty()` writes the root as `''`
   const property = pathToProperty(fieldPath) || '.';
   const errorList: RJSFValidationError[] = Array.isArray(errors)
     ? errors.map((message: string) => ({ property, message, stack: `${property} ${message}` }))

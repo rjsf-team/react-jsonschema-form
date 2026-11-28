@@ -21,6 +21,7 @@ import {
 import deepEquals from './deepEquals.ts';
 import getFieldSchemaPath from './getFieldSchemaPath.ts';
 import getKeywordParentSchema from './getKeywordParentSchema.ts';
+import getSchemaType from './getSchemaType.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getUiOptions from './getUiOptions.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
@@ -136,7 +137,7 @@ function leadsToProperty<S extends StrictRJSFSchema>(keys: string[], property: s
  * @param [parentSchema] - The schema object the engine hands over as holding the keyword
  * @returns - Whether the path leads to the engine's schema
  */
-export function isEngineParent<S extends StrictRJSFSchema = RJSFSchema>(
+function isEngineParent<S extends StrictRJSFSchema = RJSFSchema>(
   found: S | null | undefined,
   schema: S,
   schemaPath: string,
@@ -154,11 +155,12 @@ export function isEngineParent<S extends StrictRJSFSchema = RJSFSchema>(
   );
 }
 
-/** Returns the `schemaPath` with the branches the keyword sits in removed (see `getFieldSchemaPath()`), or the
- * `schemaPath` itself when the root `schema` doesn't lead along it to the engine's `parentSchema` (see
- * `isEngineParent()`). Ajv starts the path of a keyword in a `$ref` target it compiles on its own at that target, so
- * such a path names no field of the root unless it leads to the error's instance. One `skipsRefs` reads as `null` does lead along it, to a branch of a field it
- * names either way
+/** Returns the `schemaPath` with the branches the keyword sits in removed (see `getFieldSchemaPath()`), and whether the
+ * root `schema` leads along it to the engine's `parentSchema` (see `isEngineParent()`). Ajv starts the path of a keyword
+ * in a `$ref` target it compiles on its own at that target, so such a path names no field of the root unless it leads
+ * to the error's instance, and keeps its branches. A path `getKeywordParentSchema()` reads as `null`, as it does for an
+ * engine with `skipsRefs` where the path can index either a `$ref` schema's subschema or its target's, loses its
+ * branches too, since it leads to a branch of the field it names either way
  *
  * @param schemaPath - The URI fragment of the JSON Pointer to the schema keyword that failed
  * @param decodeSchemaPathKey - Decodes a key of the `schemaPath`
@@ -166,34 +168,35 @@ export function isEngineParent<S extends StrictRJSFSchema = RJSFSchema>(
  * @param [schema] - The form's root schema
  * @param [skipsRefs=false] - The engine leaves every `$ref` out of the `schemaPath`, as `getKeywordParentSchema()` reads it
  * @param [parentSchema] - The schema object the engine hands over as holding the keyword
- * @returns - The path of the keyword in the schema of the field it applies to
+ * @returns - The path of the keyword in the schema of the field it applies to, and whether the path leads to the
+ *   engine's schema
  */
-export function getErrorFieldSchemaPath<S extends StrictRJSFSchema = RJSFSchema>(
+export function getErrorSchemaPaths<S extends StrictRJSFSchema = RJSFSchema>(
   schemaPath: string,
   decodeSchemaPathKey: (key: string) => string,
   property: string,
   schema?: S,
   skipsRefs = false,
   parentSchema?: unknown,
-): string {
+): { fieldSchemaPath: string; leadsToParent: boolean } {
   const fieldSchemaPath = getFieldSchemaPath(schemaPath);
-  if (fieldSchemaPath === schemaPath || !schema) {
-    return fieldSchemaPath;
+  if (!schema) {
+    return { fieldSchemaPath, leadsToParent: false };
   }
   const found = getKeywordParentSchema<S>(schema, schemaPath, decodeSchemaPathKey, skipsRefs);
-  return found === null || isEngineParent<S>(found, schema, schemaPath, decodeSchemaPathKey, property, parentSchema)
-    ? fieldSchemaPath
-    : schemaPath;
+  const leadsToParent = isEngineParent<S>(found, schema, schemaPath, decodeSchemaPathKey, property, parentSchema);
+  return { fieldSchemaPath: found === null || leadsToParent ? fieldSchemaPath : schemaPath, leadsToParent };
 }
 
 /** The keywords that let a schema declare keys and items it doesn't hold itself */
 const OPAQUE_KEYS = [REF_KEY, ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, IF_KEY, DEPENDENCIES_KEY, DEPENDENT_SCHEMAS_KEY];
 
 /** Returns the uiSchema at a data path, an array item's read from its array's `items`, or the tuple's `prefixItems` or
- * `additionalItems` describing it, as `getStaticItemsUiSchema()` reads it, since the uiSchema keys no item by its index. A key that looks like an index is read as the key when the
- * uiSchema holds it or the schema at that point declares it, or, when known, has no items. A key the uiSchema doesn't
- * hold and the known schema doesn't declare is an additional property, read from `additionalProperties`, as the form
- * renders it. A schema holding a `$ref` or a branch isn't known
+ * `additionalItems` describing it, as `getStaticItemsUiSchema()` reads it, since the uiSchema keys no item by its index.
+ * A key that looks like an index is read as the key when the uiSchema holds it or the schema at that point declares it,
+ * or, when known, renders as no array and has no items. A key the uiSchema doesn't hold and the known schema doesn't
+ * declare is an additional property, read from `additionalProperties`, as the form renders it. A schema holding a
+ * `$ref` or a branch isn't known
  *
  * @param uiSchema - The form's uiSchema
  * @param path - The data path, such as `['arr', '0', 'name']`
@@ -216,7 +219,9 @@ export function uiSchemaAtDataPath<T, S extends StrictRJSFSchema, F extends Form
     const holdsKey = Object.hasOwn(Object(node), key);
     const declaresKey = getByPath(shown, [PROPERTIES_KEY, key]) !== undefined;
     const hasItems = getByPath(shown, ITEMS_KEY) !== undefined || getByPath(shown, PREFIX_ITEMS_KEY) !== undefined;
-    const isItem = isIndex(key) && !holdsKey && !declaresKey && (isOpaque || hasItems);
+    // A type list renders as the type `getSchemaType()` picks from it, its first other than `null`
+    const isArray = shown !== undefined && getSchemaType<S>(shown) === 'array';
+    const isItem = isIndex(key) && !holdsKey && !declaresKey && (isOpaque || hasItems || isArray);
     const isAdditional = !isItem && !holdsKey && !declaresKey && !isOpaque;
     if (isItem) {
       node = getStaticItemsUiSchema<T, S, F>(node, Number(key), shown);
@@ -282,14 +287,14 @@ function namesNoOtherProperty(keys: string[], dataPath: string[]): boolean {
 /** Used by the validator packages to find the `ui:title` of the field an error names: of the `name` under the error's
  * `property`, or of the `property` itself when no `name` is given. It is read at that field's data path, an array
  * item's field under its array's `items`, so `.arr.0.name` reads `uiSchema.arr.items.name`. The `name` is read as the
- * key it is, never as an item or an additional property. A `name` with none there
- * has it read along the `schemaPath`, where `#/properties/a/properties/b/required` points into the uiSchema at `['a',
- * 'b']`, then along it with the branches the keyword sits in removed (see `getFieldSchemaPath()`). A schema path that
- * names another property than the data path at the same level, as Ajv's does for a keyword behind a `$ref` to another
- * property, or stops short of the data path, as for one behind a `$ref` to the root, isn't read. An empty `ui:title`
- * is returned as found, and the root's own `ui:title` is never read
+ * key it is, never as an item or an additional property. A `name` with none there has it read along the `schemaPath`,
+ * where `#/properties/a/properties/b/required` points into the uiSchema at `['a', 'b']`, then along it with the branches
+ * the keyword sits in removed (see `getFieldSchemaPath()`). A schema path that names another property than the data
+ * path at the same level, as Ajv's does for a keyword behind a `$ref` to another property, or stops short of the data
+ * path, as for one behind a `$ref` to the root, isn't read. An empty `ui:title` is returned as found, and the root's
+ * own `ui:title` is never read
  *
- * @param source - The error's `property` and `schemaPath`, the uiSchema they point into and the root schema
+ * @param source - The error's `property` and `schemaPath`, the uiSchema they point into and the schemas the path is read in
  * @returns - The `ui:title` found, otherwise `undefined`
  */
 export default function getValidatorErrorUiTitle<
@@ -301,11 +306,13 @@ export default function getValidatorErrorUiTitle<
   name,
   schemaPath,
   decodeSchemaPathKey = (key) => key,
+  skipsRefs = false,
   uiSchema,
+  parentSchema,
   schema,
 }: Pick<
   ValidatorErrorTitleSource<T, S, F>,
-  'property' | 'schemaPath' | 'decodeSchemaPathKey' | 'uiSchema' | 'schema'
+  'property' | 'schemaPath' | 'decodeSchemaPathKey' | 'skipsRefs' | 'uiSchema' | 'parentSchema' | 'schema'
 > & {
   /** The name of a property under the `property`, such as one a `required` error names */
   name?: string;
@@ -330,7 +337,14 @@ export default function getValidatorErrorUiTitle<
     namesNoOtherProperty(keysOf(path), propertyPath)
       ? getUiOptions<T, S, F>(getByPath(uiSchema, [...keysOf(path.replace(/\/properties\//g, '/')), name])).title
       : undefined;
+  // A path with no branches has none to remove, so it isn't walked again
   return (
-    titleAlong(schemaPath) ?? titleAlong(getErrorFieldSchemaPath<S>(schemaPath, decodeSchemaPathKey, property, schema))
+    titleAlong(schemaPath) ??
+    (getFieldSchemaPath(schemaPath) === schemaPath
+      ? undefined
+      : titleAlong(
+          getErrorSchemaPaths<S>(schemaPath, decodeSchemaPathKey, property, schema, skipsRefs, parentSchema)
+            .fieldSchemaPath,
+        ))
   );
 }
