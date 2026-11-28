@@ -4,6 +4,8 @@ import {
   enumOptionsIsDisabled,
   getByPath,
   getDiscriminatorFieldFromSchema,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   setByPath,
   renderedOptionTitles,
   renderedOptionsUiSchema,
@@ -161,9 +163,9 @@ export default function LayoutMultiSchemaField<
   } = allUiOptions;
   const selectedOption = getByPath(formData, selectorField);
   // Where two options share a selector value, the widget offers each by its index, since the value can't tell which
-  // was picked
+  // was picked. So does one that doesn't pin the selector, whose `undefined` value would read as clearing the selection
   const selectorValues = enumOptions.map(({ value }) => value);
-  const byIndex = selectorValues.some((value, at) => selectorValues.indexOf(value) !== at);
+  const byIndex = selectorValues.some((value, at) => value === undefined || selectorValues.indexOf(value) !== at);
   // The option the selector value names, the form's pick where options a merge of lists built from the same option
   // share that value. Offered by index, options that don't pin the selector are named by the form's pick alone
   const named = getSelectedOptionIndex<S>(enumOptions, selectorField, selectedOption, (indices) =>
@@ -252,11 +254,17 @@ export default function LayoutMultiSchemaField<
     ? {
         ...uiOptions,
         enumOptions: enumOptions.map((option, index) => ({ ...option, value: index })),
-        // `ui:enumDisabled` names selector values, so each option holding one is disabled by its index.
-        // shortcut: `ui:optgroups` still names selector values, which match no index; map it too if one is used here
+        // `ui:enumDisabled` and `ui:optgroups` name selector values, so each option holding one is named by its index
         enumDisabled: selectorValues.flatMap((value, index) =>
           enumOptionsIsDisabled(value, uiOptions.enumDisabled) ? [index] : [],
         ),
+        optgroups:
+          uiOptions.optgroups &&
+          Object.fromEntries(
+            groupEnumOptions<S>(enumOptions, uiOptions.optgroups).flatMap((entry) =>
+              isEnumOptionsGroup<S>(entry) ? [[entry.label, entry.options.map(({ index }) => index)]] : [],
+            ),
+          ),
       }
     : { enumOptions, ...uiOptions };
   let widgetValue = selectedOption;
