@@ -778,12 +778,14 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
 ): S {
   const { graph, seeds } = field;
   // An option is retrieved as part of the field offering it, so an empty field's option takes neither branch of its
-  // `if`s, as the field does
+  // `if`s, as the field does. Its properties are fields of their own, planned with their own types
+  const policy = renderPolicy(context, root);
   const declared = field.optionOf?.declared;
-  const policy = declared === undefined ? renderPolicy(context, root) : { ...renderPolicy(context, root), declared };
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
-  const plan = planned ?? planOf(seeds, data);
+  const plan =
+    planned ??
+    buildPlan({ context, graph, seeds, data, policy: declared === undefined ? policy : { ...policy, declared } });
   // Keyed on what an absent `additionalProperties` means too, which decides whether the view stubs its extra keys
   const viewKey = [
     field,

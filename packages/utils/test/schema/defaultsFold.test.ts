@@ -1751,13 +1751,13 @@ describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () =
   });
 
   it.each<[string, RJSFSchema['type']]>([
-    ['object', 'object'],
-    ['with no type', undefined],
+    ['of type object', 'object'],
+    ['naming no type', undefined],
   ])(
-    "reads no start value of an empty %s field whose allOf then gives it an object const under skipEmptyDefaults, nor of its children's (#5895)",
+    'plans a chain of empty fields %s whose allOf then gives each an object const under skipEmptyDefaults at a cost linear in its depth (#5895)',
     (_name, type) => {
-      // Each level's object const is left unresolved while it is empty, which the start value of a field that may hold
-      // a primitive would resolve; read for these, each read would read its children's again, at 2^depth plans
+      // Each level's object const is left unresolved while it is empty. A level that planned its children again for
+      // each plan of its own would cost 2^depth plans
       const plansAt = (depth: number) => {
         let schema: RJSFSchema = { type: 'string' };
         for (let level = 0; level < depth; level += 1) {

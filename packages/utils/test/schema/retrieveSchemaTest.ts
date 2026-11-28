@@ -949,9 +949,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     // The data meets both options of a pair, so a pair no data meets is left out, and the branch's annotations win,
-    // so a `then` narrows or relabels the field's options as it does a field offering none. Each field holds a value,
-    // since an empty one whose options allow no object takes neither branch
-    it.each<[string, RJSFSchema[], RJSFSchema[], RJSFSchema[], unknown]>([
+    // so a `then` narrows or relabels the field's options as it does a field offering none
+    it.each<[string, RJSFSchema[], RJSFSchema[], RJSFSchema[]]>([
       [
         'relabels',
         [
@@ -960,12 +959,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ],
         [{ const: 'a', title: 'Only A' }],
         [{ const: 'a', title: 'Only A' }],
-        'a',
       ],
-      ['narrows', [{ const: 'a' }, { const: 'b' }], [{ const: 'c' }], [{ const: 'c' }], 'c'],
-      ['retypes', [{ type: 'string' }], [{ type: 'number' }], [{ type: 'number' }], 1],
-    ])("%s the field's options with the branch's, whose annotations win each pair", (_, own, then, expected, data) => {
-      expect(retrieved({ oneOf: own, if: true, then: { oneOf: then } }, data).oneOf).toEqual(expected);
+      ['narrows', [{ const: 'a' }, { const: 'b' }], [{ const: 'c' }], [{ const: 'c' }]],
+      ['retypes', [{ type: 'string' }], [{ type: 'number' }], [{ type: 'number' }]],
+    ])("%s the field's options with the branch's, whose annotations win each pair", (_, own, then, expected) => {
+      expect(retrieved({ oneOf: own, if: true, then: { oneOf: then } }).oneOf).toEqual(expected);
     });
     it.each<[string, RJSFSchema, RJSFSchema]>([
       ["the field's const", { const: 'a' }, { enum: ['b'] }],
@@ -3451,6 +3449,26 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema(context, option, schema, 'abcd').title).toBe('Long');
         // Not handed out with its field, the option names no type, so it is checked against `{}`
         expect(retrieveSchema(context, conditional, schema).title).toBe('Short');
+      });
+      it("plans a handed-out option's properties with their own types, not the type of the field offering it (#5916)", () => {
+        testValidator.setReturnValues({ isValid: (condition, data, root) => check(condition, data, root) });
+        const context = { validator: testValidator };
+        const tag: RJSFSchema = {
+          enum: ['a', 'b'],
+          if: { const: 'a' },
+          then: { title: 'A' },
+          else: { title: 'Other' },
+        };
+        const list: RJSFSchema = { type: 'array', if: { minItems: 1 }, then: { title: 'L1' }, else: { title: 'L0' } };
+        // Matched by patterns, each property is planned with the object holding it rather than handed out as declared
+        const object: RJSFSchema = { properties: { tag, list }, patternProperties: { '^t': {}, '^l': {} } };
+        const titles = (view: RJSFSchema) =>
+          Object.values(view.properties ?? {}).map((property) => (isObject(property) ? property.title : undefined));
+        const plain = retrieveSchema(context, { type: 'object', ...object }, {});
+        const schema: RJSFSchema = { type: 'object', oneOf: [object] };
+        const [option] = retrieveSchema(context, schema, schema).oneOf as RJSFSchema[];
+        expect(titles(plain)).toEqual([undefined, 'L1']);
+        expect(titles(retrieveSchema(context, option, schema))).toEqual(titles(plain));
       });
       it('should resolve if, then', () => {
         // Mock errors so that resolveCondition works as expected

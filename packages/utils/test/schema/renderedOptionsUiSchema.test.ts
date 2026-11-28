@@ -21,13 +21,8 @@ const uiB: UiSchema = { 'ui:title': 'B' };
 const uiSchema: UiSchema = { oneOf: [uiA, uiB] };
 
 /** The entries the field `field` of the root `root` reads, retrieved as `SchemaField` retrieves it */
-function entriesOf(
-  field: RJSFSchema,
-  root: RJSFSchema = field,
-  customMergeAllOf?: CustomMergeAllOf,
-  formData?: unknown,
-) {
-  const view = retrieveSchema({ validator: testValidator, customMergeAllOf }, field, root, formData);
+function entriesOf(field: RJSFSchema, root: RJSFSchema = field, customMergeAllOf?: CustomMergeAllOf) {
+  const view = retrieveSchema({ validator: testValidator, customMergeAllOf }, field, root);
   return renderedOptionsUiSchema(uiSchema, view, root);
 }
 
@@ -42,16 +37,15 @@ describe('renderedOptionsUiSchema()', () => {
     },
   );
 
-  // The branch's `type` or `$ref` would win over the field option's, collapsing pairs built from different options.
-  // Each field holds a value, since an empty one whose options allow no object takes neither branch
-  it.each<[string, RJSFSchema['oneOf'], RJSFSchema, unknown]>([
-    ['an integer meeting a number', [{ type: 'string' }, { type: 'number' }], { type: 'integer', minimum: 1 }, 1],
-    ['one of a list of types', [{ type: 'number' }, { type: ['string', 'null'] }], { type: 'null' }, null],
+  // The branch's `type` or `$ref` would win over the field option's, collapsing pairs built from different options
+  it.each<[string, RJSFSchema['oneOf'], RJSFSchema]>([
+    ['an integer meeting a number', [{ type: 'string' }, { type: 'number' }], { type: 'integer', minimum: 1 }],
+    ['one of a list of types', [{ type: 'number' }, { type: ['string', 'null'] }], { type: 'null' }],
   ])(
     "gives the option a then's list rebuilds from the field's option sharing its type, %s, that option's entry",
-    (_, oneOf, option, data) => {
+    (_, oneOf, option) => {
       const field: RJSFSchema = { oneOf, if: true, then: { oneOf: [option] } };
-      expect(entriesOf(field, field, undefined, data)).toEqual([uiB]);
+      expect(entriesOf(field)).toEqual([uiB]);
     },
   );
 
