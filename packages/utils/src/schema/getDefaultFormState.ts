@@ -111,6 +111,7 @@ import buildPlan, {
 import type {
   Branches,
   CheckedCondition,
+  DeclaredTypes,
   FixedCondition,
   Keywords,
   MergePlan,
@@ -679,6 +680,10 @@ interface DefaultsField<S extends StrictRJSFSchema> {
   readonly retrieves?: boolean;
   /** The schema of a field no subschema seeds, such as the stub of an extra key whose type is guessed from its data */
   readonly fallback?: S;
+  /** For an option `retrieveSchema()` handed out, what the field offering it declares of its `type`, see
+   * `Provenance.declared`
+   */
+  readonly declared?: DeclaredTypes;
 }
 
 /** A field's schema as the fold reads it, with the seeds of its children */
@@ -1092,15 +1097,16 @@ interface PlanRequest<S extends StrictRJSFSchema> {
   readonly depData: unknown;
   readonly selections: ReadonlyMap<string, number>;
   readonly cutRecursion: boolean;
+  readonly declared?: DeclaredTypes;
 }
 
 function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
-  { graph, seeds, data, depData, selections, cutRecursion }: PlanRequest<S>,
+  { graph, seeds, data, depData, selections, cutRecursion, declared }: PlanRequest<S>,
   { allOf, conditions }: OptionPolicy,
   optionPolicy?: OptionPolicy,
 ): PlannedField<S> {
-  const policy = policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
+  const policy = { ...policyFor(context, graph, allOf, conditions, selections, cutRecursion, optionPolicy), declared };
   return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
 }
 
@@ -1147,7 +1153,15 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
     return ownView(field, leaf, data);
   }
   const planFor = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => {
-    const fieldData = { graph, seeds, data, depData, selections: options.selections, cutRecursion };
+    const fieldData = {
+      graph,
+      seeds,
+      data,
+      depData,
+      selections: options.selections,
+      cutRecursion,
+      declared: field.declared,
+    };
     if (inherited) {
       return planWith(context, fieldData, inherited, inherited.optionPolicy);
     }
@@ -1903,7 +1917,10 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
         preferParentDefaults,
         props,
         mergesOwnSubschemas(view.schema)
-          ? (data) => retrieveField<S, F>(context, rootProvenance<S>(view.field.graph, view.field.seeds), data)
+          ? (data) => {
+              const { graph, seeds, declared } = view.field;
+              return retrieveField<S, F>(context, rootProvenance<S>(graph, seeds, declared), data);
+            }
           : undefined,
         adopted !== undefined,
       );
@@ -4006,8 +4023,11 @@ function startsFalse<S extends StrictRJSFSchema>(schema: S, isBoolean: boolean, 
  * the resource it sits in, as retrieving it resolves them; its ref path restarts all the same
  */
 function callRoot<S extends StrictRJSFSchema>(rootSchema: S | undefined, rawSchema: S): DefaultsField<S> {
-  const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema ?? schemaFrom(rawSchema, {})), rawSchema);
-  return { graph, seeds: restartSeeds(seeds), expanded: false, edge: 'root' };
+  const { graph, seeds, declared } = fieldOf<S>(
+    parseSchemaGraph<S>(rootSchema ?? schemaFrom(rawSchema, {})),
+    rawSchema,
+  );
+  return { graph, seeds: restartSeeds(seeds), expanded: false, edge: 'root', declared };
 }
 
 /** The view the exported helpers read `rawSchema` through: the schema as it stands, or, for one with an `if` (unless
@@ -4470,7 +4490,13 @@ function optionsMergedField<S extends StrictRJSFSchema, F extends FormContextTyp
     return undefined;
   }
   const { data, depData, merged } = view;
-  const plan = buildPlan<S, F>({ context, ...field, data, depData, policy: { allOf: true, conditions } });
+  const plan = buildPlan<S, F>({
+    context,
+    ...field,
+    data,
+    depData,
+    policy: { allOf: true, conditions, declared: field.declared },
+  });
   // The fixed point of the field reads the conditions the merge checked and the dependencies it qualified, as it reads
   // those of its own plan, but not the options of the lists those offer, which the merge leaves unchosen
   if (plan.readsData) {
@@ -4556,15 +4582,19 @@ function constValueOf<S extends StrictRJSFSchema>(schema: S): unknown {
  * too, each merged over the field's own seeds as the fold merged it
  */
 function viewField<S extends StrictRJSFSchema>(view: DefaultsView<S>): Provenance<S> {
-  return rootProvenance<S>(view.graph, [
-    ...view.field.seeds,
-    ...view.choices.flatMap((choice): Seed[] => {
-      const { options, refPath } = choice;
-      const index = view.options.selections.get(selectionKey(choice));
-      return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
-    }),
-    ...(view.options.adopted?.values() ?? []),
-  ]);
+  return rootProvenance<S>(
+    view.graph,
+    [
+      ...view.field.seeds,
+      ...view.choices.flatMap((choice): Seed[] => {
+        const { options, refPath } = choice;
+        const index = view.options.selections.get(selectionKey(choice));
+        return index === undefined ? [] : [{ node: options[index], refPath, scope: [`o${options[index]}`] }];
+      }),
+      ...(view.options.adopted?.values() ?? []),
+    ],
+    view.field.declared,
+  );
 }
 
 /** `ensureFormDataMatchingSchema()` for the field `view` the fold computed, retrieved as `viewField()` gives it and

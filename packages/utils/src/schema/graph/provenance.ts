@@ -21,14 +21,17 @@ interface ProvenanceFields {
   readonly seeds: readonly Seed[];
   readonly chain?: GuardChain;
   /** For an `anyOf`/`oneOf` option, the set and `setKey` of the plan of the field offering it: an option whose own plan
-   * adds nothing to that set renders nothing beside the selector. With what that field declares of its `type`, which the
-   * option is retrieved as part of, so its `if`s are checked as the field's are, see `PlanPolicy.declared`
+   * adds nothing to that set renders nothing beside the selector
    */
   readonly optionOf?: {
     readonly setKey: string;
     readonly set: ReadonlySet<NodeId>;
-    readonly declared?: DeclaredTypes;
   };
+  /** For an `anyOf`/`oneOf` option, and a copy of one, what the field offering it declares of its `type`: the option is
+   * retrieved and its defaults computed as part of that field, so its `if`s are checked as the field's are, see
+   * `PlanPolicy.declared`
+   */
+  readonly declared?: DeclaredTypes;
   /** For an `anyOf`/`oneOf` option, whether it stubs the extra keys of its data itself, which it does when the field
    * offering it renders no field of its own beside it to stub them with
    */
@@ -129,7 +132,7 @@ function intern<S extends StrictRJSFSchema>(
     seedsKey(fields.seeds),
     fields.chain?.id,
     fields.optionOf?.setKey,
-    JSON.stringify(fields.optionOf?.declared),
+    JSON.stringify(fields.declared),
     fields.stubsOwnExtraKeys,
   ].join('|');
   const interned = table.provenances.get(key);
@@ -145,6 +148,7 @@ function intern<S extends StrictRJSFSchema>(
     ),
     chain: fields.chain,
     optionOf: fields.optionOf,
+    declared: fields.declared,
     stubsOwnExtraKeys: fields.stubsOwnExtraKeys,
   };
   // A printed schema shows its stamp through this rather than the whole graph the stamp points into, as the diff of a
@@ -160,13 +164,15 @@ function intern<S extends StrictRJSFSchema>(
  *
  * @param graph - The graph the field is planned in
  * @param seeds - The field's seeds
+ * @param [declared] - For an option, what the field offering it declares of its `type`, see `Provenance.declared`
  * @returns - The interned provenance
  */
 export function rootProvenance<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   seeds: readonly Seed[],
+  declared?: DeclaredTypes,
 ): Provenance<S> {
-  return intern(graph, { seeds });
+  return intern(graph, { seeds, declared });
 }
 
 /** Returns the provenance of a child of the field `parent` is the provenance of

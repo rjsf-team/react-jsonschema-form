@@ -13,6 +13,7 @@ import {
   createSchemaUtils,
   fieldPathFromList,
   getDefaultFormState,
+  getFilledDefault,
   isObject,
   noop,
   resetLogOnce,
@@ -8772,6 +8773,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const filled = getDefaultFormState(context, { schema, formData: null });
           expect(filled).toStrictEqual({ c: 2 });
           expect(getDefaultFormState(context, { schema, formData: filled })).toStrictEqual({ c: 2 });
+        });
+        it('fills a handed-out option, and a copy of one, as part of the field offering it, so an empty field takes neither branch of its if (#5916)', () => {
+          const context = { validator: testValidator };
+          const conditional: RJSFSchema = { if: { minLength: 3 }, then: { title: 'Long', default: 'abcd' } };
+          const schema: RJSFSchema = { type: 'string', oneOf: [conditional, { title: 'Other' }] };
+          const option = retrieveSchema(context, schema, schema).oneOf?.[0];
+          if (typeof option !== 'object') {
+            throw new Error('retrieveSchema() handed out no option');
+          }
+          for (const read of [option, { ...option }]) {
+            expect(retrieveSchema(context, read, schema)).not.toHaveProperty('title');
+            expect(getDefaultFormState(context, { schema: read, rootSchema: schema })).toBeUndefined();
+            expect(computeDefaults(context, read, { rootSchema: schema })).toBeUndefined();
+            expect(getFilledDefault(context, read, schema)).toBeUndefined();
+            expect(ensureFormDataMatchingSchema(context, read, schema, 'ab')).toBe('ab');
+            expect(retrieveSchema(context, read, schema, 'abcd').title).toBe('Long');
+          }
+          // Not handed out with its field, the option names no type, so its if is checked against `{}`
+          expect(getDefaultFormState(context, { schema: conditional, rootSchema: schema })).toBe('abcd');
         });
         describe.each(PLACEMENTS)(
           'takes neither branch of an if of a field holding no value but a constant one, true, {} and false, which decides it, and lets the validator decide one holding a value, %s',

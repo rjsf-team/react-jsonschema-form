@@ -464,3 +464,30 @@ describe('an option retrieved as part of its field (#5916)', () => {
     expect(optionLabels(node)).toEqual(['long', 'other']);
   });
 });
+
+describe("an option's defaults, filled as part of its field (#5916)", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      x: {
+        type: 'string',
+        oneOf: [{ if: { minLength: 3 }, then: { title: 'Long', default: 'abcd' } }, { title: 'Other' }],
+      },
+    },
+  };
+
+  it('starts the option empty, taking neither branch, and again after switching away and back', async () => {
+    const { node, onChange } = createFormComponent({ schema });
+    const input = () => node.querySelector<HTMLInputElement>('#root_x');
+    const select = screen.getByRole('combobox');
+    expect(input()).toHaveValue('');
+    expect(screen.queryByText('Long')).toBeNull();
+
+    await user.selectOptions(select, 'Other');
+    await user.selectOptions(select, 'Option 1');
+
+    expect(input()).toHaveValue('');
+    expect(screen.queryByText('Long')).toBeNull();
+    expectToHaveBeenCalledWithFormData(onChange, {}, 'root_x__oneof_select');
+  });
+});
