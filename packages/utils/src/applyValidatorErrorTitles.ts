@@ -80,10 +80,41 @@ const NAMED_KEYS = new Set([
   DEFINITIONS_KEY,
 ]);
 
+const ITEM_STEP_KEYS = new Set([
+  PREFIX_ITEMS_KEY,
+  ITEMS_KEY,
+  ADDITIONAL_ITEMS_KEY,
+  CONTAINS_KEY,
+  UNEVALUATED_ITEMS_KEY,
+]);
+
+/** The ends of the matches a schema path's instance step can make of an error's `property` from its index `at` */
+type InstanceStep = (property: string, at: number) => number[];
+// Every step after one starts at a `.`, so only the ends of keys are kept
+const keyEnds = (property: string, start: number) =>
+  Array.from({ length: property.length - start + 1 }, (_, i) => start + i).filter(
+    (end) => end === property.length || property[end] === '.',
+  );
+// An `additionalProperties` or other such step stands for any key, which can hold a `.`
+const anyKey: InstanceStep = (property, at) => (property[at] === '.' ? keyEnds(property, at + 2) : []);
+const ITEM_INDEX = /\.\d+(?=\.|$)/y;
+const anyIndex: InstanceStep = (property, at) => {
+  ITEM_INDEX.lastIndex = at;
+  return ITEM_INDEX.test(property) ? [ITEM_INDEX.lastIndex] : [];
+};
+const anywhere: InstanceStep = (property, at) => keyEnds(property, at);
+const namedKey =
+  (key: string): InstanceStep =>
+  (property, at) =>
+    property.startsWith(`.${key}`, at) ? [at + key.length + 1] : [];
+
 /** Whether the instance a schema path's `keys` lead to from the root is the one at `property`: a `properties` step names
- * its key, and an `items`, `additionalProperties` or other such step stands for any. A schema a `$ref` names other than
- * the root, such as a definition, is reached from anywhere, so a path into one only has to end at the `property`. The
- * root a recursive `$ref: '#'` names is reached again where each such `$ref` sits, any number of times
+ * its key, an `items` or other such step stands for any index, and an `additionalProperties` or other such step for any
+ * key. A schema a `$ref` names other than the root, such as a definition, is reached from anywhere, so a path into one
+ * only has to end at the `property`. The root a recursive `$ref: '#'` names is reached again where each such `$ref`
+ * sits, any number of times. The steps are matched as the set of indexes of `property` they reach, so a schema naming
+ * its root from places that overlap, which a regular expression would backtrack through exponentially, costs no more
+ * than one that names it once
  *
  * @param keys - The decoded keys of the path from the root to the schema holding the keyword
  * @param property - The error's property path, as `applyValidatorErrorTitles()` takes it
@@ -95,42 +126,47 @@ function leadsToProperty<S extends StrictRJSFSchema>(keys: string[], property: s
   const nodes = Array.from({ length: graph.size }, (_, id) => graph.node(id) as ObjectNode<S>);
   // The JSON pointers the `$ref`s name
   const refTargets = new Set(nodes.map((node) => node.refPointer));
-  // The instance steps of a schema path from the root, or `.*` and those after it where it passes a schema a `$ref`
-  // other than the root names
-  const stepsOf = (path: string[], anyStep: string) => {
-    let pattern = '';
-    // Runs once past the last key, for a `$ref` naming the schema holding the keyword
-    for (let index = 0; index <= path.length; index++) {
+  const stepsOf = (path: string[]) => {
+    let steps: InstanceStep[] = [];
+    for (let index = 0; index < path.length; index++) {
       const key = path[index];
-      if (index > 0 && refTargets.has(childPointer('', path.slice(0, index)))) {
-        pattern = '.*';
-      }
-      if (INSTANCE_STEP_KEYS.has(key)) {
-        pattern += key === PROPERTIES_KEY ? `\\.${escapeRegExp(path[index + 1])}` : anyStep;
+      if (key === PROPERTIES_KEY) {
+        steps.push(namedKey(path[index + 1]));
+      } else if (INSTANCE_STEP_KEYS.has(key)) {
+        steps.push(ITEM_STEP_KEYS.has(key) ? anyIndex : anyKey);
       }
       // The next key is a name or an index, never a keyword
       if (NAMED_KEYS.has(key) || (key === ITEMS_KEY && /^\d+$/.test(path[index + 1]))) {
         index += 1;
       }
+      if (refTargets.has(childPointer('', path.slice(0, index + 1)))) {
+        steps = [anywhere];
+      }
     }
-    return pattern;
+    return steps;
   };
-  // A repeated step matches one key, so a repetition can't backtrack through the keys it spans
+  const follow = (ats: number[], steps: InstanceStep[]) =>
+    steps.reduce((from, step) => [...new Set(from.flatMap((at) => step(property, at)))], ats);
   const repeats = nodes
     .filter((node) => node.refPointer === '')
-    .map((node) => stepsOf(node.pointer.split('/').slice(1).map(unescapeToken), '\\.[^.]+'));
-  const start = repeats.some((steps) => steps.startsWith('.*')) ? '.*' : `(?:${repeats.join('|')})*`;
-  return new RegExp(`^${start}${stepsOf(keys, '\\..+')}$`).test(property);
+    .map((node) => stepsOf(node.pointer.split('/').slice(1).map(unescapeToken)));
+  // A `Set` iterates the indexes added while it is iterated, so this runs until the repeats reach no new one
+  const reached = new Set([0]);
+  for (const at of reached) {
+    repeats.forEach((steps) => follow([at], steps).forEach((end) => reached.add(end)));
+  }
+  return follow([...reached], stepsOf(keys)).includes(property.length);
 }
 
 /** Used by the validator packages to name the properties an error's message names by their `ui:title` or `title`.
- * A name's title is its `ui:title` at the error's `property`, then at it with each array index read as `items`, then at
- * the `schemaPath`, then at it with the branches the keyword sits in removed (see `getFieldSchemaPath()`), then the
- * `title` the uiSchema holds at the `property`, then the `title` of its schema in the `parentSchema`, then in the schema
- * of the field holding the branch the keyword sits in, then in the root `schema`. A schema that is a `$ref` is read
- * resolved, its own `title` kept over its target's and read where its `$ref` can't be merged. Each name with a title is
- * replaced, in one pass so a title that matches another name isn't replaced again, by its title in single quotes. The
- * title is written as it is, `$` patterns included.
+ * A name's title is its `ui:title` at the error's `property`, then at it with each array index read as `items`, then,
+ * unless the root leads along the `schemaPath` to no schema at the `property`, at the `schemaPath`, then at it with the
+ * branches the keyword sits in removed (see `getFieldSchemaPath()`), then the `title` the uiSchema holds at the
+ * `property`, then the `title` of its schema in the `parentSchema`, then in the schema of the field holding the branch
+ * the keyword sits in, then in the root `schema`. A schema that is a `$ref` is read resolved, its own `title` kept over
+ * its target's and read where its `$ref` can't be merged. Each name with a title is replaced, in one pass so a title
+ * that matches another name isn't replaced again, by its title in single quotes. The title is written as it is, `$`
+ * patterns included.
  *
  * @param source - The error's message and what its names' titles are looked up in
  * @returns - The `message` with each name that has a title replaced by it, and the title of each such name
@@ -175,7 +211,9 @@ export default function applyValidatorErrorTitles<
     (parentSchema === undefined ||
       deepEquals(pathParent, parentSchema) ||
       deepEquals(pathKeys.length > 0 ? getByPath(schema, pathKeys) : schema, parentSchema));
-  const fieldSchemaPath = !schema || pathParent === null || leadsToParent ? getFieldSchemaPath(schemaPath) : schemaPath;
+  // A path the root doesn't lead along names no field of the root, in the uiSchema as in the schema
+  const leadsAlong = !schema || pathParent === null || leadsToParent;
+  const fieldSchemaPath = leadsAlong ? getFieldSchemaPath(schemaPath) : schemaPath;
   const fieldSchemaPathParts = uiSchemaPathParts(fieldSchemaPath);
   const fieldSchema =
     schema && fieldSchemaPath !== schemaPath
@@ -185,6 +223,7 @@ export default function applyValidatorErrorTitles<
     let resolved = propertySchema;
     if (schema && stringKeyword(propertySchema, REF_KEY) !== undefined) {
       try {
+        // A schema holding a `$ref` string is an object, which `isObject()` narrows to no `S`
         resolved = resolveOwnRef<S>(propertySchema as S, schema);
       } catch {
         // A `$ref` to an `$anchor` or to nothing leaves the `$ref` schema's own `title`
@@ -212,8 +251,11 @@ export default function applyValidatorErrorTitles<
     const title =
       (getUiOptions<T, S, F>(getByPath(uiSchema, [...propParts, name])).title ??
         getUiOptions<T, S, F>(getByPath(uiSchema, [...itemParts, name])).title ??
-        getUiOptions<T, S, F>(getByPath(uiSchema, [...schemaPathParts, name])).title ??
-        getUiOptions<T, S, F>(getByPath(uiSchema, [...fieldSchemaPathParts, name])).title ??
+        // A path the root can't be read along may still name a field of it
+        (leadsAlong || pathParent === undefined
+          ? (getUiOptions<T, S, F>(getByPath(uiSchema, [...schemaPathParts, name])).title ??
+            getUiOptions<T, S, F>(getByPath(uiSchema, [...fieldSchemaPathParts, name])).title)
+          : undefined) ??
         (typeof rawUiTitle === 'string' ? rawUiTitle : undefined)) ||
       titleOf(propertyOf(parentSchemaPath, parentSchema, name)) ||
       titleOf(propertyOf(fieldSchemaPath, fieldSchema, name)) ||

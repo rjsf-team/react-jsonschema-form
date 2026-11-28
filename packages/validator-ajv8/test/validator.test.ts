@@ -4164,6 +4164,28 @@ describe('AJV8Validator naming a property a branch requires in a $ref target Ajv
     );
   });
 
+  it('names a property the target requires itself by the target’s title, not a root property’s ui:title', () => {
+    const schema: RJSFSchema = {
+      $defs: {
+        N: { type: 'string' },
+        F: { type: 'object', properties: { name: { $ref: '#/$defs/N', title: 'F name' } }, required: ['name'] },
+      },
+      type: 'object',
+      properties: { name: { type: 'string', title: 'Root name' }, a: { $ref: '#/$defs/F' } },
+    };
+    const uiSchema: UiSchema = { name: { 'ui:title': 'Root UI name' } };
+    const { errors } = customizeValidator().validateFormData(
+      { name: 'x', a: {} },
+      schema,
+      undefined,
+      undefined,
+      uiSchema,
+    );
+    expect(errors.find((error) => error.name === 'required')).toEqual(
+      expect.objectContaining({ property: '.a.name', schemaPath: '#/required', title: 'F name' }),
+    );
+  });
+
   it('names a property an array item’s branch holding a $ref requires by the item’s title and ui:title', () => {
     const schema: RJSFSchema = {
       $defs: { O: { type: 'object' } },

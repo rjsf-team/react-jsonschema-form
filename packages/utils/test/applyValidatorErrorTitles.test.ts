@@ -184,6 +184,65 @@ describe('applyValidatorErrorTitles()', () => {
     expect(titles).toEqual(new Map([['name', 'Root name']]));
   });
 
+  // `.kids.0` is one step of the kids' `$ref: '#'` or two of `additionalProperties`', which a regular expression would
+  // split every way before failing, doubling its time with each kid: over 10 minutes at 40 kids
+  it.each<[string, string, Map<string, string>]>([
+    ['leads to', `${'.kids.0'.repeat(40)}.q`, new Map([['name', 'Q UI name']])],
+    ['doesn’t lead to', `${'.kids.0'.repeat(40)}.zz.q.r`, new Map([['name', 'Q name']])],
+  ])('reads a property where the root names itself from places that overlap a path %s', (_, property, expected) => {
+    const q: RJSFSchema = { type: 'object', properties: { name: { title: 'Q name' } } };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property,
+      schemaPath: '#/properties/kids/items/properties/q/required',
+      parentSchema: q,
+      uiSchema: { kids: { items: { q: { name: { 'ui:title': 'Q UI name' } } } } },
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string' }, q, kids: { type: 'array', items: { $ref: '#' } } },
+        additionalProperties: { $ref: '#' },
+      },
+    });
+    expect(titles).toEqual(expected);
+  });
+
+  it('reads a property where an array item step would have to span several keys as not led to', () => {
+    const q: RJSFSchema = { type: 'object', properties: { name: { title: 'Q name' } } };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.kids.0.zz.q',
+      schemaPath: '#/properties/q/required',
+      parentSchema: q,
+      uiSchema: { q: { name: { 'ui:title': 'Root UI name' } } },
+      schema: { type: 'object', properties: { name: {}, q, kids: { type: 'array', items: { $ref: '#' } } } },
+    });
+    expect(titles).toEqual(new Map([['name', 'Q name']]));
+  });
+
+  it('reads the ui:title at a schemaPath the root can’t be read along', () => {
+    const map: RJSFSchema = { type: 'object', required: ['name'], properties: { name: {} } };
+    const { titles } = applyValidatorErrorTitles({
+      message,
+      names: ['name'],
+      quote: "'",
+      property: '.map.foo',
+      schemaPath: '#/properties/map/additionalProperties/required',
+      skipsRefs: true,
+      parentSchema: map,
+      uiSchema: { map: { additionalProperties: { name: { 'ui:title': 'Map UI name' } } } },
+      schema: {
+        $defs: { M: { $anchor: 'm', type: 'object', additionalProperties: map } },
+        type: 'object',
+        properties: { map: { $ref: '#m' } },
+      },
+    });
+    expect(titles).toEqual(new Map([['name', 'Map UI name']]));
+  });
+
   it('reads a property of the root its $ref target declares where the parentSchema is the root as written', () => {
     const schema: RJSFSchema = {
       $defs: { R: { properties: { name: { type: 'string', title: 'R name' } } } },
