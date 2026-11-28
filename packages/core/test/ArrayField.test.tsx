@@ -1641,6 +1641,31 @@ describe('ArrayField', () => {
       expect(input(node, 'root_1_name')).toBeVisible();
     });
 
+    it('updates the layout only when native validation opens an item and leaves focus to the browser', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] },
+        },
+        initialFormData: [{}],
+        uiSchema,
+      });
+      const field = input(node, 'root_0_name');
+      const details = elementOf(node, 'details', HTMLDetailsElement);
+      const summary = elementOf(details, 'summary', HTMLElement);
+      const layout = vi.spyOn(details, 'getBoundingClientRect');
+      summary.focus();
+
+      expect(field.checkValidity()).toBe(false);
+      expect(details.open).toBe(true);
+      expect(layout).toHaveBeenCalledOnce();
+      expect(summary).toHaveFocus();
+
+      expect(field.checkValidity()).toBe(false);
+      expect(layout).toHaveBeenCalledOnce();
+      expect(summary).toHaveFocus();
+    });
+
     it('keeps a hidden item hidden without adding a disclosure', () => {
       const { node } = createFormComponent({
         schema,

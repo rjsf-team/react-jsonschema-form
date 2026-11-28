@@ -659,7 +659,13 @@ function ArrayItemDisclosure(props: {
       className={ARRAY_ITEM_DETAILS_CLASS}
       open={initiallyOpen}
       ref={hasErrors ? openItem : undefined}
-      onInvalidCapture={(event) => openItem(event.currentTarget)}
+      onInvalidCapture={({ currentTarget }) => {
+        if (!currentTarget.open) {
+          openItem(currentTarget);
+          // WebKit needs the new layout before it can focus the first invalid field.
+          currentTarget.getBoundingClientRect();
+        }
+      }}
     >
       <summary>{label}</summary>
       {children}
@@ -905,6 +911,7 @@ function ArrayFieldItemInner<
     className: 'rjsf-array-item',
     disabled: lockedDisabled,
     hasToolbar: has.toolbar,
+    hasDisclosure,
     index,
     readonly: lockedReadonly,
     registry,

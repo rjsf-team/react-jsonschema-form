@@ -239,6 +239,7 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `buttonsProps`: The props to pass to the `ArrayFieldItemButtonsTemplate`.
 - `className`: The className string.
 - `disabled`: Whether the array item's buttons are disabled, by the array's lock or the item's own. Its inputs can stay enabled, under an item's `ui:disabled: false`.
+- `hasDisclosure`: Whether the item shows an expand/collapse control above its fields. Themes can use this to align the toolbar with the summary.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `itemKey`: A stable, unique key for the array item.

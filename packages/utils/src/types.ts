@@ -1626,6 +1626,8 @@ export type ArrayFieldItemTemplateProps<
   className: string;
   /** Whether the array item's buttons are disabled, by the array's lock or the item's own; its inputs can stay enabled, under an item's `ui:disabled: false` */
   disabled?: boolean;
+  /** Whether the item shows an expand/collapse control above its fields */
+  hasDisclosure?: boolean;
   /** A boolean value stating whether the array item has a toolbar */
   hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
